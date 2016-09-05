@@ -1,0 +1,6 @@
+/Liquid/linux/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.fs
+/Liquid/linux/bin/Debug/Liquid.exe.mdb
+/Liquid/linux/bin/Debug/Liquid.exe
+/Liquid/linux/obj/x86/Debug/Liquid.exe
+/Liquid/linux/obj/x86/Debug/Liquid.exe.mdb
+/Liquid/linux/bin/Debug/Liquid1.dll

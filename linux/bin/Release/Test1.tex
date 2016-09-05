@@ -1,0 +1,37 @@
+\input{/Liquid/LiquidTikZ}
+\begin{document}
+\title{LiquidTikZ sample}
+\author{Liquid v1}
+
+\begin{figure*}
+\def\Scale{1.00}
+\begin{tikzpicture}[scale=\Scale,every node/.style={scale=\Scale}]
+\matrix[matStyle] {
+  \point[0-0] & \gate[0-1]{Rx0,79} & \ctrl[0-2] & \ctrl[0-3] & \ctrl[0-4] & \ctrl[0-5] & \ctrl[0-6] & \ctrl[0-7] & \ctrl[0-8] & \ctrl[0-9] & \ctrl[0-10] & \meter[0-11] &  &  &  &  &  &  &  &  &  & \point[0-21]  \\
+  \point[1-0] &  & \targ[1-2] &  &  &  &  &  &  &  &  &  & \meter[1-12] &  &  &  &  &  &  &  &  & \point[1-21]  \\
+  \point[2-0] &  &  & \targ[2-3] &  &  &  &  &  &  &  &  &  & \meter[2-13] &  &  &  &  &  &  &  & \point[2-21]  \\
+  \point[3-0] &  &  &  & \targ[3-4] &  &  &  &  &  &  &  &  &  & \meter[3-14] &  &  &  &  &  &  & \point[3-21]  \\
+  \point[4-0] &  &  &  &  & \targ[4-5] &  &  &  &  &  &  &  &  &  & \meter[4-15] &  &  &  &  &  & \point[4-21]  \\
+  \point[5-0] &  &  &  &  &  & \targ[5-6] &  &  &  &  &  &  &  &  &  & \meter[5-16] &  &  &  &  & \point[5-21]  \\
+  \point[6-0] &  &  &  &  &  &  & \targ[6-7] &  &  &  &  &  &  &  &  &  & \meter[6-17] &  &  &  & \point[6-21]  \\
+  \point[7-0] &  &  &  &  &  &  &  & \targ[7-8] &  &  &  &  &  &  &  &  &  & \meter[7-18] &  &  & \point[7-21]  \\
+  \point[8-0] &  &  &  &  &  &  &  &  & \targ[8-9] &  &  &  &  &  &  &  &  &  & \meter[8-19] &  & \point[8-21]  \\
+  \point[9-0] &  &  &  &  &  &  &  &  &  & \targ[9-10] &  &  &  &  &  &  &  &  &  & \meter[9-20] & \point[9-21]  \\
+   &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &   \\
+};
+% multigates go here
+% annotations go here
+% wires go here
+\begin{pgfonlayer}{background}
+\qw{0-0}{0-11} \qw{1-0}{1-12} \qw{2-0}{2-13} \qw{3-0}{3-14} \qw{4-0}{4-15} \qw{5-0}{5-16} 
+\qw{6-0}{6-17} \qw{7-0}{7-18} \qw{8-0}{8-19} \qw{9-0}{9-20} \cw{0-11}{0-21} \cw{1-12}{1-21} 
+\cw{2-13}{2-21} \cw{3-14}{3-21} \cw{4-15}{4-21} \cw{5-16}{5-21} \cw{6-17}{6-21} \cw{7-18}{7-21} 
+\cw{8-19}{8-21} \cw{9-20}{9-21} 
+\qwx{0-2}{1-2} \qwx{0-3}{2-3} \qwx{0-4}{3-4} \qwx{0-5}{4-5} \qwx{0-6}{5-6} \qwx{0-7}{6-7} 
+\qwx{0-8}{7-8} \qwx{0-9}{8-9} \qwx{0-10}{9-10} 
+\end{pgfonlayer}
+\end{tikzpicture}
+\caption{\label{fig:Test1} Test1}
+\end{figure*}
+
+\end{document}

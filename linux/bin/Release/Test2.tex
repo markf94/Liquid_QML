@@ -1,0 +1,38 @@
+\input{/Liquid/LiquidTikZ}
+% \usepackage[landscape]{geometry}
+\begin{document}
+\title{LiquidTikZ sample}
+\author{Liquid v1}
+
+\begin{figure*}
+\def\Scale{1.00}
+\begin{tikzpicture}[scale=\Scale,every node/.style={scale=\Scale}]
+\matrix[matStyle] {
+  \point[0-0] & \gate[0-1]{Rx0,79} & \mg[0-2]{2C91520} & \meter[0-3] &  &  &  &  &  &  &  &  &  & \point[0-13]  \\
+  \point[1-0] &  &  &  & \meter[1-4] &  &  &  &  &  &  &  &  & \point[1-13]  \\
+  \point[2-0] &  &  &  &  & \meter[2-5] &  &  &  &  &  &  &  & \point[2-13]  \\
+  \point[3-0] &  &  &  &  &  & \meter[3-6] &  &  &  &  &  &  & \point[3-13]  \\
+  \point[4-0] &  &  &  &  &  &  & \meter[4-7] &  &  &  &  &  & \point[4-13]  \\
+  \point[5-0] &  &  &  &  &  &  &  & \meter[5-8] &  &  &  &  & \point[5-13]  \\
+  \point[6-0] &  &  &  &  &  &  &  &  & \meter[6-9] &  &  &  & \point[6-13]  \\
+  \point[7-0] &  &  &  &  &  &  &  &  &  & \meter[7-10] &  &  & \point[7-13]  \\
+  \point[8-0] &  &  &  &  &  &  &  &  &  &  & \meter[8-11] &  & \point[8-13]  \\
+  \point[9-0] &  & \mg[9-2]{2C91520} &  &  &  &  &  &  &  &  &  & \meter[9-12] & \point[9-13]  \\
+   &  &  &  &  &  &  &  &  &  &  &  &  &   \\
+};
+% multigates go here
+\multigate{0-2}{9-2}{2C91520}
+% annotations go here
+% wires go here
+\begin{pgfonlayer}{background}
+\qw{0-0}{0-3} \qw{1-0}{1-4} \qw{2-0}{2-5} \qw{3-0}{3-6} \qw{4-0}{4-7} \qw{5-0}{5-8} 
+\qw{6-0}{6-9} \qw{7-0}{7-10} \qw{8-0}{8-11} \qw{9-0}{9-12} \cw{0-3}{0-13} \cw{1-4}{1-13} 
+\cw{2-5}{2-13} \cw{3-6}{3-13} \cw{4-7}{4-13} \cw{5-8}{5-13} \cw{6-9}{6-13} \cw{7-10}{7-13} 
+\cw{8-11}{8-13} \cw{9-12}{9-13} 
+
+\end{pgfonlayer}
+\end{tikzpicture}
+\caption{\label{fig:Test2} Test2}
+\end{figure*}
+
+\end{document}

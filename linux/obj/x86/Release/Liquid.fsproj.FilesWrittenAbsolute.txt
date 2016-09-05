@@ -1,0 +1,4 @@
+/Liquid/linux/obj/x86/Release/.NETFramework,Version=v4.5.AssemblyAttribute.fs
+/Liquid/linux/bin/Release/Liquid.exe
+/Liquid/linux/obj/x86/Release/Liquid.exe
+/Liquid/linux/bin/Release/Liquid1.dll

@@ -1,0 +1,482 @@
+0:0000.0/=============== Logging to: Liquid.log opened ================
+0:0000.0/============ TELEPORT =============
+0:0000.0/Initial State:   (0.8639+0.4295i)|0>+ (-0.1444-0.2197i)|1>
+0:0000.0/Final   State:   (0.8639+0.4295i)|0>+ (-0.1444-0.2197i)|1> (bits:10)
+0:0000.0/Initial State:   (0.1852+0.6907i)|0>+ (-0.6038-0.3524i)|1>
+0:0000.0/Final   State:   (0.1852+0.6907i)|0>+ (-0.6038-0.3524i)|1> (bits:10)
+0:0000.0/Initial State:    (0.7531-0.371i)|0>+ (-0.1482-0.5226i)|1>
+0:0000.0/Final   State:    (0.7531-0.371i)|0>+ (-0.1482-0.5226i)|1> (bits:00)
+0:0000.0/Initial State:  (-0.8021-0.2322i)|0>+  (0.07514+0.545i)|1>
+0:0000.0/Final   State:  (-0.8021-0.2322i)|0>+  (0.07514+0.545i)|1> (bits:01)
+0:0000.0/Initial State:  (-0.8125-0.5318i)|0>+  (0.05686-0.232i)|1>
+0:0000.0/Final   State:  (-0.8125-0.5318i)|0>+  (0.05686-0.232i)|1> (bits:00)
+0:0000.0/Initial State:  (0.9104-0.05844i)|0>+ (-0.2077+0.3531i)|1>
+0:0000.0/Final   State:  (0.9104-0.05844i)|0>+ (-0.2077+0.3531i)|1> (bits:00)
+0:0000.0/Initial State:  (0.02861+0.4248i)|0>+ (-0.1465+0.8929i)|1>
+0:0000.0/Final   State:  (0.02861+0.4248i)|0>+ (-0.1465+0.8929i)|1> (bits:00)
+0:0000.0/Initial State:   (0.8694+0.3757i)|0>+ (0.02093+0.3203i)|1>
+0:0000.0/Final   State:   (0.8694+0.3757i)|0>+ (0.02093+0.3203i)|1> (bits:00)
+0:0000.0/Initial State: (-0.8547+0.01507i)|0>+  (-0.453+0.2531i)|1>
+0:0000.0/Final   State: (-0.8547+0.01507i)|0>+  (-0.453+0.2531i)|1> (bits:00)
+0:0000.0/Initial State:   (-0.489+0.4897i)|0>+  (0.4938-0.5265i)|1>
+0:0000.0/Final   State:   (-0.489+0.4897i)|0>+  (0.4938-0.5265i)|1> (bits:10)
+0:0000.0/==================================
+0:0000.0/
+0:0000.0/SEQ
+0:0000.0/  PAR
+0:0000.0/    APPLY
+0:0000.0/      GATE Src is a Label qubit: Src (String) 
+0:0000.0/        1 0 
+0:0000.0/        0 1 
+0:0000.0/      WIRE(Id:0)
+0:0000.0/    APPLY
+0:0000.0/      GATE \ket{0} is a Label qubit: \ket{0} (String) 
+0:0000.0/        1 0 
+0:0000.0/        0 1 
+0:0000.0/      WIRE(Id:2)
+0:0000.0/    APPLY
+0:0000.0/      GATE \ket{0} is a Label qubit: \ket{0} (String) 
+0:0000.0/        1 0 
+0:0000.0/        0 1 
+0:0000.0/      WIRE(Id:1)
+0:0000.0/  APPLY
+0:0000.0/    GATE H is a  (Normal) 
+0:0000.0/      0.7071 0.7071 
+0:0000.0/      0.7071 -0.7071 
+0:0000.0/    WIRE(Id:1)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/  APPLY
+0:0000.0/    GATE CNOT is a Controlled NOT (Normal) 
+0:0000.0/      1 0 0 0 
+0:0000.0/      0 1 0 0 
+0:0000.0/      0 0 0 1 
+0:0000.0/      0 0 1 0 
+0:0000.0/    WIRE(Id:1)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/  APPLY
+0:0000.0/    GATE CNOT is a Controlled NOT (Normal) 
+0:0000.0/      1 0 0 0 
+0:0000.0/      0 1 0 0 
+0:0000.0/      0 0 0 1 
+0:0000.0/      0 0 1 0 
+0:0000.0/    WIRE(Id:0)
+0:0000.0/    WIRE(Id:1)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/  APPLY
+0:0000.0/    GATE H is a  (Normal) 
+0:0000.0/      0.7071 0.7071 
+0:0000.0/      0.7071 -0.7071 
+0:0000.0/    WIRE(Id:0)
+0:0000.0/    WIRE(Id:1)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/  PAR
+0:0000.0/    APPLY
+0:0000.0/      GATE Meas is a Collapse State (Measure(,Joint=)) 
+0:0000.0/        1 0 
+0:0000.0/        0 1 
+0:0000.0/      WIRE(Id:1)
+0:0000.0/    APPLY
+0:0000.0/      GATE Meas is a Collapse State (Measure(,Joint=)) 
+0:0000.0/        1 0 
+0:0000.0/        0 1 
+0:0000.0/      WIRE(Id:0)
+0:0000.0/  BitCon
+0:0000.0/    GATE BitContol is a Bit control Qubit operator (BitControl(1)) P
+0:0000.0/    WIRE(Id:1)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/      APPLY
+0:0000.0/        GATE X is a Pauli X flip (Normal) 
+0:0000.0/          0 1 
+0:0000.0/          1 0 
+0:0000.0/        WIRE(Id:2)
+0:0000.0/  BitCon
+0:0000.0/    GATE BitContol is a Bit control Qubit operator (BitControl(1)) P
+0:0000.0/    WIRE(Id:0)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/      APPLY
+0:0000.0/        GATE Z is a Pauli Z flip (Normal) 
+0:0000.0/          1 0 
+0:0000.0/          0 -1 
+0:0000.0/        WIRE(Id:2)
+0:0000.0/  APPLY
+0:0000.0/    GATE Dest is a Label qubit: Dest (String) 
+0:0000.0/      1 0 
+0:0000.0/      0 1 
+0:0000.0/    WIRE(Id:2)
+0:0000.0/============= Rendering Teleport
+0:0000.0/==== Dump of: Teleport_CN
+0:0000.0/SEQ
+0:0000.0/  APPLY
+0:0000.0/    GATE Src is a Label qubit: Src (String) 
+0:0000.0/      1 0 
+0:0000.0/      0 1 
+0:0000.0/    WIRE(Id:0)
+0:0000.0/  APPLY
+0:0000.0/    GATE \ket{0} is a Label qubit: \ket{0} (String) 
+0:0000.0/      1 0 
+0:0000.0/      0 1 
+0:0000.0/    WIRE(Id:1)
+0:0000.0/  APPLY
+0:0000.0/    GATE \ket{0} is a Label qubit: \ket{0} (String) 
+0:0000.0/      1 0 
+0:0000.0/      0 1 
+0:0000.0/    WIRE(Id:2)
+0:0000.0/  APPLY
+0:0000.0/    GATE H is a  (Normal) 
+0:0000.0/      0.7071 0.7071 
+0:0000.0/      0.7071 -0.7071 
+0:0000.0/    WIRE(Id:1)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/  APPLY
+0:0000.0/    GATE CNOT is a Controlled NOT (Normal) 
+0:0000.0/      1 0 0 0 
+0:0000.0/      0 1 0 0 
+0:0000.0/      0 0 0 1 
+0:0000.0/      0 0 1 0 
+0:0000.0/    WIRE(Id:1)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/  APPLY
+0:0000.0/    GATE CNOT is a Controlled NOT (Normal) 
+0:0000.0/      1 0 0 0 
+0:0000.0/      0 1 0 0 
+0:0000.0/      0 0 0 1 
+0:0000.0/      0 0 1 0 
+0:0000.0/    WIRE(Id:0)
+0:0000.0/    WIRE(Id:1)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/  APPLY
+0:0000.0/    GATE H is a  (Normal) 
+0:0000.0/      0.7071 0.7071 
+0:0000.0/      0.7071 -0.7071 
+0:0000.0/    WIRE(Id:0)
+0:0000.0/    WIRE(Id:1)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/  APPLY
+0:0000.0/    GATE Meas is a Collapse State (Measure(,Joint=)) 
+0:0000.0/      1 0 
+0:0000.0/      0 1 
+0:0000.0/    WIRE(Id:1)
+0:0000.0/  BitCon
+0:0000.0/    GATE BitContol is a Bit control Qubit operator (BitControl(1)) P
+0:0000.0/    WIRE(Id:1)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/      APPLY
+0:0000.0/        GATE X is a Pauli X flip (Normal) 
+0:0000.0/          0 1 
+0:0000.0/          1 0 
+0:0000.0/        WIRE(Id:2)
+0:0000.0/  APPLY
+0:0000.0/    GATE Meas is a Collapse State (Measure(,Joint=)) 
+0:0000.0/      1 0 
+0:0000.0/      0 1 
+0:0000.0/    WIRE(Id:0)
+0:0000.0/  BitCon
+0:0000.0/    GATE BitContol is a Bit control Qubit operator (BitControl(1)) P
+0:0000.0/    WIRE(Id:0)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/      APPLY
+0:0000.0/        GATE Z is a Pauli Z flip (Normal) 
+0:0000.0/          1 0 
+0:0000.0/          0 -1 
+0:0000.0/        WIRE(Id:2)
+0:0000.0/  APPLY
+0:0000.0/    GATE Dest is a Label qubit: Dest (String) 
+0:0000.0/      1 0 
+0:0000.0/      0 1 
+0:0000.0/    WIRE(Id:2)
+0:0000.0/Writing: Teleport_CN.tex (split=100.00% scale=100.00%)
+0:0000.0/     Doing columns:  0 - 12
+0:0000.0/Writing: Teleport_CN.htm (split=100.00% scale=100.00%)
+0:0000.0/Writing: Teleport_CF.tex (split=100.00% scale=100.00%)
+0:0000.0/     Doing columns:  0 - 11
+0:0000.0/Writing: Teleport_CF.htm (split=100.00% scale=100.00%)
+0:0000.0/==== Dump of: Teleport_CA
+0:0000.0/SEQ
+0:0000.0/  APPLY
+0:0000.0/    GATE H is a  (Normal) 
+0:0000.0/      0.7071 0.7071 
+0:0000.0/      0.7071 -0.7071 
+0:0000.0/    WIRE(Id:1)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/  APPLY
+0:0000.0/    GATE CNOT is a Controlled NOT (Normal) 
+0:0000.0/      1 0 0 0 
+0:0000.0/      0 1 0 0 
+0:0000.0/      0 0 0 1 
+0:0000.0/      0 0 1 0 
+0:0000.0/    WIRE(Id:1)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/  APPLY
+0:0000.0/    GATE CNOT is a Controlled NOT (Normal) 
+0:0000.0/      1 0 0 0 
+0:0000.0/      0 1 0 0 
+0:0000.0/      0 0 0 1 
+0:0000.0/      0 0 1 0 
+0:0000.0/    WIRE(Id:0)
+0:0000.0/    WIRE(Id:1)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/  APPLY
+0:0000.0/    GATE H is a  (Normal) 
+0:0000.0/      0.7071 0.7071 
+0:0000.0/      0.7071 -0.7071 
+0:0000.0/    WIRE(Id:0)
+0:0000.0/    WIRE(Id:1)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/  PAR
+0:0000.0/    APPLY
+0:0000.0/      GATE Meas is a Collapse State (Measure(,Joint=)) 
+0:0000.0/        1 0 
+0:0000.0/        0 1 
+0:0000.0/      WIRE(Id:1)
+0:0000.0/    APPLY
+0:0000.0/      GATE Meas is a Collapse State (Measure(,Joint=)) 
+0:0000.0/        1 0 
+0:0000.0/        0 1 
+0:0000.0/      WIRE(Id:0)
+0:0000.0/  BitCon
+0:0000.0/    GATE BitContol is a Bit control Qubit operator (BitControl(1)) P
+0:0000.0/    WIRE(Id:1)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/      APPLY
+0:0000.0/        GATE X is a Pauli X flip (Normal) 
+0:0000.0/          0 1 
+0:0000.0/          1 0 
+0:0000.0/        WIRE(Id:2)
+0:0000.0/  BitCon
+0:0000.0/    GATE BitContol is a Bit control Qubit operator (BitControl(1)) P
+0:0000.0/    WIRE(Id:0)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/      APPLY
+0:0000.0/        GATE Z is a Pauli Z flip (Normal) 
+0:0000.0/          1 0 
+0:0000.0/          0 -1 
+0:0000.0/        WIRE(Id:2)
+0:0000.0/Writing: Teleport_CA.tex (split=100.00% scale=100.00%)
+0:0000.0/     Doing columns:  0 -  9
+0:0000.0/Writing: Teleport_CA.htm (split=100.00% scale=100.00%)
+0:0000.0/Original circuit gates: 8
+0:0000.0/   Grown circuit gates: 5
+0:0000.0/==== Dump of: Teleport_GF
+0:0000.0/SEQ
+0:0000.0/  APPLY
+0:0000.0/    GATE 1CB83FB is a 1CB83FB (Normal) 
+0:0000.0/      0.5 0 0.5 0 0 0.5 0 -0.5 
+0:0000.0/      0 0.5 0 0.5 0.5 0 -0.5 0 
+0:0000.0/      0 0.5 0 -0.5 0.5 0 0.5 0 
+0:0000.0/      0.5 0 -0.5 0 0 0.5 0 0.5 
+0:0000.0/      0.5 0 0.5 0 0 -0.5 0 0.5 
+0:0000.0/      0 0.5 0 0.5 -0.5 0 0.5 0 
+0:0000.0/      0 0.5 0 -0.5 -0.5 0 -0.5 0 
+0:0000.0/      0.5 0 -0.5 0 0 -0.5 0 -0.5 
+0:0000.0/    WIRE(Id:0)
+0:0000.0/    WIRE(Id:1)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/  PAR
+0:0000.0/    APPLY
+0:0000.0/      GATE Meas is a Collapse State (Measure(,Joint=)) 
+0:0000.0/        1 0 
+0:0000.0/        0 1 
+0:0000.0/      WIRE(Id:1)
+0:0000.0/    APPLY
+0:0000.0/      GATE Meas is a Collapse State (Measure(,Joint=)) 
+0:0000.0/        1 0 
+0:0000.0/        0 1 
+0:0000.0/      WIRE(Id:0)
+0:0000.0/  BitCon
+0:0000.0/    GATE BitContol is a Bit control Qubit operator (BitControl(1)) P
+0:0000.0/    WIRE(Id:1)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/      APPLY
+0:0000.0/        GATE X is a Pauli X flip (Normal) 
+0:0000.0/          0 1 
+0:0000.0/          1 0 
+0:0000.0/        WIRE(Id:2)
+0:0000.0/  BitCon
+0:0000.0/    GATE BitContol is a Bit control Qubit operator (BitControl(1)) P
+0:0000.0/    WIRE(Id:0)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/      APPLY
+0:0000.0/        GATE Z is a Pauli Z flip (Normal) 
+0:0000.0/          1 0 
+0:0000.0/          0 -1 
+0:0000.0/        WIRE(Id:2)
+0:0000.0/Writing: Teleport_GF.tex (split=100.00% scale=100.00%)
+0:0000.0/     Doing columns:  0 -  6
+0:0000.0/Writing: Teleport_GF.htm (split=100.00% scale=100.00%)
+0:0000.0/============ TELEPORT =============
+0:0000.0/Initial State:      (0.6-0.3185i)|0>+  (0.7033-0.2096i)|1>
+0:0000.0/Final   State:      (0.6-0.3185i)|0>+  (0.7033-0.2096i)|1> (bits:11)
+0:0000.0/Initial State:   (0.2852-0.8076i)|0>+  (0.3132-0.4102i)|1>
+0:0000.0/Final   State:   (0.2852-0.8076i)|0>+  (0.3132-0.4102i)|1> (bits:11)
+0:0000.0/Initial State:    (0.7679-0.239i)|0>+  (0.1597+0.5724i)|1>
+0:0000.0/Final   State:    (0.7679-0.239i)|0>+  (0.1597+0.5724i)|1> (bits:00)
+0:0000.0/Initial State:   (0.6164-0.4588i)|0>+   (0.3957-0.503i)|1>
+0:0000.0/Final   State:   (0.6164-0.4588i)|0>+   (0.3957-0.503i)|1> (bits:00)
+0:0000.0/Initial State:    (0.627+0.6373i)|0>+  (0.07892-0.441i)|1>
+0:0000.0/Final   State:    (0.627+0.6373i)|0>+  (0.07892-0.441i)|1> (bits:11)
+0:0000.0/Initial State:  (0.7721-0.02457i)|0>+ (0.005679-0.635i)|1>
+0:0000.0/Final   State:  (0.7721-0.02457i)|0>+ (0.005679-0.635i)|1> (bits:10)
+0:0000.0/Initial State:  (-0.2271-0.2097i)|0>+ (-0.6816-0.6632i)|1>
+0:0000.0/Final   State:  (-0.2271-0.2097i)|0>+ (-0.6816-0.6632i)|1> (bits:10)
+0:0000.0/Initial State:   (0.6285-0.3387i)|0>+  (0.4187+0.5613i)|1>
+0:0000.0/Final   State:   (0.6285-0.3387i)|0>+  (0.4187+0.5613i)|1> (bits:10)
+0:0000.0/Initial State:    (0.1685+0.371i)|0>+ (-0.4927+0.7689i)|1>
+0:0000.0/Final   State:    (0.1685+0.371i)|0>+ (-0.4927+0.7689i)|1> (bits:11)
+0:0000.0/Initial State:   (-0.541+0.4546i)|0>+   (0.433+0.5596i)|1>
+0:0000.0/Final   State:   (-0.541+0.4546i)|0>+   (0.433+0.5596i)|1> (bits:00)
+0:0000.0/==================================
+0:0000.0/
+0:0000.0/Original circuit gates: 8
+0:0000.0/   Grown circuit gates: 5
+0:0000.0/Original circuit:
+0:0000.0/Wrap
+0:0000.0/  GATE teleGate is a  (Wrap) 
+0:0000.0/  WIRE(Id:0)
+0:0000.0/  WIRE(Id:1)
+0:0000.0/  WIRE(Id:2)
+0:0000.0/    SEQ
+0:0000.0/      APPLY
+0:0000.0/        GATE Src is a Label qubit: Src (String) 
+0:0000.0/          1 0 
+0:0000.0/          0 1 
+0:0000.0/        WIRE(Id:0)
+0:0000.0/      APPLY
+0:0000.0/        GATE \ket{0} is a Label qubit: \ket{0} (String) 
+0:0000.0/          1 0 
+0:0000.0/          0 1 
+0:0000.0/        WIRE(Id:1)
+0:0000.0/      APPLY
+0:0000.0/        GATE \ket{0} is a Label qubit: \ket{0} (String) 
+0:0000.0/          1 0 
+0:0000.0/          0 1 
+0:0000.0/        WIRE(Id:2)
+0:0000.0/      APPLY
+0:0000.0/        GATE H is a  (Normal) 
+0:0000.0/          0.7071 0.7071 
+0:0000.0/          0.7071 -0.7071 
+0:0000.0/        WIRE(Id:1)
+0:0000.0/        WIRE(Id:2)
+0:0000.0/      APPLY
+0:0000.0/        GATE CNOT is a Controlled NOT (Normal) 
+0:0000.0/          1 0 0 0 
+0:0000.0/          0 1 0 0 
+0:0000.0/          0 0 0 1 
+0:0000.0/          0 0 1 0 
+0:0000.0/        WIRE(Id:1)
+0:0000.0/        WIRE(Id:2)
+0:0000.0/      APPLY
+0:0000.0/        GATE CNOT is a Controlled NOT (Normal) 
+0:0000.0/          1 0 0 0 
+0:0000.0/          0 1 0 0 
+0:0000.0/          0 0 0 1 
+0:0000.0/          0 0 1 0 
+0:0000.0/        WIRE(Id:0)
+0:0000.0/        WIRE(Id:1)
+0:0000.0/        WIRE(Id:2)
+0:0000.0/      APPLY
+0:0000.0/        GATE H is a  (Normal) 
+0:0000.0/          0.7071 0.7071 
+0:0000.0/          0.7071 -0.7071 
+0:0000.0/        WIRE(Id:0)
+0:0000.0/        WIRE(Id:1)
+0:0000.0/        WIRE(Id:2)
+0:0000.0/      APPLY
+0:0000.0/        GATE Meas is a Collapse State (Measure(,Joint=)) 
+0:0000.0/          1 0 
+0:0000.0/          0 1 
+0:0000.0/        WIRE(Id:1)
+0:0000.0/      BitCon
+0:0000.0/        GATE BitContol is a Bit control Qubit operator (BitControl(1)) P
+0:0000.0/        WIRE(Id:1)
+0:0000.0/        WIRE(Id:2)
+0:0000.0/          APPLY
+0:0000.0/            GATE X is a Pauli X flip (Normal) 
+0:0000.0/              0 1 
+0:0000.0/              1 0 
+0:0000.0/            WIRE(Id:2)
+0:0000.0/      APPLY
+0:0000.0/        GATE Meas is a Collapse State (Measure(,Joint=)) 
+0:0000.0/          1 0 
+0:0000.0/          0 1 
+0:0000.0/        WIRE(Id:0)
+0:0000.0/      BitCon
+0:0000.0/        GATE BitContol is a Bit control Qubit operator (BitControl(1)) P
+0:0000.0/        WIRE(Id:0)
+0:0000.0/        WIRE(Id:2)
+0:0000.0/          APPLY
+0:0000.0/            GATE Z is a Pauli Z flip (Normal) 
+0:0000.0/              1 0 
+0:0000.0/              0 -1 
+0:0000.0/            WIRE(Id:2)
+0:0000.0/      APPLY
+0:0000.0/        GATE Dest is a Label qubit: Dest (String) 
+0:0000.0/          1 0 
+0:0000.0/          0 1 
+0:0000.0/        WIRE(Id:2)
+0:0000.0/Grown circuit:
+0:0000.0/SEQ
+0:0000.0/  APPLY
+0:0000.0/    GATE BA72B0A is a BA72B0A (Normal) 
+0:0000.0/      0.5 0 0.5 0 0 0.5 0 -0.5 
+0:0000.0/      0 0.5 0 0.5 0.5 0 -0.5 0 
+0:0000.0/      0 0.5 0 -0.5 0.5 0 0.5 0 
+0:0000.0/      0.5 0 -0.5 0 0 0.5 0 0.5 
+0:0000.0/      0.5 0 0.5 0 0 -0.5 0 0.5 
+0:0000.0/      0 0.5 0 0.5 -0.5 0 0.5 0 
+0:0000.0/      0 0.5 0 -0.5 -0.5 0 -0.5 0 
+0:0000.0/      0.5 0 -0.5 0 0 -0.5 0 -0.5 
+0:0000.0/    WIRE(Id:0)
+0:0000.0/    WIRE(Id:1)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/  APPLY
+0:0000.0/    GATE Meas is a Collapse State (Measure(,Joint=)) 
+0:0000.0/      1 0 
+0:0000.0/      0 1 
+0:0000.0/    WIRE(Id:1)
+0:0000.0/  BitCon
+0:0000.0/    GATE BitContol is a Bit control Qubit operator (BitControl(1)) P
+0:0000.0/    WIRE(Id:1)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/      APPLY
+0:0000.0/        GATE X is a Pauli X flip (Normal) 
+0:0000.0/          0 1 
+0:0000.0/          1 0 
+0:0000.0/        WIRE(Id:2)
+0:0000.0/  APPLY
+0:0000.0/    GATE Meas is a Collapse State (Measure(,Joint=)) 
+0:0000.0/      1 0 
+0:0000.0/      0 1 
+0:0000.0/    WIRE(Id:0)
+0:0000.0/  BitCon
+0:0000.0/    GATE BitContol is a Bit control Qubit operator (BitControl(1)) P
+0:0000.0/    WIRE(Id:0)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/      APPLY
+0:0000.0/        GATE Z is a Pauli Z flip (Normal) 
+0:0000.0/          1 0 
+0:0000.0/          0 -1 
+0:0000.0/        WIRE(Id:2)
+0:0000.0/============ TELEPORT =============
+0:0000.0/Initial State:  (-0.6148-0.3369i)|0>+   (0.5499-0.454i)|1>
+0:0000.0/Final   State:  (-0.6148-0.3369i)|0>+   (0.5499-0.454i)|1> (bits:10)
+0:0000.0/Initial State:  (-0.4585-0.5054i)|0>+   (0.592-0.4289i)|1>
+0:0000.0/Final   State:  (-0.4585-0.5054i)|0>+   (0.592-0.4289i)|1> (bits:01)
+0:0000.0/Initial State:   (0.2658-0.6512i)|0>+  (0.2706+0.6573i)|1>
+0:0000.0/Final   State:   (0.2658-0.6512i)|0>+  (0.2706+0.6573i)|1> (bits:01)
+0:0000.0/Initial State:  (-0.6086+0.3649i)|0>+(-0.7043-0.02052i)|1>
+0:0000.0/Final   State:  (-0.6086+0.3649i)|0>+(-0.7043-0.02052i)|1> (bits:01)
+0:0000.0/Initial State:   (0.2185-0.2909i)|0>+   (-0.7794+0.51i)|1>
+0:0000.0/Final   State:   (0.2185-0.2909i)|0>+   (-0.7794+0.51i)|1> (bits:00)
+0:0000.0/Initial State:   (-0.647+0.1777i)|0>+ (-0.1343+0.7292i)|1>
+0:0000.0/Final   State:   (-0.647+0.1777i)|0>+ (-0.1343+0.7292i)|1> (bits:11)
+0:0000.0/Initial State:  (-0.5948+0.4942i)|0>+ (-0.3671-0.5169i)|1>
+0:0000.0/Final   State:  (-0.5948+0.4942i)|0>+ (-0.3671-0.5169i)|1> (bits:11)
+0:0000.0/Initial State:    (-0.49+0.4863i)|0>+  (0.4828+0.5388i)|1>
+0:0000.0/Final   State:    (-0.49+0.4863i)|0>+  (0.4828+0.5388i)|1> (bits:11)
+0:0000.0/Initial State: (-0.04343+0.2895i)|0>+  (-0.947+0.1324i)|1>
+0:0000.0/Final   State: (-0.04343+0.2895i)|0>+  (-0.947+0.1324i)|1> (bits:00)
+0:0000.0/Initial State:   (-0.3426-0.329i)|0>+  (0.8329+0.2841i)|1>
+0:0000.0/Final   State:   (-0.3426-0.329i)|0>+  (0.8329+0.2841i)|1> (bits:11)
+0:0000.0/==================================
+0:0000.0/
+0:0000.0/=============== Logging to: Liquid.log closed ================
