@@ -1,4 +1,57 @@
 0:0000.0/=============== Logging to: Liquid.log opened ================
-0:0000.0/Measured ancilla qubit: 0-4948 1-5052
-0:0000.0/Measured m register: 0-5034 1-4966
+0:0000.0/SEQ
+0:0000.0/  APPLY
+0:0000.0/    GATE H is a  (Normal) 
+0:0000.0/      0.7071 0.7071 
+0:0000.0/      0.7071 -0.7071 
+0:0000.0/    WIRE(Id:0)
+0:0000.0/  APPLY
+0:0000.0/    GATE H is a  (Normal) 
+0:0000.0/      0.7071 0.7071 
+0:0000.0/      0.7071 -0.7071 
+0:0000.0/    WIRE(Id:3)
+0:0000.0/  Extend
+0:0000.0/    GATE CH is a Control of  (Modify(1)) P
+0:0000.0/      1 0 0 0 
+0:0000.0/      0 1 0 0 
+0:0000.0/      0 0 0.7071 0.7071 
+0:0000.0/      0 0 0.7071 -0.7071 
+0:0000.0/      WIRE(Id:0)
+0:0000.0/      WIRE(Id:1)
+0:0000.0/    APPLY
+0:0000.0/      GATE H is a  (Normal) 
+0:0000.0/        0.7071 0.7071 
+0:0000.0/        0.7071 -0.7071 
+0:0000.0/      WIRE(Id:1)
+0:0000.0/  APPLY
+0:0000.0/    GATE CNOT is a Controlled NOT (Normal) 
+0:0000.0/      1 0 0 0 
+0:0000.0/      0 1 0 0 
+0:0000.0/      0 0 0 1 
+0:0000.0/      0 0 1 0 
+0:0000.0/    WIRE(Id:3)
+0:0000.0/    WIRE(Id:2)
+0:0000.0/  APPLY
+0:0000.0/    GATE X is a Pauli X flip (Normal) 
+0:0000.0/      0 1 
+0:0000.0/      1 0 
+0:0000.0/    WIRE(Id:0)
+0:0000.0/  APPLY
+0:0000.0/    GATE CCNOT is a Toffoli - Controlled Controlled Not (Normal) 
+0:0000.0/      1 0 0 0 0 0 0 0 
+0:0000.0/      0 1 0 0 0 0 0 0 
+0:0000.0/      0 0 1 0 0 0 0 0 
+0:0000.0/      0 0 0 1 0 0 0 0 
+0:0000.0/      0 0 0 0 1 0 0 0 
+0:0000.0/      0 0 0 0 0 1 0 0 
+0:0000.0/      0 0 0 0 0 0 0 1 
+0:0000.0/      0 0 0 0 0 0 1 0 
+0:0000.0/    WIRE(Id:0)
+0:0000.0/    WIRE(Id:3)
+0:0000.0/    WIRE(Id:1)
+0:0000.0/Writing: StatePreparation.htm (split=100.00% scale=100.00%)
+0:0000.0/Writing: StatePreparation.tex (split=100.00% scale=100.00%)
+0:0000.0/     Doing columns:  0 -  8
+0:0000.0/Measured ancilla qubit: 0-10000 1-0
+0:0000.0/Measured m register: 0-10000 1-0
 0:0000.0/=============== Logging to: Liquid.log closed ================

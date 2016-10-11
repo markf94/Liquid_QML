@@ -29,17 +29,14 @@ module UserSample =
                 )
         (gate theta).Run qs
 
-    //define a quantum function
-    let qfunc (qs:Qubits) =
-        //Hadamard on first and fourth qubit
-        //H   qs
-        //H   qs.[4]
-        //rotate qubit by 90 degrees in x direction (Math.PI/2. different direction than H rotation)
-        //rotX (Math.PI/4.)   qs //do this to first qubit
+    //define function for quantum state preparation
+    let statepreparation (qs:Qubits) =
+
+        //Preparing the up and down state as training vectors
+        //The |+> state is used as new input vector
 
         //extract the individual qubits
         let q0, q1, q2, q3 = qs.Head, qs.[1], qs.[2], qs.[3]
-
         //prepare superposition to separate training and input vectors
         H   [q0]
         //put m register into superposition
@@ -48,14 +45,25 @@ module UserSample =
         Cgate H [q0;q1]
         //flip the class label with CNOT (q3 control, q2 target)
         CNOT [q3;q2]
+        //flip the first qubit
+        X   [q0]
+        //apply Toffoli (q0 & q3 controls, q1 target)
+        CCNOT   [q0;q3;q1]
 
+        //PRINTING THE QUBITS
+        //for q in qs do
+        //show "q0 = %s" (q0.ToString())
 
-        //ENTANGLEMENT
+        //TUTORIAL SNIPPETS:
+        //rotate qubit by 90 degrees in x direction (Math.PI/2. different direction than H rotation)
+        //rotX (Math.PI/4.)   qs //do this to first qubit
+
+        //Entanglement
         //for q in qs.Tail do CNOT [qs.Head;q]//select the other qubits but the first one
         //apply a CNOT between the head qubit and each other qubit >> results in entanglement
 
         //M does measurement of one qubit (it does the first one in the list)
-        M >< qs //bow tie operator applies measurement to all qubits
+        //M >< qs //bow tie operator applies measurement to all qubits
 
     [<LQD>] //means it can be called from the command line
     //let __UserSample(n:int) =
@@ -65,13 +73,26 @@ module UserSample =
         let stats   = Array.create 2 0
         let statso  = Array.create 2 0
 
-
         //create state vector containing a single qubit
         let k       = Ket(4)
         let qs = k.Qubits
 
         //create circuit
-        let circ    = Circuit.Compile qfunc qs
+        let circ    = Circuit.Compile statepreparation qs
+
+        //show "q = %s" (qs.[0].ToString())
+        //prepare the initial state by running the circuit
+        circ.Run qs
+        //statepreparation    qs
+        //show "qaH = %s" (qs.ToString())
+
+        //output circuit as htm and tex files
+        circ.Dump()
+        circ.RenderHT("StatePreparation")
+
+
+        //create circuit
+        //let circ    = Circuit.Compile qfunc k.Qubits
 
         //Apply(H,qs.[4])
         //H   qs.[4]
@@ -100,8 +121,8 @@ module UserSample =
             //let qa, qb, qc, qd  = a.Reset(), b.Reset(), c.Reset(), d.Reset()
             let qs = k.Reset()
             //instead of 'qfunc qs' I can run the circuit which does nothing else than running qfunc
-            circ.Run qs
-
+            //circ.Run qs
+            M >< qs
             //retrieve the bit value of the first qubit in list qs and convert to integer (v)
             let v   = qs.[0].Bit.v
             let w   = qs.[3].Bit.v
