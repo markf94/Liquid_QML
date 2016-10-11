@@ -13,13 +13,13 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug</OutputPath>
     <ErrorReport>prompt</ErrorReport>
-    <Commandlineparameters>__Teleport()</Commandlineparameters>
+    <Commandlineparameters>__UserSample()</Commandlineparameters>
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
-    <Commandlineparameters>__UserSample(10)</Commandlineparameters>
+    <Commandlineparameters>__UserSample()</Commandlineparameters>
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
