@@ -47,15 +47,45 @@ module UserSample =
         H   [q3]
 
         ///// PREPARING THE NEW INPUT VECTOR
+
+        ////////// START: 3/4 |0> state >> alpha = 0.85355 - 0.35355i; beta = 0.35355 - 0.14645i \\\\\\\\\\\\\\\\\\\\\\
+        //controlled Sdagger (q0 control, q1 target)
+        //Cgate (Adj S) [q0;q1]
+        //controlled H (q0 control, q1 target)
+        //Cgate H [q0;q1]
+        //controlled Tdagger (q0 control, q1 target)
+        //Cgate (Adj T) [q0;q1]
+        //controlled H (q0 control, q1 target)
+        //Cgate H [q0;q1]
+
+        //OPTIONAL:
+        //flip it such that it should be classified as |1>
+        //CNOT [q0;q1]
+        //////// END \\\\\\\\\
+
+        ////////// START: 7/8 |0> state >> alpha = 0.81537 - 0.54481i; beta = 0.16219 - 0.10837i \\\\\\\\\\\\\\\\\\\\\\
         //controlled Sdagger (q0 control, q1 target)
         Cgate (Adj S) [q0;q1]
         //controlled H (q0 control, q1 target)
         Cgate H [q0;q1]
-        //controlled Tdagger (q0 control, q1 target)
+        //controlled T (q0 control, q1 target)
         Cgate (Adj T) [q0;q1]
+        //controlled pi/8 rotation (q0 control, q1 target)
+        Cgate (Adj (R 4)) [q0;q1]
+        //more controlled rotations
+        //Cgate (Adj (R 5)) [q0;q1]
+        //Cgate (Adj (R 6)) [q0;q1]
+
         //controlled H (q0 control, q1 target)
         Cgate H [q0;q1]
-        ////////
+        //controlled S (q0 control, q1 target)
+        Cgate S [q0;q1]
+        Cgate S [q0;q1]
+
+        //OPTIONAL:
+        //flip it such that it should be classified as |1>
+        //CNOT [q0;q1]
+        //////// END \\\\\\\\\
 
         //flip the class label with CNOT (q3 control, q2 target)
         CNOT [q3;q2]
@@ -74,7 +104,10 @@ module UserSample =
             //info on how to pass arrays into functions: http://stackoverflow.com/questions/16968060/f-why-cant-i-access-the-item-member
 
             //measure all the qubits in the z-basis
-            M >< qs
+            //M >< qs
+            M   [qs.[1]]
+            M   [qs.[2]]
+            M   [qs.[3]]
 
             //retrieve the bit values of the qubits in qubit list qs and convert to integer (v)
             let v,w,x,y   = qs.[0].Bit.v, qs.[1].Bit.v, qs.[2].Bit.v, qs.[3].Bit.v
@@ -139,6 +172,11 @@ module UserSample =
         show "Measured |1101>: %f" stats.[13]
         show "Measured |1011>: %f" stats.[14]
         show "Measured |1111>: %f" stats.[15]
+        if stats01.[4] > stats01.[5] then
+            show "Input classified as: |0>"
+        else
+            show "Input classified as: |1>"
+
 
     [<LQD>] //means it can be called from the command line
     let __UserSample(n:int) = //n defines the number of runs
@@ -153,6 +191,8 @@ module UserSample =
         //let stats1  = Array.create 2 0
         //let stats2  = Array.create 2 0
         //let stats3  = Array.create 2 0
+
+        let mutable conditionalcounter = 0
 
         //create state vector containing a single qubit
         let k  = Ket(4)
@@ -187,19 +227,24 @@ module UserSample =
             //interfere the training vectors with the new input vector
             H   qs
 
-            ////CONDITIONAL MEASUREMENT SHOULD COME HERE
-
+            ////CONDITIONAL MEASUREMENT on q0 >> if 
+            M   [qs.[0]] //BC M [q0;q2]
+            if qs.[0].Bit.v = 0 then
+                //M   [qs.[2]]
+                collectstats qs stats stats01
+                conditionalcounter <- conditionalcounter + 1
+            
             //collect the statistics
-            collectstats qs stats stats01
-
+            //collectstats qs stats stats01
+        //conditionalcounter <- n
         //divide the qubit counts by the number of runs
         for s in 0..15 do
-            stats.[s] <- stats.[s]/float(n)
+            stats.[s] <- stats.[s]/float(conditionalcounter)
             if s < 8 then
-                stats01.[s] <- stats01.[s]/float(n)
-        
-        printstats stats stats01
+                stats01.[s] <- stats01.[s]/float(conditionalcounter)
 
+        printstats stats stats01
+        show "Successful CMs: %i" conditionalcounter
         /////////////// OLD CODE SNIPPETS ///////////////////////
 
         //PRINTING THE QUBITS
