@@ -8,19 +8,19 @@
 \def\Scale{1.00}
 \begin{tikzpicture}[scale=\Scale,every node/.style={scale=\Scale}]
 \matrix[matStyle] {
-  \point[0-0] & \gate[0-1]{H} &  & \ctrl[0-3] & \ctrl[0-4] & \ctrl[0-5] & \ctrl[0-6] & \ctrl[0-7] & \ctrl[0-8] & \ctrl[0-9] &  & \gate[0-11]{X} & \ctrl[0-12] & \point[0-13]  \\
-  \point[1-0] &  &  & \gate[1-3]{S^\dagger} & \gate[1-4]{H} & \gate[1-5]{T^\dagger} & \gate[1-6]{R4^\dagger} & \gate[1-7]{H} & \gate[1-8]{S} & \gate[1-9]{S} &  &  & \targ[1-12] & \point[1-13]  \\
-  \point[2-0] &  &  &  &  &  &  &  &  &  & \targ[2-10] &  &  & \point[2-13]  \\
-  \point[3-0] &  & \gate[3-2]{H} &  &  &  &  &  &  &  & \ctrl[3-10] &  & \ctrl[3-12] & \point[3-13]  \\
-   &  &  &  &  &  &  &  &  &  &  &  &  &   \\
+  \point[0-0] & \gate[0-1]{H} &  &  & \ctrl[0-4] & \ctrl[0-5] & \gate[0-6]{X} & \ctrl[0-7] & \ctrl[0-8] &  & \point[0-10]  \\
+  \point[1-0] &  &  & \gate[1-3]{H} & \gate[1-4]{T} & \targ[1-5] &  & \gate[1-7]{S} & \gate[1-8]{Z} &  & \point[1-10]  \\
+  \point[2-0] &  &  &  &  &  &  &  &  & \targ[2-9] & \point[2-10]  \\
+  \point[3-0] &  & \gate[3-2]{H} &  &  &  &  &  & \ctrl[3-8] & \ctrl[3-9] & \point[3-10]  \\
+   &  &  &  &  &  &  &  &  &  &   \\
 };
 % multigates go here
 % annotations go here
 % wires go here
 \begin{pgfonlayer}{background}
-\qw{0-0}{0-13} \qw{1-0}{1-13} \qw{2-0}{2-13} \qw{3-0}{3-13} 
-\qwx{0-3}{1-3} \qwx{0-4}{1-4} \qwx{0-5}{1-5} \qwx{0-6}{1-6} \qwx{0-7}{1-7} \qwx{0-8}{1-8} 
-\qwx{0-9}{1-9} \qwx{0-12}{3-12} \qwxB{1-12}{3-12} \qwx{2-10}{3-10} 
+\qw{0-0}{0-10} \qw{1-0}{1-10} \qw{2-0}{2-10} \qw{3-0}{3-10} 
+\qwx{0-4}{1-4} \qwx{0-5}{1-5} \qwx{0-7}{1-7} \qwx{0-8}{3-8} \qwxB{1-8}{3-8} \qwx{2-9}{3-9} 
+
 \end{pgfonlayer}
 \end{tikzpicture}
 \caption{\label{fig:StatePreparation} StatePreparation}

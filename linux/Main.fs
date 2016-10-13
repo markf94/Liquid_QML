@@ -48,51 +48,108 @@ module UserSample =
 
         ///// PREPARING THE NEW INPUT VECTOR
 
-        ////////// START: 3/4 |0> state >> alpha = 0.85355 - 0.35355i; beta = 0.35355 - 0.14645i \\\\\\\\\\\\\\\\\\\\\\
-        //controlled Sdagger (q0 control, q1 target)
-        //Cgate (Adj S) [q0;q1]
+        //// #1 \\\\\
+        ////////// START: Binary classifier in z-x-plane \\\\\\\\\\\\\\\\\\\\\\
+        /// input ector (3/4) >> alpha = 0.85355 - 0.35355i; beta = 0.35355 - 0.14645i
+        /// training vector #1 >> alpha = 1; beta = 0
+        /// training vector #2 >> alpha = 0; beta = 1
+
+        //prepared state > probabilities checked twice!
+        //interfered state >> probabilities checked twice!
+        //python bloch sphere mapping >> available!
+
         //controlled H (q0 control, q1 target)
         //Cgate H [q0;q1]
         //controlled Tdagger (q0 control, q1 target)
         //Cgate (Adj T) [q0;q1]
         //controlled H (q0 control, q1 target)
         //Cgate H [q0;q1]
+        //controlled Sdagger (q0 control, q1 target)
+        //Cgate (Adj S) [q0;q1]
 
         //OPTIONAL:
         //flip it such that it should be classified as |1>
         //CNOT [q0;q1]
+
+        //flip the class label with CNOT (q3 control, q2 target)
+        //CNOT [q3;q2]
+        //flip the first qubit >> move input vector to the front
+        //X   [q0]
+        //apply Toffoli (q0 & q3 controls, q1 target) >> to create the second training vector
+        //CCNOT   [q0;q3;q1]
         //////// END \\\\\\\\\
 
-        ////////// START: 7/8 |0> state >> alpha = 0.81537 - 0.54481i; beta = 0.16219 - 0.10837i \\\\\\\\\\\\\\\\\\\\\\
-        //controlled Sdagger (q0 control, q1 target)
-        Cgate (Adj S) [q0;q1]
+        //// #2 \\\\\
+        ////////// START: Binary classifier in z-x-plane \\\\\\\\\\\\\\\\\\\\\\
+        /// input vector (7/8) >> alpha = 0.96194 - 0.19134i; beta = 0.19134 - 0.03806i 
+        /// training vector #1 >> alpha = 1; beta = 0
+        /// training vector #2 >> alpha = 0; beta = 1
+
+        //prepared state > probabilities checked!
+        //interfered state >> probabilities checked!
+        //python bloch sphere mapping >> available!
+
         //controlled H (q0 control, q1 target)
-        Cgate H [q0;q1]
-        //controlled T (q0 control, q1 target)
-        Cgate (Adj T) [q0;q1]
+        //Cgate H [q0;q1]
+        //controlled Tdagger (q0 control, q1 target)
+        //Cgate (Adj T) [q0;q1]
         //controlled pi/8 rotation (q0 control, q1 target)
-        Cgate (Adj (R 4)) [q0;q1]
+        //Cgate (R 4) [q0;q1]
+        //controlled H (q0 control, q1 target)
+        //Cgate H [q0;q1]
+        //controlled Sdagger (q0 control, q1 target)
+        //Cgate (Adj S) [q0;q1]
+
+        //if needed:
         //more controlled rotations
         //Cgate (Adj (R 5)) [q0;q1]
         //Cgate (Adj (R 6)) [q0;q1]
 
-        //controlled H (q0 control, q1 target)
-        Cgate H [q0;q1]
-        //controlled S (q0 control, q1 target)
-        Cgate S [q0;q1]
-        Cgate S [q0;q1]
-
         //OPTIONAL:
         //flip it such that it should be classified as |1>
         //CNOT [q0;q1]
-        //////// END \\\\\\\\\
 
         //flip the class label with CNOT (q3 control, q2 target)
-        CNOT [q3;q2]
+        //CNOT [q3;q2]
+        //flip the first qubit >> move input vector to the front
+        //X   [q0]
+        //apply Toffoli (q0 & q3 controls, q1 target) >> to create the second training vector
+        //CCNOT   [q0;q3;q1]
+        //////// END \\\\\\\\\
+
+        //// #3 \\\\\
+        ////////// START: Binary classifier in x-y-plane \\\\\\\\\\\\\\\\\\\\\\
+        /// input vector >> alpha = 0.70711; beta = 0.50000 + 0.50000i 
+        /// training vector #1 >> alpha = 0.70711; beta = 0.70711i
+        /// training vector #2 >> alpha = 0.70711; beta = -0.70711i
+
+        //prepared state > probabilities 
+        //interfered state >> probabilities 
+        //python bloch sphere mapping >> available!
+
+        //put the second qubit into |+> state
+        H [q1]
+        //Prepare input vector: controlled T (q0 control, q1 target)
+        Cgate T [q0;q1]
+
+        //OPTIONAL:
+        //flip it such that it should be classified as |1>
+        Cgate Z [q0;q1]
+        //CNOT [q0;q1]
+        //CNOT should work as well though...
+
         //flip the first qubit >> move input vector to the front
         X   [q0]
-        //apply Toffoli (q0 & q3 controls, q1 target) >> to create the second training vector
-        CCNOT   [q0;q3;q1]
+        //controlled controlled S gate (q0 & q3 control, q2 target)
+        //creates the first training vector
+        Cgate S [q0;q1]
+        //controlled controlled Z to flip the phase in which is to become the second training vector
+        //separates the first from the second training vector
+        CCgate  Z   [q0;q3;q1]
+        //flip the class label with CNOT (q3 control, q2 target)
+        CNOT [q3;q2]
+
+        //////// END \\\\\\\\\
 
     /// <summary>
     /// Collects the statistics for a qubit list with four qubits. 
