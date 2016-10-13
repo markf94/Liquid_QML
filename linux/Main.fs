@@ -123,8 +123,8 @@ module UserSample =
         /// training vector #1 >> alpha = 0.70711; beta = 0.70711i
         /// training vector #2 >> alpha = 0.70711; beta = -0.70711i
 
-        //prepared state > probabilities 
-        //interfered state >> probabilities 
+        //prepared state > probabilities checked!
+        //interfered state >> probabilities checked!
         //python bloch sphere mapping >> available!
 
         //put the second qubit into |+> state
@@ -134,9 +134,7 @@ module UserSample =
 
         //OPTIONAL:
         //flip it such that it should be classified as |1>
-        Cgate Z [q0;q1]
-        //CNOT [q0;q1]
-        //CNOT should work as well though...
+        //Cgate Z [q0;q1]
 
         //flip the first qubit >> move input vector to the front
         X   [q0]
@@ -157,14 +155,16 @@ module UserSample =
     /// <param name="qs">The qubit list of which the statistics shall be calculated from.</param>
     /// <param name="stats">A float array with 16 items storing the stats for the states |0000>, |0001>, etc.</param>
     /// <param name="stats01">A float array with 8 items collecting the stats for the individual qubits (ancilla, data, class and m)</param>
-    let collectstats (qs:Qubits) (stats:_[]) (stats01:_[]) = 
+    let collectstats (qs:Qubits) (stats:_[]) (stats01:_[]) (conditional:bool) = 
             //info on how to pass arrays into functions: http://stackoverflow.com/questions/16968060/f-why-cant-i-access-the-item-member
 
             //measure all the qubits in the z-basis
-            //M >< qs
-            M   [qs.[1]]
-            M   [qs.[2]]
-            M   [qs.[3]]
+            if conditional = true then
+                M   [qs.[1]]
+                M   [qs.[2]]
+                M   [qs.[3]]
+            else
+                M >< qs
 
             //retrieve the bit values of the qubits in qubit list qs and convert to integer (v)
             let v,w,x,y   = qs.[0].Bit.v, qs.[1].Bit.v, qs.[2].Bit.v, qs.[3].Bit.v
@@ -283,17 +283,19 @@ module UserSample =
 
             //interfere the training vectors with the new input vector
             H   qs
+            let CM = true
 
+            if CM = true then
             ////CONDITIONAL MEASUREMENT on q0 >> if 
-            M   [qs.[0]] //BC M [q0;q2]
-            if qs.[0].Bit.v = 0 then
-                //M   [qs.[2]]
-                collectstats qs stats stats01
-                conditionalcounter <- conditionalcounter + 1
-            
-            //collect the statistics
-            //collectstats qs stats stats01
-        //conditionalcounter <- n
+                M   [qs.[0]] //BC M [q0;q2]
+                if qs.[0].Bit.v = 0 then
+                    collectstats qs stats stats01 true
+                    conditionalcounter <- conditionalcounter + 1
+            else
+                //collect the statistics
+                collectstats qs stats stats01 false
+                conditionalcounter <- n
+        
         //divide the qubit counts by the number of runs
         for s in 0..15 do
             stats.[s] <- stats.[s]/float(conditionalcounter)
