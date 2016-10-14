@@ -1,3 +1,17 @@
 0:0000.0/=============== Logging to: Liquid.log opened ================
-0:0000.0/This module is a good place to put compiled user code
-0:0000.0/=============== Logging to: Liquid.log closed ================
+0:0000.0/!!!!!!!!!!!!!!!!!!!!!! Stack Trace !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+0:0000.0/  at ag+t.Invoke (System.String A_0) <0x41c824b0 + 0x0001f>
+0:0000.0/    in <filename unknown>:0 
+0:0000.0/  at Microsoft.FSharp.Core.PrintfImpl+StringPrintfEnv`1[TResult].Finalize () <0x41c55400 + 0x00039>
+0:0000.0/    in <filename unknown>:0 
+0:0000.0/  at Microsoft.FSharp.Core.PrintfImpl+Final1@224[TState,TResidue,TResult,A].Invoke (Microsoft.FSharp.Core.FSharpFunc`2 env, A a) <0x41c550f0 + 0x000a1>
+0:0000.0/    in <filename unknown>:0 
+0:0000.0/  at Microsoft.FSharp.Core.OptimizedClosures+Invoke@3252[T2,TResult,T1].Invoke (T2 u) <0x41c550c0 + 0x00029>
+0:0000.0/    in <filename unknown>:0 
+0:0000.0/  at ad.c (System.String A_0) <0x41c81690 + 0x0047f>
+0:0000.0/    in <filename unknown>:0 
+0:0000.0/  at Microsoft.Research.Liquid.Parser.CommandRun (Microsoft.Research.Liquid.LiquidArgs las) <0x41c7cd40 + 0x00267>
+0:0000.0/    in <filename unknown>:0 
+0:0000.0/!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+0:0000.0/!!!    ERROR: Run function: Can't find __qubitKNN
+0:0000.0/!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

@@ -1,6 +1,6 @@
 ﻿namespace Microsoft.Research.Liquid
 
-module UserSample =
+module BinaryAmplitudeKNN =
     open System
     open Util
     open Operations
@@ -9,7 +9,7 @@ module UserSample =
     //open Tests              // All the built-in tests
 
     /// <summary>
-    /// Performs an arbitrary rotation around X. 
+    /// Performs an arbitrary rotation around X.
     /// </summary>
     /// <param name="theta">Angle to rotate by</param>
     /// <param name="qs">The head qubit of this list is operated on.</param>
@@ -30,23 +30,10 @@ module UserSample =
         (gate theta).Run qs
 
     /// <summary>
-    /// Prepares the initial quantum state as required by Schuld's amplitude-based k-nearest neighbour algorithm. 
+    /// Prepare the 3/4 state for the x-z plane classifier
     /// </summary>
-    /// <param name="qs">The qubit list with four qubits that is being manipulated.</param>
-    let statepreparation (qs:Qubits) =
-
-        //Preparing the up and down state as training vectors
-        //The |+> state is used as new input vector
-
-        //extract the individual qubits
-        let q0, q1, q2, q3 = qs.Head, qs.[1], qs.[2], qs.[3]
-
-        //prepare superposition to separate training and input vectors
-        H   [q0]
-        //put m register into superposition
-        H   [q3]
-
-        ///// PREPARING THE NEW INPUT VECTOR
+    /// <param name="qs">The qubits that will be prepared.</param>
+    let state1 (q0:Qubit) (q1:Qubit) (q2:Qubit) (q3:Qubit) =
 
         //// #1 \\\\\
         ////////// START: Binary classifier in z-x-plane \\\\\\\\\\\\\\\\\\\\\\
@@ -59,29 +46,35 @@ module UserSample =
         //python bloch sphere mapping >> available!
 
         //controlled H (q0 control, q1 target)
-        //Cgate H [q0;q1]
+        Cgate H [q0;q1]
         //controlled Tdagger (q0 control, q1 target)
-        //Cgate (Adj T) [q0;q1]
+        Cgate (Adj T) [q0;q1]
         //controlled H (q0 control, q1 target)
-        //Cgate H [q0;q1]
+        Cgate H [q0;q1]
         //controlled Sdagger (q0 control, q1 target)
-        //Cgate (Adj S) [q0;q1]
+        Cgate (Adj S) [q0;q1]
 
         //OPTIONAL:
         //flip it such that it should be classified as |1>
         //CNOT [q0;q1]
 
         //flip the class label with CNOT (q3 control, q2 target)
-        //CNOT [q3;q2]
+        CNOT [q3;q2]
         //flip the first qubit >> move input vector to the front
-        //X   [q0]
+        X   [q0]
         //apply Toffoli (q0 & q3 controls, q1 target) >> to create the second training vector
-        //CCNOT   [q0;q3;q1]
+        CCNOT   [q0;q3;q1]
         //////// END \\\\\\\\\
+
+     /// <summary>
+    /// Prepare the 7/8 state for the x-z plane classifier
+    /// </summary>
+    /// <param name="qs">The qubits that will be prepared.</param>
+    let state2 (q0:Qubit) (q1:Qubit) (q2:Qubit) (q3:Qubit) =
 
         //// #2 \\\\\
         ////////// START: Binary classifier in z-x-plane \\\\\\\\\\\\\\\\\\\\\\
-        /// input vector (7/8) >> alpha = 0.96194 - 0.19134i; beta = 0.19134 - 0.03806i 
+        /// input vector (7/8) >> alpha = 0.96194 - 0.19134i; beta = 0.19134 - 0.03806i
         /// training vector #1 >> alpha = 1; beta = 0
         /// training vector #2 >> alpha = 0; beta = 1
 
@@ -90,15 +83,15 @@ module UserSample =
         //python bloch sphere mapping >> available!
 
         //controlled H (q0 control, q1 target)
-        //Cgate H [q0;q1]
+        Cgate H [q0;q1]
         //controlled Tdagger (q0 control, q1 target)
-        //Cgate (Adj T) [q0;q1]
+        Cgate (Adj T) [q0;q1]
         //controlled pi/8 rotation (q0 control, q1 target)
-        //Cgate (R 4) [q0;q1]
+        Cgate (R 4) [q0;q1]
         //controlled H (q0 control, q1 target)
-        //Cgate H [q0;q1]
+        Cgate H [q0;q1]
         //controlled Sdagger (q0 control, q1 target)
-        //Cgate (Adj S) [q0;q1]
+        Cgate (Adj S) [q0;q1]
 
         //if needed:
         //more controlled rotations
@@ -110,16 +103,22 @@ module UserSample =
         //CNOT [q0;q1]
 
         //flip the class label with CNOT (q3 control, q2 target)
-        //CNOT [q3;q2]
+        CNOT [q3;q2]
         //flip the first qubit >> move input vector to the front
-        //X   [q0]
+        X   [q0]
         //apply Toffoli (q0 & q3 controls, q1 target) >> to create the second training vector
-        //CCNOT   [q0;q3;q1]
+        CCNOT   [q0;q3;q1]
         //////// END \\\\\\\\\
+
+    /// <summary>
+    /// Prepare the 3/4 state for the x-y plane classifier
+    /// </summary>
+    /// <param name="qs">The qubits that will be prepared.</param>
+    let state3 (q0:Qubit) (q1:Qubit) (q2:Qubit) (q3:Qubit) =
 
         //// #3 \\\\\
         ////////// START: Binary classifier in x-y-plane \\\\\\\\\\\\\\\\\\\\\\
-        /// input vector >> alpha = 0.70711; beta = 0.50000 + 0.50000i 
+        /// input vector >> alpha = 0.70711; beta = 0.50000 + 0.50000i
         /// training vector #1 >> alpha = 0.70711; beta = 0.70711i
         /// training vector #2 >> alpha = 0.70711; beta = -0.70711i
 
@@ -146,16 +145,41 @@ module UserSample =
         CCgate  Z   [q0;q3;q1]
         //flip the class label with CNOT (q3 control, q2 target)
         CNOT [q3;q2]
-
         //////// END \\\\\\\\\
 
     /// <summary>
-    /// Collects the statistics for a qubit list with four qubits. 
+    /// Prepares the initial quantum state as required by Schuld's amplitude-based k-nearest neighbour algorithm.
+    /// </summary>
+    /// <param name="qs">The qubit list with four qubits that is being manipulated.</param>
+    let statepreparation (qs:Qubits) =
+        //OPTIONS
+        //STATE 1 -> X-Z plane binary classifier with 3/4 state
+        //STATE 2 -> X-Z plane binary classifier with 7/8 state
+        //STATE 3 -> X-Y plane binary classifier with 3/4 state
+        let state = 2
+
+        //extract the individual qubits
+        let q0, q1, q2, q3 = qs.Head, qs.[1], qs.[2], qs.[3]
+
+        //prepare superposition to separate training and input vectors
+        H   [q0]
+        //put m register into superposition
+        H   [q3]
+
+        ///// PREPARING the qubits in the selected state (state preparation functions are defined above)
+        match state with
+            | 1 -> state1 q0 q1 q2 q3
+            | 2 -> state2 q0 q1 q2 q3
+            | 3 -> state3 q0 q1 q2 q3
+            | _ -> show "option undefined"
+
+    /// <summary>
+    /// Collects the statistics for a qubit list with four qubits.
     /// </summary>
     /// <param name="qs">The qubit list of which the statistics shall be calculated from.</param>
     /// <param name="stats">A float array with 16 items storing the stats for the states |0000>, |0001>, etc.</param>
     /// <param name="stats01">A float array with 8 items collecting the stats for the individual qubits (ancilla, data, class and m)</param>
-    let collectstats (qs:Qubits) (stats:_[]) (stats01:_[]) (conditional:bool) = 
+    let collectstats (qs:Qubits) (stats:_[]) (stats01:_[]) (conditional:bool) =
             //info on how to pass arrays into functions: http://stackoverflow.com/questions/16968060/f-why-cant-i-access-the-item-member
 
             //measure all the qubits in the z-basis
@@ -174,7 +198,7 @@ module UserSample =
             stats01.[2+w] <- stats01.[2+w] + 1.0 //reaches item 2 or 3 >> data qubit stats
             stats01.[4+x] <- stats01.[4+x] + 1.0 //reaches item 4 or 5 >> class qubit stats
             stats01.[6+y] <- stats01.[6+y] + 1.0 //reaches item 6 or 7 >> m qubit stats
-            
+
             //match qs.[0].Bit.v, qs.[1].Bit.v, qs.[2].Bit.v, qs.[3].Bit.v with
             match v,w,x,y with
                 | 0,0,0,0 -> stats.[0] <- stats.[0] + 1.0
@@ -194,7 +218,7 @@ module UserSample =
                 | 1,0,1,1 -> stats.[14] <- stats.[14] + 1.0
                 | 1,1,1,1 -> stats.[15] <- stats.[15] + 1.0
                 | _,_,_,_ -> show "error" //to handle all other cases (which won't occur any way)
-    
+
     /// <summary>
     /// Prints the individual statistics of 4 qubits and their combinations (|0000>, |0001>, etc.).
     /// </summary>
@@ -236,8 +260,15 @@ module UserSample =
 
 
     [<LQD>] //means it can be called from the command line
-    let __UserSample(n:int) = //n defines the number of runs
+    let __BinaryAmplitudeKNN(n:int) = //n defines the number of runs
     //let __UserSample() =
+
+        //OPTIONS:
+        //if only statepreparation is wanted >> false, false
+        //if statepreparation and interference is wanted >> false, true
+        //if full classification is wanted >> true, trues
+        let CM = true
+        let interfere = true
 
         //initialize statistic arrays
         //float array with 16 items and initialize with 0.0 >> will hold the stats for the combination states like |0000>, |0001>, etc.
@@ -282,11 +313,11 @@ module UserSample =
             circ.Run qs
 
             //interfere the training vectors with the new input vector
-            H   qs
-            let CM = true
+            if interfere = true then
+                H   qs
 
             if CM = true then
-            ////CONDITIONAL MEASUREMENT on q0 >> if 
+            ////CONDITIONAL MEASUREMENT on q0 >> if
                 M   [qs.[0]] //BC M [q0;q2]
                 if qs.[0].Bit.v = 0 then
                     collectstats qs stats stats01 true
@@ -295,7 +326,7 @@ module UserSample =
                 //collect the statistics
                 collectstats qs stats stats01 false
                 conditionalcounter <- n
-        
+
         //divide the qubit counts by the number of runs
         for s in 0..15 do
             stats.[s] <- stats.[s]/float(conditionalcounter)
@@ -326,7 +357,7 @@ module UserSample =
 
         //statepreparation    qs
         //show "qaH = %s" (qs.ToString())
-    
+
         //show "test1:"
         //output the circuit into the log file
         //circ.Dump()
@@ -349,7 +380,21 @@ module UserSample =
         //Test for entanglement
         //for q in qs.Tail do
             //if q.Bit <> qs.Head.Bit then
-                //failwith "BAD!!!!!"
+                //failwith "BAD!!!!!" 
+
+module qubitKNN = 
+    open System
+    open Util
+    open Operations
+    //open Native             // Support for Native Interop
+    //open HamiltonianGates   // Extra gates for doing Hamiltonian simulations
+    //open Tests              // All the built-in tests
+
+    [<LQD>] //means it can be called from the command line
+    let __qubitKNN() = //n defines the number of runs
+        show "The quantum kNN based on qubit encoding"
+        show "_______________________________________"
+
 
 module Main =
     open App
