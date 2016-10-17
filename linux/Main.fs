@@ -156,7 +156,7 @@ module BinaryAmplitudeKNN =
         //STATE 1 -> X-Z plane binary classifier with 3/4 state
         //STATE 2 -> X-Z plane binary classifier with 7/8 state
         //STATE 3 -> X-Y plane binary classifier with 3/4 state
-        let state = 2
+        let state = 3
 
         //extract the individual qubits
         let q0, q1, q2, q3 = qs.Head, qs.[1], qs.[2], qs.[3]
@@ -258,6 +258,16 @@ module BinaryAmplitudeKNN =
         else
             show "Input classified as: |1>"
 
+    /// <summary>
+    /// Outsourcing the second part of the amplitude-KNN algorithm to create a TEX and HTML file.
+    /// </summary>
+    /// <param name="qs">Qubit list</param>
+    let secondpartofALG (qs:Qubits) =
+            
+            H   qs
+            X   qs
+            BC M [qs.[0];qs.[2]]
+
 
     [<LQD>] //means it can be called from the command line
     let __BinaryAmplitudeKNN(n:int) = //n defines the number of runs
@@ -288,6 +298,12 @@ module BinaryAmplitudeKNN =
 
         //create circuit
         let circ = Circuit.Compile statepreparation qs
+        let circ2 = Circuit.Compile secondpartofALG qs
+
+        let totalcirc = Seq [circ;circ2]
+        totalcirc.RenderHT("TotalCircuit")
+
+        totalcirc.Dump()
 
         //output the circuit into the log file
         circ.Dump()
@@ -312,13 +328,24 @@ module BinaryAmplitudeKNN =
             //instead of 'statepreparation qs' I run the circuit since it was optimized by the GrowGates algorithm
             circ.Run qs
 
+            //secondpartofALG qs interfere CM stats stats01 conditionalcounter n
+
+
             //interfere the training vectors with the new input vector
             if interfere = true then
                 H   qs
 
             if CM = true then
-            ////CONDITIONAL MEASUREMENT on q0 >> if
-                M   [qs.[0]] //BC M [q0;q2]
+                //X   [qs.[0]]
+                //BC M [qs.[0];qs.[2]]
+                //need to prevent the unknown bit case!
+                //if qs.[0].Bit.v = 1 then
+                    //collectstats qs stats stats01 true
+                   // conditionalcounter <- conditionalcounter + 1
+
+            
+            ////CONDITIONAL MEASUREMENT on q0
+                M   [qs.[0]]
                 if qs.[0].Bit.v = 0 then
                     collectstats qs stats stats01 true
                     conditionalcounter <- conditionalcounter + 1
@@ -326,7 +353,7 @@ module BinaryAmplitudeKNN =
                 //collect the statistics
                 collectstats qs stats stats01 false
                 conditionalcounter <- n
-
+            
         //divide the qubit counts by the number of runs
         for s in 0..15 do
             stats.[s] <- stats.[s]/float(conditionalcounter)
