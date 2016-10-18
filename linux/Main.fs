@@ -271,8 +271,8 @@ module BinaryAmplitudeKNN =
 
     [<LQD>] //means it can be called from the command line
     let __BinaryAmplitudeKNN(n:int) = //n defines the number of runs
-    //let __UserSample() =
-
+        show "The quantum kNN based on amplitude encoding"
+        show "_______________________________________________________"
         //OPTIONS:
         //if only statepreparation is wanted >> false, false
         //if statepreparation and interference is wanted >> false, true
@@ -418,9 +418,10 @@ module qubitKNN =
     //open Tests              // All the built-in tests
 
     [<LQD>] //means it can be called from the command line
-    let __qubitKNN() = //n defines the number of runs
+    let __qubitKNN() = 
         show "The quantum kNN based on qubit encoding"
-        show "_______________________________________"
+        show "_______________________________________________________"
+
 
 
 module Main =
