@@ -330,7 +330,6 @@ module BinaryAmplitudeKNN =
 
             //secondpartofALG qs interfere CM stats stats01 conditionalcounter n
 
-
             //interfere the training vectors with the new input vector
             if interfere = true then
                 H   qs
@@ -421,6 +420,55 @@ module qubitKNN =
     let __qubitKNN() = 
         show "The quantum kNN based on qubit encoding"
         show "_______________________________________________________"
+
+        //INITIALIZE FIRST REGISTER >> INPUT VECTOR
+        //inputvector is a classical 8 bit (1 byte) and a quantum mechanical 8 qubit string
+        let k = Ket(8)
+        let inputvector = k.Qubits
+
+        //apply NOT gates where the classical bit string has ones
+        X   [inputvector.[1]]
+        X   [inputvector.[2]]
+        X   [inputvector.[5]]
+       
+        //INITIALIZE SECOND REGISTER >> TRAINING VECTORS AND CLASS LABEL
+        //8 qubits for the training vectors and 1 qubit for the class label
+        let m = Ket(9)
+        let training = m.Qubits
+
+        //put class qubit into superposition
+        H   [training.[8]]
+
+        //now flip the respective qubits using CNOT gates
+        //first training vector
+        CNOT    [training.[8];training.[0]]
+        CNOT    [training.[8];training.[2]]
+
+        //move the first training vector to the front by flipping the class label
+        X       [training.[8]]
+
+        //second training vector
+        CNOT    [training.[8];training.[4]]
+        CNOT    [training.[8];training.[6]]
+
+        //Construct the initial state out of the first & second register and add an ancilla (third register)
+        let o = Ket(1)
+        let ancilla = o.Qubits
+
+        let initialstate = !!(inputvector,training,ancilla)
+
+        //Apply a Hadamard on the third register
+        H   [initialstate.[17]]
+
+        //----------------------------------------
+        //next step is to calculate the Hamming distance quantum mechanically!
+
+        //Test code below
+        M >< initialstate
+      
+        let outcome = initialstate.[17].Bit.v
+
+        show "Measured: %d" outcome
 
 
 
