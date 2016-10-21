@@ -263,14 +263,14 @@ module BinaryAmplitudeKNN =
     /// </summary>
     /// <param name="qs">Qubit list</param>
     let secondpartofALG (qs:Qubits) =
-            
+
             H   qs
             X   qs
             BC M [qs.[0];qs.[2]]
 
 
     [<LQD>] //means it can be called from the command line
-    let __BinaryAmplitudeKNN(n:int) = //n defines the number of runs
+    let __BinaryAmplitudeKNN(runs:int) = //parameter defines the number of runs
         show "The quantum kNN based on amplitude encoding"
         show "_______________________________________________________"
         //OPTIONS:
@@ -320,7 +320,7 @@ module BinaryAmplitudeKNN =
         //Draw it into HTML (H) and Tex (T)
         circ.RenderHT("StatePreparationOptim")
 
-        for i in 0..(n-1) do
+        for i in 0..(runs-1) do
 
             //reset the state vector since the measurement will collapse the state vector
             let qs = k.Reset()
@@ -342,7 +342,7 @@ module BinaryAmplitudeKNN =
                     //collectstats qs stats stats01 true
                    // conditionalcounter <- conditionalcounter + 1
 
-            
+
             ////CONDITIONAL MEASUREMENT on q0
                 M   [qs.[0]]
                 if qs.[0].Bit.v = 0 then
@@ -351,8 +351,8 @@ module BinaryAmplitudeKNN =
             else
                 //collect the statistics
                 collectstats qs stats stats01 false
-                conditionalcounter <- n
-            
+                conditionalcounter <- runs
+
         //divide the qubit counts by the number of runs
         for s in 0..15 do
             stats.[s] <- stats.[s]/float(conditionalcounter)
@@ -406,9 +406,9 @@ module BinaryAmplitudeKNN =
         //Test for entanglement
         //for q in qs.Tail do
             //if q.Bit <> qs.Head.Bit then
-                //failwith "BAD!!!!!" 
+                //failwith "BAD!!!!!"
 
-module qubitKNN = 
+module qubitKNN =
     open System
     open Util
     open Operations
@@ -416,60 +416,215 @@ module qubitKNN =
     //open HamiltonianGates   // Extra gates for doing Hamiltonian simulations
     //open Tests              // All the built-in tests
 
+    //-----START: define new gates----\\
+
+    let U1 (qs:Qubits) =
+        let gate (qs:Qubits) =
+            Gate.Build("U1", fun () ->
+                new Gate(
+                    Qubits = qs.Length,
+                    Name = "U1",
+                    Help = "First part of the Hamiltonian unitary",
+                    //Draw = .....,
+                    Op = WrapOp (fun (qs:Qubits) ->
+                            X   qs;
+                            Adj (R 5) qs;
+                            X   qs;
+                            )
+            ))
+        (gate qs).Run qs
+
+    let U2 (qs:Qubits) =
+        let gate =
+            Gate.Build("U2", fun () ->
+                new Gate(
+                    //Qubits = qs.Length,
+                    Name = "U2",
+                    Help = "Second part of the Hamiltonian unitary",
+                    Mat  = (CSMat(2,[(0,0,0.92388,0.38268); (1,1,1.,0.)]))
+                    //Draw = .....,
+            ))
+        gate.Run qs
+
+
+    let HDUnitary (qs:Qubits) =
+        let gate (qs:Qubits) =
+            Gate.Build("HDUnitary", fun () ->
+                let nam     = "HDUnitary"
+                new Gate(
+                    Qubits = qs.Length,
+                    Name = "HDUnitary",
+                    Help = "Sums up the Hamming distances",
+                    //Draw = .....,
+                    Op = WrapOp (fun (qs:Qubits) ->
+                            U1          qs;
+                            Cgate U2    qs;
+                            )
+            ))
+        (gate qs).Run qs
+
+    //-----END: define new gates----\\
+
+    //-----START: define new functions----\\
+
+    let statepreparation (qs:Qubits) =
+
+        //INITIALIZE FIRST REGISTER >> INPUT VECTOR in decimals = [0.6;0.4]
+        //apply NOT gates where the classical bit string has ones
+        X   [qs.[1]]
+        X   [qs.[2]]
+        X   [qs.[5]]
+
+        //put class qubit into superposition
+        H   [qs.[16]]
+
+        //now flip the respective qubits using CNOT gates
+        //first training vector >> class qubit used as control
+        CNOT    [qs.[16];qs.[8]]
+        CNOT    [qs.[16];qs.[10]]
+
+        //move the first training vector to the front by flipping the class label
+        X       [qs.[16]]
+
+        //second training vector >> class qubit used as control
+        CNOT    [qs.[16];qs.[12]]
+        CNOT    [qs.[16];qs.[14]]
+
+    let SchuldQMLAlg (qs:Qubits) =
+
+            //Put ancilla register into superposition
+            H   [qs.[17]]
+
+            //----------------------------------------
+            // Calculate the Hamming distance quantum mechanically!
+
+            for i in 0..7 do
+                //CNOT calculates the Hamming distance
+                CNOT    [qs.[i];qs.[i+8]]
+                //reverse the Hamming distance
+                X   [qs.[i+8]]
+
+            //------- Applying the Hamiltonian operator to sum the Hamming distances -----\\
+
+            for j in 0..7 do
+              //apply the unitary operator >> use the ancilla qubit as control for the CU^(-2) operation (see Trugenberger et al., 2001)
+              HDUnitary   [qs.[17];qs.[8+j]]
+
+            //Hadamard on ancilla writes the total Hamming distance into the amplitudes
+            H   [qs.[17]]
+
+            //measuring the ancilla qubit
+            M   [qs.[17]]
+
+
+    //-----END: define new functions----\\
+
     [<LQD>] //means it can be called from the command line
-    let __qubitKNN() = 
+    let __qubitKNN(runs:int) =
         show "The quantum kNN based on qubit encoding"
         show "_______________________________________________________"
 
-        //INITIALIZE FIRST REGISTER >> INPUT VECTOR
-        //inputvector is a classical 8 bit (1 byte) and a quantum mechanical 8 qubit string
-        let k = Ket(8)
-        let inputvector = k.Qubits
+        //initialize stats arrays
+        let stats = Array.create 2 0
+        let cstats = Array.create 2 0
 
-        //apply NOT gates where the classical bit string has ones
-        X   [inputvector.[1]]
-        X   [inputvector.[2]]
-        X   [inputvector.[5]]
-       
-        //INITIALIZE SECOND REGISTER >> TRAINING VECTORS AND CLASS LABEL
-        //8 qubits for the training vectors and 1 qubit for the class label
-        let m = Ket(9)
-        let training = m.Qubits
+        //First register: inputvector is a classical 8 bit (1 byte) and a quantum mechanical 8 qubit string
+        //Second register: 8 qubits for the training vectors and 1 qubit for the class label
+        //Third register: 1 qubit as an ancilla
+        //Total: 18 qubits needed
+        let k = Ket(18)
+        let initialstate = k.Qubits
 
-        //put class qubit into superposition
-        H   [training.[8]]
+        //Circuit business
+        let preparecirc = Circuit.Compile statepreparation initialstate
+        preparecirc.Dump() //output into log file
+        //Draw it into HTML (H) and Tex (T)
+        preparecirc.Fold().RenderHT("qubitKNNStatePreparation")
+        //convolutes the quantum gates >> impossible on an actual quantum computer
 
-        //now flip the respective qubits using CNOT gates
-        //first training vector
-        CNOT    [training.[8];training.[0]]
-        CNOT    [training.[8];training.[2]]
 
-        //move the first training vector to the front by flipping the class label
-        X       [training.[8]]
+        let algorithmcirc = Circuit.Compile SchuldQMLAlg initialstate
+        algorithmcirc.Dump() //output into log file
+        //Draw it into HTML (H) and Tex (T)
+        algorithmcirc.Fold().RenderHT("qubitKNNAlgorithm")
+        //convolutes the quantum gates >> impossible on an actual quantum computer
 
-        //second training vector
-        CNOT    [training.[8];training.[4]]
-        CNOT    [training.[8];training.[6]]
+        let totalcirc = Seq [preparecirc;algorithmcirc]
+        totalcirc.Dump()
+        totalcirc.Fold().RenderHT("TotalCircuit")
 
-        //Construct the initial state out of the first & second register and add an ancilla (third register)
-        let o = Ket(1)
-        let ancilla = o.Qubits
+        let preparecirc    = preparecirc.GrowGates(k)
+        preparecirc.Run initialstate
+        let algorithmcirc = algorithmcirc.GrowGates(k)
 
-        let initialstate = !!(inputvector,training,ancilla)
+        /////// START OF THE ACTUAL QML ALGORITHM \\\\\\\\
 
-        //Apply a Hadamard on the third register
-        H   [initialstate.[17]]
+        for l in 0..(runs-1) do
 
-        //----------------------------------------
-        //next step is to calculate the Hamming distance quantum mechanically!
+            show "%i" l
+            let initialstate = k.Reset()
 
-        //Test code below
-        M >< initialstate
-      
-        let outcome = initialstate.[17].Bit.v
+            algorithmcirc.Run initialstate
 
-        show "Measured: %d" outcome
+            (*
+            //Put ancilla register into superposition
+            H   [initialstate.[17]]
 
+            //----------------------------------------
+            // Calculate the Hamming distance quantum mechanically!
+
+            for i in 0..7 do
+                //CNOT calculates the Hamming distance
+                CNOT    [initialstate.[i];initialstate.[i+8]]
+                //reverse the Hamming distance
+                X   [initialstate.[i+8]]
+
+            //------- Applying the Hamiltonian operator to sum the Hamming distances -----\\
+
+            for i in 0..7 do
+              //apply the unitary operator >> use the ancilla qubit as control for the CU^(-2) operation (see Trugenberger et al., 2001)
+              HDUnitary   [initialstate.[17];initialstate.[8+i]]
+
+            //Hadamard on ancilla writes the total Hamming distance into the amplitudes
+            H   [initialstate.[17]]
+
+            //measuring the ancilla qubit
+            M   [initialstate.[17]]*)
+
+
+            //retrieve the ancilla stats
+            let w = initialstate.[17].Bit.v
+            stats.[w] <- stats.[w] + 1
+
+            //Conditional measurement (CM)
+            if w = 0 then
+              M [initialstate.[16]]
+              //if CM was successful measure the class qubits
+              let c = initialstate.[16].Bit.v
+              cstats.[c] <- cstats.[c] + 1
+
+        //---OUTPUT---\\
+        show "Ancilla measured as 0: %d" stats.[0]
+        show "Ancilla measured as 1: %d" stats.[1]
+        show "Class measured as 0: %d" cstats.[0]
+        show "Class measured as 1: %d" cstats.[1]
+
+        if cstats.[0] > cstats.[1] then
+          show "Input classified as |0>"
+        else
+          show "Input classied as |1>"
+
+        //----OTHER STUFF----\\
+
+        (* IMPORTANT! CNOT cannot be applied to qubits from different states!
+        let a  = Ket(4)
+        let qs1 = a.Qubits
+        let b  = Ket(4)
+        let qs2 = b.Qubits
+        let tester = !!(qs1,qs2)
+
+        CNOT    [tester.[0];tester.[4]]
+        *)
 
 
 module Main =

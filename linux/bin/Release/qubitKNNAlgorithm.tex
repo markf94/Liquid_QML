@@ -1,0 +1,81 @@
+\input{/Liquid/LiquidTikZ}
+% \usepackage[landscape]{geometry}
+\begin{document}
+\title{LiquidTikZ sample}
+\author{Liquid v1}
+
+\begin{figure*}
+\def\Scale{0.70}
+\begin{tikzpicture}[scale=\Scale,every node/.style={scale=\Scale}]
+\matrix[matStyle] {
+  \point[0-0] & \ctrl[0-1] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[0-19]  \\
+  \point[1-0] & \ctrl[1-1] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[1-19]  \\
+  \point[2-0] & \ctrl[2-1] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[2-19]  \\
+  \point[3-0] & \ctrl[3-1] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[3-19]  \\
+  \point[4-0] & \ctrl[4-1] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[4-19]  \\
+  \point[5-0] & \ctrl[5-1] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[5-19]  \\
+  \point[6-0] & \ctrl[6-1] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[6-19]  \\
+  \point[7-0] & \ctrl[7-1] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[7-19]  \\
+  \point[8-0] & \targ[8-1] & \gate[8-2]{X} &  &  &  & \point[8-6] &  &  &  &  &  &  &  &  &  &  &  &  & \point[8-19]  \\
+  \point[9-0] & \targ[9-1] & \gate[9-2]{X} &  &  &  &  &  &  &  & \point[9-10] &  &  &  &  &  &  &  &  & \point[9-19]  \\
+  \point[10-0] & \targ[10-1] & \gate[10-2]{X} &  &  &  &  &  &  &  &  &  &  &  & \point[10-14] &  &  &  &  & \point[10-19]  \\
+  \point[11-0] & \targ[11-1] & \gate[11-2]{X} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[11-18] & \point[11-19]  \\
+  \point[12-0] & \targ[12-1] & \gate[12-2]{X} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[12-19]  \\
+  \point[13-0] & \targ[13-1] & \gate[13-2]{X} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[13-19]  \\
+  \point[14-0] & \targ[14-1] & \gate[14-2]{X} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[14-19]  \\
+  \point[15-0] & \targ[15-1] & \gate[15-2]{X} &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[15-19]  \\
+  \point[16-0] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[16-19]  \\
+  \point[17-0] & \gate[17-1]{H} &  & \gate[17-3]{X} & \gate[17-4]{R5^\dagger} & \gate[17-5]{X} & \ctrl[17-6] & \gate[17-7]{X} & \gate[17-8]{R5^\dagger} & \gate[17-9]{X} & \ctrl[17-10] & \gate[17-11]{X} & \gate[17-12]{R5^\dagger} & \gate[17-13]{X} & \ctrl[17-14] & \gate[17-15]{X} & \gate[17-16]{R5^\dagger} & \gate[17-17]{X} & \ctrl[17-18] & \gate[17-19]{X}  \\
+   &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &   \\
+};
+% multigates go here
+% annotations go here
+% wires go here
+\begin{pgfonlayer}{background}
+\qw{0-0}{0-19} \qw{1-0}{1-19} \qw{2-0}{2-19} \qw{3-0}{3-19} \qw{4-0}{4-19} \qw{5-0}{5-19} 
+\qw{6-0}{6-19} \qw{7-0}{7-19} \qw{8-0}{8-19} \qw{9-0}{9-19} \qw{10-0}{10-19} \qw{11-0}{11-19} 
+\qw{12-0}{12-19} \qw{13-0}{13-19} \qw{14-0}{14-19} \qw{15-0}{15-19} \qw{16-0}{16-19} 
+\qw{17-0}{17-19} 
+\qwx{0-1}{8-1} \qwxB{1-1}{9-1} \qwxB{2-1}{10-1} \qwxB{3-1}{11-1} \qwxB{4-1}{12-1} 
+\qwxB{5-1}{13-1} \qwxB{6-1}{14-1} \qwxB{7-1}{15-1} \qwx{8-6}{17-6} \qwx{9-10}{17-10} 
+\qwx{10-14}{17-14} \qwx{11-18}{17-18} 
+\end{pgfonlayer}
+\end{tikzpicture}
+\def\Scale{0.70}
+\begin{tikzpicture}[scale=\Scale,every node/.style={scale=\Scale}]
+\matrix[matStyle] {
+   & \point[0-20] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[0-37]  \\
+   & \point[1-20] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[1-37]  \\
+   & \point[2-20] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[2-37]  \\
+   & \point[3-20] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[3-37]  \\
+   & \point[4-20] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[4-37]  \\
+   & \point[5-20] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[5-37]  \\
+   & \point[6-20] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[6-37]  \\
+   & \point[7-20] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[7-37]  \\
+   & \point[8-20] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[8-37]  \\
+   & \point[9-20] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[9-37]  \\
+   & \point[10-20] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[10-37]  \\
+   & \point[11-20] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[11-37]  \\
+   & \point[12-20] &  & \point[12-22] &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[12-37]  \\
+   & \point[13-20] &  &  &  &  &  & \point[13-26] &  &  &  &  &  &  &  &  &  &  & \point[13-37]  \\
+   & \point[14-20] &  &  &  &  &  &  &  &  &  & \point[14-30] &  &  &  &  &  &  & \point[14-37]  \\
+   & \point[15-20] &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[15-34] &  &  & \point[15-37]  \\
+   & \point[16-20] &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \point[16-37]  \\
+   & \gate[17-20]{R5^\dagger} & \gate[17-21]{X} & \ctrl[17-22] & \gate[17-23]{X} & \gate[17-24]{R5^\dagger} & \gate[17-25]{X} & \ctrl[17-26] & \gate[17-27]{X} & \gate[17-28]{R5^\dagger} & \gate[17-29]{X} & \ctrl[17-30] & \gate[17-31]{X} & \gate[17-32]{R5^\dagger} & \gate[17-33]{X} & \ctrl[17-34] & \gate[17-35]{H} & \meter[17-36] & \point[17-37]  \\
+   &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &   \\
+};
+% multigates go here
+% annotations go here
+% wires go here
+\begin{pgfonlayer}{background}
+\qw{0-20}{0-37} \qw{1-20}{1-37} \qw{2-20}{2-37} \qw{3-20}{3-37} \qw{4-20}{4-37} \qw{5-20}{5-37} 
+\qw{6-20}{6-37} \qw{7-20}{7-37} \qw{8-20}{8-37} \qw{9-20}{9-37} \qw{10-20}{10-37} 
+\qw{11-20}{11-37} \qw{12-20}{12-37} \qw{13-20}{13-37} \qw{14-20}{14-37} \qw{15-20}{15-37} 
+\qw{16-20}{16-37} \qw{17-20}{17-36} \cw{17-36}{17-37} 
+\qwx{12-22}{17-22} \qwx{13-26}{17-26} \qwx{14-30}{17-30} \qwx{15-34}{17-34} 
+\end{pgfonlayer}
+\end{tikzpicture}
+\caption{\label{fig:qubitKNNAlgorithm} qubitKNNAlgorithm}
+\end{figure*}
+
+\end{document}

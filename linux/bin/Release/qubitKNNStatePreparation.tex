@@ -1,0 +1,43 @@
+\input{/Liquid/LiquidTikZ}
+% \usepackage[landscape]{geometry}
+\begin{document}
+\title{LiquidTikZ sample}
+\author{Liquid v1}
+
+\begin{figure*}
+\def\Scale{1.00}
+\begin{tikzpicture}[scale=\Scale,every node/.style={scale=\Scale}]
+\matrix[matStyle] {
+  \point[0-0] &  &  &  &  &  &  & \point[0-7]  \\
+  \point[1-0] & \gate[1-1]{X} &  &  &  &  &  & \point[1-7]  \\
+  \point[2-0] & \gate[2-1]{X} &  &  &  &  &  & \point[2-7]  \\
+  \point[3-0] &  &  &  &  &  &  & \point[3-7]  \\
+  \point[4-0] &  &  &  &  &  &  & \point[4-7]  \\
+  \point[5-0] & \gate[5-1]{X} &  &  &  &  &  & \point[5-7]  \\
+  \point[6-0] &  &  &  &  &  &  & \point[6-7]  \\
+  \point[7-0] &  &  &  &  &  &  & \point[7-7]  \\
+  \point[8-0] &  & \targ[8-2] &  &  &  &  & \point[8-7]  \\
+  \point[9-0] &  &  &  &  &  &  & \point[9-7]  \\
+  \point[10-0] &  &  & \targ[10-3] &  &  &  & \point[10-7]  \\
+  \point[11-0] &  &  &  &  &  &  & \point[11-7]  \\
+  \point[12-0] &  &  &  &  & \targ[12-5] &  & \point[12-7]  \\
+  \point[13-0] &  &  &  &  &  &  & \point[13-7]  \\
+  \point[14-0] &  &  &  &  &  & \targ[14-6] & \point[14-7]  \\
+  \point[15-0] &  &  &  &  &  &  & \point[15-7]  \\
+  \point[16-0] & \gate[16-1]{H} & \ctrl[16-2] & \ctrl[16-3] & \gate[16-4]{X} & \ctrl[16-5] & \ctrl[16-6] & \point[16-7]  \\
+   &  &  &  &  &  &  &   \\
+};
+% multigates go here
+% annotations go here
+% wires go here
+\begin{pgfonlayer}{background}
+\qw{0-0}{0-7} \qw{1-0}{1-7} \qw{2-0}{2-7} \qw{3-0}{3-7} \qw{4-0}{4-7} \qw{5-0}{5-7} 
+\qw{6-0}{6-7} \qw{7-0}{7-7} \qw{8-0}{8-7} \qw{9-0}{9-7} \qw{10-0}{10-7} \qw{11-0}{11-7} 
+\qw{12-0}{12-7} \qw{13-0}{13-7} \qw{14-0}{14-7} \qw{15-0}{15-7} \qw{16-0}{16-7} 
+\qwx{8-2}{16-2} \qwx{10-3}{16-3} \qwx{12-5}{16-5} \qwx{14-6}{16-6} 
+\end{pgfonlayer}
+\end{tikzpicture}
+\caption{\label{fig:qubitKNNStatePreparation} qubitKNNStatePreparation}
+\end{figure*}
+
+\end{document}
