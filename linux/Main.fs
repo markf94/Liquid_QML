@@ -427,13 +427,12 @@ module qubitKNN =
                     Help = "First part of the Hamiltonian unitary",
                     //Draw = .....,
                     Op = WrapOp (fun (qs:Qubits) ->
-                            X   qs;
-                            Adj (R 5) qs;
-                            X   qs;
+                            X   qs; Adj (R 5) qs; X   qs;
                             )
             ))
         (gate qs).Run qs
 
+    
     let U2 (qs:Qubits) =
         let gate =
             Gate.Build("U2", fun () ->
@@ -445,7 +444,7 @@ module qubitKNN =
                     //Draw = .....,
             ))
         gate.Run qs
-
+    
 
     let HDUnitary (qs:Qubits) =
         let gate (qs:Qubits) =
@@ -486,7 +485,7 @@ module qubitKNN =
         //move the first training vector to the front by flipping the class label
         X       [qs.[16]]
 
-        //second training vector >> class qubit used as control
+        //second training vector >> class qubit again used as control
         CNOT    [qs.[16];qs.[12]]
         CNOT    [qs.[16];qs.[14]]
 
@@ -533,28 +532,29 @@ module qubitKNN =
         //Third register: 1 qubit as an ancilla
         //Total: 18 qubits needed
         let k = Ket(18)
-        let initialstate = k.Qubits
+        let quantumstate = k.Qubits
 
-        //Circuit business
-        let preparecirc = Circuit.Compile statepreparation initialstate
+        //----Circuit initilizations----\\
+
+        //State preparation circuit
+        let preparecirc = Circuit.Compile statepreparation quantumstate
         preparecirc.Dump() //output into log file
-        //Draw it into HTML (H) and Tex (T)
-        preparecirc.Fold().RenderHT("qubitKNNStatePreparation")
-        //convolutes the quantum gates >> impossible on an actual quantum computer
+        preparecirc.Fold().RenderHT("qubitKNNStatePrparation") //Draw it into HTML (H) and Tex (T)
 
-
-        let algorithmcirc = Circuit.Compile SchuldQMLAlg initialstate
-        algorithmcirc.Dump() //output into log file
-        //Draw it into HTML (H) and Tex (T)
+        //Circuit for the actual algorithm
+        let algorithmcirc = Circuit.Compile SchuldQMLAlg quantumstate
+        algorithmcirc.Dump()
         algorithmcirc.Fold().RenderHT("qubitKNNAlgorithm")
-        //convolutes the quantum gates >> impossible on an actual quantum computer
 
+        //Combine both circuits
         let totalcirc = Seq [preparecirc;algorithmcirc]
         totalcirc.Dump()
         totalcirc.Fold().RenderHT("TotalCircuit")
 
+        //convolutes the quantum gates >> impossible on an actual quantum computer
         let preparecirc    = preparecirc.GrowGates(k)
-        preparecirc.Run initialstate
+        //prepare the 
+        preparecirc.Run quantumstate
         let algorithmcirc = algorithmcirc.GrowGates(k)
 
         /////// START OF THE ACTUAL QML ALGORITHM \\\\\\\\
@@ -562,9 +562,9 @@ module qubitKNN =
         for l in 0..(runs-1) do
 
             show "%i" l
-            let initialstate = k.Reset()
+            let quantumstate = k.Reset()
 
-            algorithmcirc.Run initialstate
+            algorithmcirc.Run quantumstate
 
             (*
             //Put ancilla register into superposition
@@ -593,14 +593,14 @@ module qubitKNN =
 
 
             //retrieve the ancilla stats
-            let w = initialstate.[17].Bit.v
+            let w = quantumstate.[17].Bit.v
             stats.[w] <- stats.[w] + 1
 
             //Conditional measurement (CM)
             if w = 0 then
-              M [initialstate.[16]]
-              //if CM was successful measure the class qubits
-              let c = initialstate.[16].Bit.v
+              //if CM was successful measure the class qubit
+              M [quantumstate.[16]]
+              let c = quantumstate.[16].Bit.v
               cstats.[c] <- cstats.[c] + 1
 
         //---OUTPUT---\\
