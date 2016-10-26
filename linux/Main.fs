@@ -687,43 +687,28 @@ module TrugenbergerStorage =
             ))
         gate.Run qs
 
-    (*let TrugenbergerCS (i:float) (p:float) (qs:Qubits) =
-        let gate (qs:Qubits) =
-            new Gate(
-                Qubits = qs.Length,
-                Name = "TrugenbergerCS",
-                Help = "Trugenberger et al.'s CS^(p+1-i) matrix",
-                //Draw = .....,
-                Op = WrapOp (fun (qs:Qubits) ->
-                    Cgate (TrugenbergerS i p) qs)
-            )
-        (gate qs).Run qs
-
-    let TrugenbergerCS2 (i:float) (p:float) (qs:Qubits) =
-        let gate (qs:Qubits) =
-            Gate.Build("TrugenbergerCS2", fun () ->
-                let nam     = "TrugenbergerCS2"
-                new Gate(
-                    Qubits = qs.Length,
-                    Name = "TrugenbergerCS2",
-                    Help = "Trugenberger et al.'s CS^(p+1-i) matrix",
-                    //Draw = .....,
-                    Op = WrapOp (fun (qs:Qubits) ->
-                            Cgate (TrugenbergerS2 i p) qs;
-                            )
-            ))
-        (gate qs).Run qs*)
-
-    let Test (qs:Qubits) =
+    let TrugenbergerS5 (p:float) (qs:Qubits) =
         let gate =
-            Gate.Build("Test", fun () ->
+            Gate.Build("TrugenbergerS5", fun () ->
                 new Gate(
-                    Name = "Test",
-                    Help = "Trugenberger et al.'s S^(p+1-i) matrix",
-                    Mat  = (CSMat(2,[(0,0,0.,0.); (1,1,0.,0.);(1,0,-1.,0.); (0,1,1.,0.)]))
+                    Name = "TrugenbergerS5",
+                    Help = "Trugenberger et al.'s S^(p+1-i) matrix with i=5",
+                    Mat  = (CSMat(2,[(0,0,sqrt((p-5.)/(p-4.)),0.); (1,1,sqrt((p-5.)/(p-4.)),0.);(1,0,-1./sqrt(p-4.),0.); (0,1,1./sqrt(p-4.),0.)]))
                     //Draw = .....,
             ))
         gate.Run qs
+
+    let TrugenbergerS6 (p:float) (qs:Qubits) =
+        let gate =
+            Gate.Build("TrugenbergerS6", fun () ->
+                new Gate(
+                    Name = "TrugenbergerS6",
+                    Help = "Trugenberger et al.'s S^(p+1-i) matrix with i=6",
+                    Mat  = (CSMat(2,[(0,0,sqrt((p-6.)/(p-5.)),0.); (1,1,sqrt((p-6.)/(p-5.)),0.);(1,0,-1./sqrt(p-5.),0.); (0,1,1./sqrt(p-5.),0.)]))
+                    //Draw = .....,
+            ))
+        gate.Run qs
+
 
     //-----END: define new gates----\\
 
@@ -757,81 +742,28 @@ module TrugenbergerStorage =
     /// <param name="qs">The qubit list of which the statistics shall be calculated from.</param>
     /// <param name="stats">A float array with 16 items storing the stats for the states |0000>, |0001>, etc.</param>
     /// <param name="stats01">A float array with 8 items collecting the stats for the individual qubits (ancilla, data, class and m)</param>
-    let collectstats (qs:Qubits) (stats:_[]) =
+    let collectstats (numberofqubits:int) (patternstorage:string[]) (stats:_[]) (qs:Qubits) =
+
+            //initialize variables and array
+            let mutable arraycounter = 0
+            let mutable memoryqubitstring = ""
+            let memoryqubitvalue = Array.create (patternstorage.[0].Length) 0
 
             //measure all the qubits
             M >< qs
 
-            //retrieve the bit values of the qubits in qubit list qs and convert to integer (v)
-            let a,b,c,d,e,f,g,h   = qs.[0].Bit.v, qs.[1].Bit.v, qs.[2].Bit.v, qs.[3].Bit.v, qs.[4].Bit.v, qs.[5].Bit.v, qs.[6].Bit.v, qs.[7].Bit.v
+            for i in numberofqubits/2+1..numberofqubits-1 do
+                //only retrieve the bit values of the memory register since this is what we're most interested in!
+                memoryqubitvalue.[arraycounter] <- qs.[i].Bit.v
+                //create a string of the measured memory register
+                memoryqubitstring <- memoryqubitstring + (string memoryqubitvalue.[arraycounter])
+                arraycounter <- arraycounter + 1
+               
+            for p in 0..patternstorage.Length-1 do
+                //increase the stats by 1 for the matching pattern!
+                if memoryqubitstring = patternstorage.[p] then
+                    stats.[p] <- stats.[p] + 1
 
-            show "%i %i %i %i %i %i %i %i" a b c d e f g h
-
-            match a,b,c,d,e,f,g,h with
-                | 0,1,1,0,0,0,1,1 -> stats.[0] <- stats.[0] + 1
-                | 0,1,1,0,1,0,0,0 -> stats.[1] <- stats.[1] + 1
-                | 1,0,1,0,0,0,1,1 -> stats.[2] <- stats.[2] + 1
-                | 1,0,1,0,0,1,0,1 -> stats.[3] <- stats.[3] + 1
-                | 1,0,1,0,1,0,0,0 -> stats.[4] <- stats.[4] + 1
-                | 1,1,1,0,0,1,1,1 -> stats.[5] <- stats.[5] + 1
-                | 1,1,1,0,0,0,1,1 -> stats.[6] <- stats.[6] + 1
-                | 1,1,1,0,0,1,0,1 -> stats.[7] <- stats.[7] + 1
-                (*| 0,0,1,0 -> stats.[2] <- stats.[2] + 1.0
-                | 0,1,0,0 -> stats.[3] <- stats.[3] + 1.0
-                | 1,0,0,0 -> stats.[4] <- stats.[4] + 1.0
-                | 0,0,1,1 -> stats.[5] <- stats.[5] + 1.0
-                | 0,1,1,0 -> stats.[6] <- stats.[6] + 1.0
-                | 1,1,0,0 -> stats.[7] <- stats.[7] + 1.0
-                | 1,0,0,1 -> stats.[8] <- stats.[8] + 1.0
-                | 0,1,0,1 -> stats.[9] <- stats.[9] + 1.0
-                | 1,0,1,0 -> stats.[10] <- stats.[10] + 1.0
-                | 0,1,1,1 -> stats.[11] <- stats.[11] + 1.0
-                | 1,1,1,0 -> stats.[12] <- stats.[12] + 1.0
-                | 1,1,0,1 -> stats.[13] <- stats.[13] + 1.0
-                | 1,0,1,1 -> stats.[14] <- stats.[14] + 1.0
-                | 1,1,1,1 -> stats.[15] <- stats.[15] + 1.0*)
-                | _,_,_,_,_,_,_,_ -> show "error" //to handle all other cases (which won't occur any way)
-
-
-
-    /// <summary>
-    /// Prints the individual statistics of 4 qubits and their combinations (|0000>, |0001>, etc.).
-    /// </summary>
-    /// <param name="stats">A float array with 16 items storing the stats for the states |0000>, |0001>, etc.</param>
-    /// <param name="stats01">A float array with 8 items collecting the stats for the individual qubits (ancilla, data, class and m)</param>
-    let printstats (stats:_[]) (stats01:_[]) =
-
-        //printing etiquette:
-        //printfn "A string: %s. An int: %i. A float: %f. A bool: %b" "hello" 42 3.14 true
-
-        show "Measured ancilla qubit: |0>: %f |1>: %f" stats01.[0] stats01.[1]
-        //show "Old Measured ancilla qubit: 0-%d 1-%d" stats0.[0] stats0.[1]
-        show "Measured data register: |0> %f |1> %f" stats01.[2] stats01.[3]
-        //show "Old Measured data qubit: 0-%d 1-%d" stats1.[0] stats1.[1]
-        show "Measured class register: |0> %f |1> %f" stats01.[4] stats01.[5]
-        //show "Old Measured class qubit: 0-%d 1-%d" stats2.[0] stats2.[1]
-        show "Measured m register: |0> %f |1> %f" stats01.[6] stats01.[7]
-        //show "Old Measured m qubit: 0-%d 1-%d" stats3.[0] stats3.[1]
-        show "Measured |0000>: %f" stats.[0]
-        show "Measured |0001>: %f" stats.[1]
-        show "Measured |0010>: %f" stats.[2]
-        show "Measured |0100>: %f" stats.[3]
-        show "Measured |1000>: %f" stats.[4]
-        show "Measured |0011>: %f" stats.[5]
-        show "Measured |0110>: %f" stats.[6]
-        show "Measured |1100>: %f" stats.[7]
-        show "Measured |1001>: %f" stats.[8]
-        show "Measured |0101>: %f" stats.[9]
-        show "Measured |1010>: %f" stats.[10]
-        show "Measured |0111>: %f" stats.[11]
-        show "Measured |1110>: %f" stats.[12]
-        show "Measured |1101>: %f" stats.[13]
-        show "Measured |1011>: %f" stats.[14]
-        show "Measured |1111>: %f" stats.[15]
-        if stats01.[4] > stats01.[5] then
-            show "Input classified as: |0>"
-        else
-            show "Input classified as: |1>"
 
 
     let StorageAlgorithm (patternstorage:string[]) (patternlength:int) (patternnumber:int) (psi:Qubits)=
@@ -874,6 +806,8 @@ module TrugenbergerStorage =
                 | 2 -> Cgate (TrugenbergerS2 (float patternstorage.Length))  [psi.[u1position];psi.[u2position]]
                 | 3 -> Cgate (TrugenbergerS3 (float patternstorage.Length))  [psi.[u1position];psi.[u2position]]
                 | 4 -> Cgate (TrugenbergerS4 (float patternstorage.Length))  [psi.[u1position];psi.[u2position]]
+                | 5 -> Cgate (TrugenbergerS5 (float patternstorage.Length))  [psi.[u1position];psi.[u2position]]
+                | 6 -> Cgate (TrugenbergerS6 (float patternstorage.Length))  [psi.[u1position];psi.[u2position]]
                 | _ -> show "Trugenberger's CS^(p+1-i) gate not defined yet"
 
             // STEP 5
@@ -895,12 +829,12 @@ module TrugenbergerStorage =
 
 
     [<LQD>] //means it can be called from the command line
-    let __TrugenbergerStorage() =
+    let __TrugenbergerStorage(runs:int) =
         show "The memory storage algorithm by Trugenberger et al."
         show "_______________________________________________________"
 
-        let stats = Array.create 10 0
-        //let patterncount = 3
+        //let stats = Array.create 10 0
+        //let patterncount = 2
         //let patternstorage = Array.create patterncount "empty"
 
         // Ask the user for the number of patterns
@@ -910,7 +844,7 @@ module TrugenbergerStorage =
         let patterncount = int (Console.ReadLine())
 
         let patternstorage = Array.create patterncount "empty"
-
+        let stats = Array.create patterncount 0
         for c in 0..patterncount-1 do
             // Ask the user for pattern
             Console.Write("Pattern {0}: ", (c+1))
@@ -935,8 +869,9 @@ module TrugenbergerStorage =
         let psi = k.Qubits
         let u2position = patternlength + 1
 
-        for i in 0..99 do
+        for i in 0..runs-1 do
 
+            show "ITERATION %i" i
             let psi = k.Reset()
 
             X   [psi.[u2position]] //flip the second utility qubit
@@ -960,17 +895,20 @@ module TrugenbergerStorage =
                     //show "%i" k
                     X   [psi.[k]]*)
 
-            //collectstats psi stats
+            collectstats requiredqubits patternstorage stats psi
 
         show "========= STATS ========="
-        show "Measured |01100011>: %i" stats.[0]
+        for m in 0..patternstorage.Length-1 do
+            show "Measured |%s>: %i" patternstorage.[m] stats.[m]
+
+        (*show "Measured |01100011>: %i" stats.[0]
         show "Measured |01101000>: %i" stats.[1]
         show "Measured |10100011>: %i" stats.[2]
         show "Measured |10100101>: %i" stats.[3]
         show "Measured |10101000>: %i" stats.[4]
         show "Measured |11100111>: %i" stats.[5]
         show "Measured |11100011>: %i" stats.[6]
-        show "Measured |11100101>: %i" stats.[7]
+        show "Measured |11100101>: %i" stats.[7]*)
 
 
 

@@ -19,7 +19,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
-    <Commandlineparameters>__TrugenbergerStorage()</Commandlineparameters>
+    <Commandlineparameters>__TrugenbergerStorage(100)</Commandlineparameters>
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
