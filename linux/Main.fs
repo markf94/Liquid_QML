@@ -636,31 +636,94 @@ module TrugenbergerStorage =
 
     //-----START: define new gates ----\\
 
-    let TrugenbergerS (i:float) (p:float) (qs:Qubits) =
+    //IMPORTANT TAKE HOME MESSAGE FROM THE DOCUMENTATION: The function cannot be
+    // used if the gate created could be different on each instantiation. The gate creation function is only
+    // called once and from then on is looked up in a dictionary.
+
+    // general Trugenberger S matrix:
+    // Mat  = (CSMat(2,[(0,0,sqrt((p-i)/(p+1.-i)),0.); (1,1,sqrt((p-i)/(p+1.-i)),0.);(1,0,-1./sqrt(p+1.-i),0.); (0,1,1./sqrt(p+1.-i),0.)]))
+
+    let TrugenbergerS1 (p:float) (qs:Qubits) =
         let gate =
-            Gate.Build("TrugenbergerS", fun () ->
+            Gate.Build("TrugenbergerS1", fun () ->
                 new Gate(
-                    Name = "Si",
-                    Help = "Trugenberger et al.'s S^(p+1-i) matrix",
-                    Mat  = (CSMat(2,[(0,0,sqrt((p-i)/(p+1.-i)),0.); (1,1,sqrt((p-i)/(p+1.-i)),0.);(1,0,-1./sqrt(p+1.-i),0.); (0,1,1./sqrt(p+1.-i),0.)])) //
+                    Name = "TrugenbergerS1",
+                    Help = "Trugenberger et al.'s S^(p+1-i) matrix with i=2",
+                    Mat  = (CSMat(2,[(0,0,sqrt((p-1.)/(p)),0.); (1,1,sqrt((p-1.)/(p)),0.);(1,0,-1./sqrt(p),0.); (0,1,1./sqrt(p),0.)]))
                     //Draw = .....,
             ))
         gate.Run qs
 
-    let TrugenbergerCS (i:float) (p:float) (qs:Qubits) =
+    let TrugenbergerS2 (p:float) (qs:Qubits) =
+        let gate =
+            Gate.Build("TrugenbergerS2", fun () ->
+                new Gate(
+                    Name = "TrugenbergerS2",
+                    Help = "Trugenberger et al.'s S^(p+1-i) matrix with i=2",
+                    Mat  = (CSMat(2,[(0,0,sqrt((p-2.)/(p-1.)),0.); (1,1,sqrt((p-2.)/(p-1.)),0.);(1,0,-1./sqrt(p-1.),0.); (0,1,1./sqrt(p-1.),0.)]))
+                    //Draw = .....,
+            ))
+        gate.Run qs
+
+    let TrugenbergerS3 (p:float) (qs:Qubits) =
+        let gate =
+            Gate.Build("TrugenbergerS3", fun () ->
+                new Gate(
+                    Name = "TrugenbergerS3",
+                    Help = "Trugenberger et al.'s S^(p+1-i) matrix with i=3",
+                    Mat  = (CSMat(2,[(0,0,sqrt((p-3.)/(p-2.)),0.); (1,1,sqrt((p-3.)/(p-2.)),0.);(1,0,-1./sqrt(p-2.),0.); (0,1,1./sqrt(p-2.),0.)]))
+                    //Draw = .....,
+            ))
+        gate.Run qs
+
+    let TrugenbergerS4 (p:float) (qs:Qubits) =
+        let gate =
+            Gate.Build("TrugenbergerS4", fun () ->
+                new Gate(
+                    Name = "TrugenbergerS4",
+                    Help = "Trugenberger et al.'s S^(p+1-i) matrix with i=4",
+                    Mat  = (CSMat(2,[(0,0,sqrt((p-4.)/(p-3.)),0.); (1,1,sqrt((p-4.)/(p-3.)),0.);(1,0,-1./sqrt(p-3.),0.); (0,1,1./sqrt(p-3.),0.)]))
+                    //Draw = .....,
+            ))
+        gate.Run qs
+
+    (*let TrugenbergerCS (i:float) (p:float) (qs:Qubits) =
         let gate (qs:Qubits) =
-            Gate.Build("TrugenbergerCS", fun () ->
-                let nam     = "TrugenbergerCS"
+            new Gate(
+                Qubits = qs.Length,
+                Name = "TrugenbergerCS",
+                Help = "Trugenberger et al.'s CS^(p+1-i) matrix",
+                //Draw = .....,
+                Op = WrapOp (fun (qs:Qubits) ->
+                    Cgate (TrugenbergerS i p) qs)
+            )
+        (gate qs).Run qs
+
+    let TrugenbergerCS2 (i:float) (p:float) (qs:Qubits) =
+        let gate (qs:Qubits) =
+            Gate.Build("TrugenbergerCS2", fun () ->
+                let nam     = "TrugenbergerCS2"
                 new Gate(
                     Qubits = qs.Length,
-                    Name = "TrugenbergerCS",
+                    Name = "TrugenbergerCS2",
                     Help = "Trugenberger et al.'s CS^(p+1-i) matrix",
                     //Draw = .....,
                     Op = WrapOp (fun (qs:Qubits) ->
-                            Cgate (TrugenbergerS i p) qs;
+                            Cgate (TrugenbergerS2 i p) qs;
                             )
             ))
-        (gate qs).Run qs
+        (gate qs).Run qs*)
+
+    let Test (qs:Qubits) =
+        let gate =
+            Gate.Build("Test", fun () ->
+                new Gate(
+                    Name = "Test",
+                    Help = "Trugenberger et al.'s S^(p+1-i) matrix",
+                    Mat  = (CSMat(2,[(0,0,0.,0.); (1,1,0.,0.);(1,0,-1.,0.); (0,1,1.,0.)]))
+                    //Draw = .....,
+            ))
+        gate.Run qs
 
     //-----END: define new gates----\\
 
@@ -702,12 +765,17 @@ module TrugenbergerStorage =
             //retrieve the bit values of the qubits in qubit list qs and convert to integer (v)
             let a,b,c,d,e,f,g,h   = qs.[0].Bit.v, qs.[1].Bit.v, qs.[2].Bit.v, qs.[3].Bit.v, qs.[4].Bit.v, qs.[5].Bit.v, qs.[6].Bit.v, qs.[7].Bit.v
 
-            //show "%i %i %i %i %i %i %i %i" a b c d e f g h
+            show "%i %i %i %i %i %i %i %i" a b c d e f g h
 
-            //match qs.[0].Bit.v, qs.[1].Bit.v, qs.[2].Bit.v, qs.[3].Bit.v with
             match a,b,c,d,e,f,g,h with
                 | 0,1,1,0,0,0,1,1 -> stats.[0] <- stats.[0] + 1
                 | 0,1,1,0,1,0,0,0 -> stats.[1] <- stats.[1] + 1
+                | 1,0,1,0,0,0,1,1 -> stats.[2] <- stats.[2] + 1
+                | 1,0,1,0,0,1,0,1 -> stats.[3] <- stats.[3] + 1
+                | 1,0,1,0,1,0,0,0 -> stats.[4] <- stats.[4] + 1
+                | 1,1,1,0,0,1,1,1 -> stats.[5] <- stats.[5] + 1
+                | 1,1,1,0,0,0,1,1 -> stats.[6] <- stats.[6] + 1
+                | 1,1,1,0,0,1,0,1 -> stats.[7] <- stats.[7] + 1
                 (*| 0,0,1,0 -> stats.[2] <- stats.[2] + 1.0
                 | 0,1,0,0 -> stats.[3] <- stats.[3] + 1.0
                 | 1,0,0,0 -> stats.[4] <- stats.[4] + 1.0
@@ -765,114 +833,26 @@ module TrugenbergerStorage =
         else
             show "Input classified as: |1>"
 
-    //-----END: define new functions----\\
 
+    let StorageAlgorithm (patternstorage:string[]) (patternlength:int) (patternnumber:int) (psi:Qubits)=
 
-    [<LQD>] //means it can be called from the command line
-    let __TrugenbergerStorage() =
-        show "The memory storage algorithm by Trugenberger et al."
-        show "_______________________________________________________"
+            //Define the important variables
+            let u1position = patternlength
+            let u2position = patternlength + 1
+            let mregisterstart = u2position + 1
 
-        //How many different patterns shall be stored?
-        let patterncount = 2
-
-        let patternstorage = Array.create patterncount "empty"
-        let stats = Array.create 2 0
-
-        //Defining the patterns that are to be stored
-        //NEED TO BE SAME LENGTH!
-        patternstorage.[0] <- "011"
-        patternstorage.[1] <- "101"
-        //patternstorage.[2] <- "111"
-
-        //find the length of the patterns
-        let patternlength = patternstorage.[0].Length
-        show "Binary pattern length: %i" patternlength
-
-        //memory register (patternlength long); loading register (patternlength long); utility register (2 qubits)
-        let requiredqubits = 2*patternlength+2
-        show "Number of required qubits: %i" requiredqubits
-        let k = Ket(requiredqubits)
-        let psi = k.Qubits
-
-        //save the positions of the utility qubits
-        let u1position = patternlength
-        let u2position = patternlength + 1
-        let mregisterstart = u2position + 1
-
-        // --- START: INITIALIZATION --- \\
-
-        (*X   [psi.[u2position]] //flip the second utility qubit
-
-        X   [psi.[1]]
-        X   [psi.[2]]*)
-
-        // Load the first pattern
-        //for a in 0..patternlength-1 do
-            //if the pattern has a 1 at this point then flip the corresponding qubit
-            //if patternstorage.[0].[a] = '1' then
-                //X   [psi.[a]]
-
-        // --- END: INITIALIZATION --- \\
-
-        // --- START: STORAGE ALGORITHM --- \\
-        (*
-        // STEP 1
-        for i in 0..(patternlength-1) do
-            CCNOT [psi.[i];psi.[u2position];psi.[mregisterstart+i]]
-
-        // STEP 2
-        for j=0 to patternlength-1 do
-            CNOT [psi.[j];psi.[mregisterstart+j]]
-            X    [psi.[mregisterstart+j]]
-
-        // STEP 3
-        //applying the n-CNOT gate (all memory qubits as controls and u1 as target qubit)
-        nCNOT patternlength mregisterstart u1position psi
-
-        // STEP 4
-        //separating out the new pattern >> automatically takes care of normalization
-        TrugenbergerCS 1. (float patternstorage.Length)     [psi.[u1position];psi.[u2position]]
-
-        // STEP 5
-        //undo STEP 3
-        nCNOT patternlength mregisterstart u1position psi
-
-        // STEP 6
-        //undo STEP 2
-        for j=0 to patternlength-1 do
-            X    [psi.[mregisterstart+j]]
-            CNOT [psi.[j];psi.[mregisterstart+j]]
-
-        // STEP 7
-        //undo STEP 1
-        for i in 0..(patternlength-1) do
-            CCNOT [psi.[i];psi.[u2position];psi.[mregisterstart+i]]
-
-        collectstats psi stats*)
-
-        //M   [psi.[u1position]]
-
-        //let v = psi.[u1position].Bit.v
-        //stats.[v] <- stats.[v] + 1
-        //show "Measured u1 as 1: %i" stats.[1]
-        // --- END: STORAGE ALGORITHM --- \\
-
-
-        //(TrugenbergerS 1. 2.) initial
-        //(TrugenbergerS 2. 2.) initial
-        //(TrugenbergerCS 2. 2.) initial
-
-        for i in 0..999 do
-
-            let psi = k.Reset()
-
-            X   [psi.[u2position]] //flip the second utility qubit
-
-            for l in 0..patternlength-1 do
-            //if the pattern has a 1 at this point then flip the corresponding qubit
-                if patternstorage.[0].[l] = '1' then
-                    X   [psi.[l]]
+            if patternnumber = 1 then
+                for l in 0..patternlength-1 do
+                //if the pattern has a 1 at this point then flip the corresponding qubit
+                    if patternstorage.[0].[l] = '1' then
+                        X   [psi.[l]]
+            else
+                // LOADING THE SECOND PATTERN
+                for k in 0..patternlength-1 do
+                //if the pattern has a 1 at this point then flip the corresponding qubit
+                    if patternstorage.[patternnumber-2].[k] <> patternstorage.[patternnumber-1].[k] then
+                        //show "%i" k
+                        X   [psi.[k]]
 
             // STEP 1
             for i in 0..(patternlength-1) do
@@ -887,9 +867,14 @@ module TrugenbergerStorage =
             //applying the n-CNOT gate (all memory qubits as controls and u1 as target qubit)
             nCNOT patternlength mregisterstart u1position psi
 
-            // STEP 4
-            //separating out the new pattern >> automatically takes care of normalization
-            TrugenbergerCS 1. (float patternstorage.Length)     [psi.[u1position];psi.[u2position]]
+              // STEP 4
+              //separating out the new pattern >> automatically takes care of normalization
+            match patternnumber with
+                | 1 -> Cgate (TrugenbergerS1 (float patternstorage.Length))  [psi.[u1position];psi.[u2position]]
+                | 2 -> Cgate (TrugenbergerS2 (float patternstorage.Length))  [psi.[u1position];psi.[u2position]]
+                | 3 -> Cgate (TrugenbergerS3 (float patternstorage.Length))  [psi.[u1position];psi.[u2position]]
+                | 4 -> Cgate (TrugenbergerS4 (float patternstorage.Length))  [psi.[u1position];psi.[u2position]]
+                | _ -> show "Trugenberger's CS^(p+1-i) gate not defined yet"
 
             // STEP 5
             //undo STEP 3
@@ -897,25 +882,96 @@ module TrugenbergerStorage =
 
             // STEP 6
             //undo STEP 2
-            for j=0 to patternlength-1 do
+            for j in 0..patternlength-1 do
                 X    [psi.[mregisterstart+j]]
                 CNOT [psi.[j];psi.[mregisterstart+j]]
 
-            // STEP 7
-            //undo STEP 1
+                // STEP 7
+                //undo STEP 1
             for i in 0..(patternlength-1) do
                 CCNOT [psi.[i];psi.[u2position];psi.[mregisterstart+i]]
 
-            collectstats psi stats
-            //M   [psi.[u1position]]
+    //-----END: define new functions----\\
 
-            //let v = psi.[u1position].Bit.v
-            //stats.[v] <- stats.[v] + 1
 
-        //show "Measured u1 as 1: %i" stats.[1]
+    [<LQD>] //means it can be called from the command line
+    let __TrugenbergerStorage() =
+        show "The memory storage algorithm by Trugenberger et al."
+        show "_______________________________________________________"
+
+        let stats = Array.create 10 0
+        //let patterncount = 3
+        //let patternstorage = Array.create patterncount "empty"
+
+        // Ask the user for the number of patterns
+        Console.Write("Number of patterns to store: ")
+
+        // Read user input
+        let patterncount = int (Console.ReadLine())
+
+        let patternstorage = Array.create patterncount "empty"
+
+        for c in 0..patterncount-1 do
+            // Ask the user for pattern
+            Console.Write("Pattern {0}: ", (c+1))
+
+            // Read user input
+            patternstorage.[c] <- Console.ReadLine()
+        
+        //Defining the patterns that are to be stored
+        //NEED TO BE SAME LENGTH!
+        //patternstorage.[0] <- "011"
+        //patternstorage.[1] <- "101"
+        //patternstorage.[2] <- "111"
+
+        //find the length of the patterns
+        let patternlength = patternstorage.[0].Length
+        show "Binary pattern length: %i" patternlength
+
+        //memory register (patternlength long); loading register (patternlength long); utility register (2 qubits)
+        let requiredqubits = 2*patternlength+2
+        show "Number of required qubits: %i" requiredqubits
+        let k = Ket(requiredqubits)
+        let psi = k.Qubits
+        let u2position = patternlength + 1
+
+        for i in 0..99 do
+
+            let psi = k.Reset()
+
+            X   [psi.[u2position]] //flip the second utility qubit
+
+            //maybe put this into the StorageAlgorithm function
+            //X   [psi.[u2position]] //flip the second utility qubit
+
+            (* LOADING THE FIRST PATTERN
+            for l in 0..patternlength-1 do
+            //if the pattern has a 1 at this point then flip the corresponding qubit
+                if patternstorage.[0].[l] = '1' then
+                    X   [psi.[l]]*)
+
+            for p in 1..patterncount do
+                StorageAlgorithm patternstorage patternlength p psi
+
+            (*// LOADING THE SECOND PATTERN
+            for k in 0..patternlength-1 do
+            //if the pattern has a 1 at this point then flip the corresponding qubit
+                if patternstorage.[0].[k] <> patternstorage.[1].[k] then
+                    //show "%i" k
+                    X   [psi.[k]]*)
+
+            //collectstats psi stats
+
         show "========= STATS ========="
         show "Measured |01100011>: %i" stats.[0]
         show "Measured |01101000>: %i" stats.[1]
+        show "Measured |10100011>: %i" stats.[2]
+        show "Measured |10100101>: %i" stats.[3]
+        show "Measured |10101000>: %i" stats.[4]
+        show "Measured |11100111>: %i" stats.[5]
+        show "Measured |11100011>: %i" stats.[6]
+        show "Measured |11100101>: %i" stats.[7]
+
 
 
             //show "qaH = %s" (initial.ToString())
