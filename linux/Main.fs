@@ -675,31 +675,122 @@ module TrugenbergerStorage =
         show "The memory storage algorithm by Trugenberger et al."
         show "_______________________________________________________"
 
+        //How many different patterns shall be stored?
+        let patterncount = 2
+
+        let patternstorage = Array.create patterncount "empty"
         let stats = Array.create 4 0
-        let k = Ket(2)
-        let initial = k.Qubits
+
+        //Defining the patterns that are to be stored
+        //NEED TO BE SAME LENGTH!
+        patternstorage.[0] <- "011"
+        patternstorage.[1] <- "101" 
+
+        //find the length of the patterns
+        let patternlength = patternstorage.[0].Length
+
+        //memory register (patternlength long); loading register (patternlength long); utility register (2 qubits)
+        let requiredqubits = 2*patternlength+2  
+        let k = Ket(requiredqubits)
+        let psi = k.Qubits
+
+        //save the positions of the utility qubits
+        let u1position = patternlength 
+        let u2position = patternlength + 1
+        let mregisterstart = u2position + 1
+
+        // --- START: INITIALIZATION --- \\
+
+        X   [psi.[u2position]] //flip the second utility qubit
+
+        // Load the first pattern
+        for a in 0..patternlength-1 do
+            //if the pattern has a 1 at this point then flip the corresponding qubit
+            if patternstorage.[0].[a] = '1' then
+                X   [psi.[a]] 
+        
+        // --- END: INITIALIZATION --- \\
+
+        // --- START: STORAGE ALGORITHM --- \\
+
+        (*
+        // STEP 1
+        for i in 0..(patternlength-1) do
+            CCNOT [psi.[i];psi.[u2position];psi.[mregisterstart+i]]
+        
+        // STEP 2
+        for j=0 to patternlength-1 do
+            CNOT [psi.[j];psi.[mregisterstart+j]]
+            X    [psi.[mregisterstart+j]]
+        
+        // STEP 3
+
+        //make this more general!
+        Cgate (CCgate X)  [psi.[mregisterstart];psi.[mregisterstart+1];psi.[mregisterstart+2];psi.[u1position]]
+
+        // STEP 4
+
+        TrugenbergerCS 1. (float patternstorage.Length)     [psi.[u1position];psi.[u2position]]
+
+        // STEP 5
+
+        // STEP 6
+
+        M   [psi.[u1position]]
+
+        let v = psi.[u1position].Bit.v
+        stats.[v] <- stats.[v] + 1
+        show "Measured u1 as 1: %i" stats.[1]*)
+        // --- END: STORAGE ALGORITHM --- \\
+
 
         //(TrugenbergerS 1. 2.) initial
         //(TrugenbergerS 2. 2.) initial
         //(TrugenbergerCS 2. 2.) initial
+
         for i in 0..999 do
-            
-            let initial = k.Reset()
+           
+            let psi = k.Reset()
+
+            // STEP 1
+            for i in 0..(patternlength-1) do
+                CCNOT [psi.[i];psi.[u2position];psi.[mregisterstart+i]]
+        
+            // STEP 2
+            for j=0 to patternlength-1 do
+                CNOT [psi.[j];psi.[mregisterstart+j]]
+                X    [psi.[mregisterstart+j]]
+        
+            // STEP 3
+
+            //make this more general!
+            Cgate (CCgate X)  [psi.[mregisterstart];psi.[mregisterstart+1];psi.[mregisterstart+2];psi.[u1position]]
+
+            // STEP 4
+
+            TrugenbergerCS 1. (float patternstorage.Length)     [psi.[u1position];psi.[u2position]]
+
+            M   [psi.[u1position]]
+
+            let v = psi.[u1position].Bit.v
+            stats.[v] <- stats.[v] + 1
+        show "Measured u1 as 1: %i" stats.[1]
+
 
             //show "qaH = %s" (initial.ToString())
-            X initial
-            X initial.Tail
-            (TrugenbergerCS 2. 2.) initial
+            //X initial
+            //X initial.Tail
+            //(TrugenbergerCS 2. 2.) initial
             //Cgate (TrugenbergerS 1. 2.) [initial.[0];initial.[1]]
             //H initial.Tail
 
             //show "qaH = %s" (initial.ToString())
 
-            M >< initial
+            //M >< initial
 
-            let v,w = initial.[0].Bit.v, initial.[1].Bit.v
+            //let v,w = initial.[0].Bit.v, initial.[1].Bit.v
 
-            if (v=0) && (v = w) then
+            (*if (v=0) && (v = w) then
                 stats.[0] <- stats.[0] + 1
             if (v=0) && (w=1) then
                 stats.[1] <- stats.[1] + 1
@@ -712,7 +803,7 @@ module TrugenbergerStorage =
         show "Measured |00>: %i" stats.[0]
         show "Measured |01>: %i" stats.[1]
         show "Measured |10>: %i" stats.[2]
-        show "Measured |11>: %i" stats.[3]
+        show "Measured |11>: %i" stats.[3]*)
 
 
 module Main =

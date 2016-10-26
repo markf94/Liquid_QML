@@ -1,8 +1,5 @@
 0:0000.0/=============== Logging to: Liquid.log opened ================
 0:0000.0/The memory storage algorithm by Trugenberger et al.
 0:0000.0/_______________________________________________________
-0:0000.0/Measured |00>: 0
-0:0000.0/Measured |01>: 0
-0:0000.0/Measured |10>: 1000
-0:0000.0/Measured |11>: 0
+0:0000.0/Measured u1 as 1: 1000
 0:0000.0/=============== Logging to: Liquid.log closed ================
