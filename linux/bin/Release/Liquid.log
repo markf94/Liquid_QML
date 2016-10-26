@@ -1,9 +1,15 @@
 0:0000.0/=============== Logging to: Liquid.log opened ================
 0:0000.0/The memory storage algorithm by Trugenberger et al.
 0:0000.0/_______________________________________________________
-0:0000.0/Binary pattern length: 3
-0:0000.0/Number of required qubits: 8
-0:0000.1/========= STATS =========
-0:0000.1/Measured |01100011>: 496
-0:0000.1/Measured |01101000>: 504
-0:0000.1/=============== Logging to: Liquid.log closed ================
+0:0000.0/Binary pattern length: 2
+0:0000.0/Number of required qubits: 6
+0:0000.0/========= STATS =========
+0:0000.0/Measured |01100011>: 0
+0:0000.0/Measured |01101000>: 0
+0:0000.0/Measured |10100011>: 0
+0:0000.0/Measured |10100101>: 0
+0:0000.0/Measured |10101000>: 0
+0:0000.0/Measured |11100111>: 0
+0:0000.0/Measured |11100011>: 0
+0:0000.0/Measured |11100101>: 0
+0:0000.0/=============== Logging to: Liquid.log closed ================
