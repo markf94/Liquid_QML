@@ -626,6 +626,94 @@ module qubitKNN =
         CNOT    [tester.[0];tester.[4]]
         *)
 
+module TrugenbergerStorage =
+    open System
+    open Util
+    open Operations
+    //open Native             // Support for Native Interop
+    //open HamiltonianGates   // Extra gates for doing Hamiltonian simulations
+    //open Tests              // All the built-in tests
+
+    //-----START: define new gates ----\\
+
+    let TrugenbergerS (i:float) (p:float) (qs:Qubits) =
+        let gate =
+            Gate.Build("TrugenbergerS", fun () ->
+                new Gate(
+                    Name = "Si",
+                    Help = "Trugenberger et al.'s S^(p+1-i) matrix",
+                    Mat  = (CSMat(2,[(0,0,sqrt((p-i)/(p+1.-i)),0.); (1,1,sqrt((p-i)/(p+1.-i)),0.);(1,0,-1./sqrt(p+1.-i),0.); (0,1,1./sqrt(p+1.-i),0.)])) //
+                    //Draw = .....,
+            ))
+        gate.Run qs
+
+    let TrugenbergerCS (i:float) (p:float) (qs:Qubits) =
+        let gate (qs:Qubits) =
+            Gate.Build("TrugenbergerCS", fun () ->
+                let nam     = "TrugenbergerCS"
+                new Gate(
+                    Qubits = qs.Length,
+                    Name = "TrugenbergerCS",
+                    Help = "Trugenberger et al.'s CS^(p+1-i) matrix",
+                    //Draw = .....,
+                    Op = WrapOp (fun (qs:Qubits) ->
+                            Cgate (TrugenbergerS i p) qs;
+                            )
+            ))
+        (gate qs).Run qs
+
+    //-----END: define new gates----\\
+
+    //-----START: define new functions----\\
+
+
+    //-----END: define new functions----\\
+
+
+    [<LQD>] //means it can be called from the command line
+    let __TrugenbergerStorage() =
+        show "The memory storage algorithm by Trugenberger et al."
+        show "_______________________________________________________"
+
+        let stats = Array.create 4 0
+        let k = Ket(2)
+        let initial = k.Qubits
+
+        //(TrugenbergerS 1. 2.) initial
+        //(TrugenbergerS 2. 2.) initial
+        //(TrugenbergerCS 2. 2.) initial
+        for i in 0..999 do
+            
+            let initial = k.Reset()
+
+            //show "qaH = %s" (initial.ToString())
+            X initial
+            X initial.Tail
+            (TrugenbergerCS 2. 2.) initial
+            //Cgate (TrugenbergerS 1. 2.) [initial.[0];initial.[1]]
+            //H initial.Tail
+
+            //show "qaH = %s" (initial.ToString())
+
+            M >< initial
+
+            let v,w = initial.[0].Bit.v, initial.[1].Bit.v
+
+            if (v=0) && (v = w) then
+                stats.[0] <- stats.[0] + 1
+            if (v=0) && (w=1) then
+                stats.[1] <- stats.[1] + 1
+            if (v=1) && (w=0) then
+                stats.[2] <- stats.[2] + 1
+            if (v=1) && (v = w) then
+                stats.[3] <- stats.[3] + 1
+
+
+        show "Measured |00>: %i" stats.[0]
+        show "Measured |01>: %i" stats.[1]
+        show "Measured |10>: %i" stats.[2]
+        show "Measured |11>: %i" stats.[3]
+
 
 module Main =
     open App
