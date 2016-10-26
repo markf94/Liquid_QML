@@ -432,7 +432,7 @@ module qubitKNN =
             ))
         (gate qs).Run qs
 
-    
+
     let U2 (qs:Qubits) =
         let gate =
             Gate.Build("U2", fun () ->
@@ -444,7 +444,7 @@ module qubitKNN =
                     //Draw = .....,
             ))
         gate.Run qs
-    
+
 
     let HDUnitary (qs:Qubits) =
         let gate (qs:Qubits) =
@@ -553,7 +553,7 @@ module qubitKNN =
 
         //convolutes the quantum gates >> impossible on an actual quantum computer
         let preparecirc    = preparecirc.GrowGates(k)
-        //prepare the 
+        //prepare the
         preparecirc.Run quantumstate
         let algorithmcirc = algorithmcirc.GrowGates(k)
 
@@ -666,6 +666,104 @@ module TrugenbergerStorage =
 
     //-----START: define new functions----\\
 
+    let nCNOT (patternlength:int) (mregisterstart:int) (u1position:int) (psi:Qubits) =
+
+            match patternlength with
+                | 1 -> CNOT  [psi.[mregisterstart];psi.[u1position]]
+                | 2 -> CCNOT  [psi.[mregisterstart];psi.[mregisterstart+1];psi.[u1position]]
+                | 3 -> Cgate (CCNOT)  [psi.[mregisterstart];psi.[mregisterstart+1];psi.[mregisterstart+2];psi.[u1position]]
+                | 4 -> Cgate (Cgate (CCNOT))  [psi.[mregisterstart];psi.[mregisterstart+1];psi.[mregisterstart+2];psi.[mregisterstart+3];psi.[u1position]]
+                | 5 -> Cgate (Cgate (Cgate (CCNOT)))  [psi.[mregisterstart];psi.[mregisterstart+1];psi.[mregisterstart+2];psi.[mregisterstart+3];psi.[mregisterstart+4];psi.[u1position]]
+                | 6 -> Cgate (Cgate (Cgate (Cgate (CCNOT))))  [psi.[mregisterstart];psi.[mregisterstart+1];psi.[mregisterstart+2];psi.[mregisterstart+3];psi.[mregisterstart+4];psi.[mregisterstart+5];psi.[u1position]]
+                | 7 -> Cgate (Cgate (Cgate (Cgate (Cgate (CCNOT)))))  [psi.[mregisterstart];psi.[mregisterstart+1];psi.[mregisterstart+2];psi.[mregisterstart+3];psi.[mregisterstart+4];psi.[mregisterstart+5];psi.[mregisterstart+6];psi.[u1position]]
+                | 8 -> Cgate (Cgate (Cgate (Cgate (Cgate (Cgate (CCNOT))))))  [psi.[mregisterstart];psi.[mregisterstart+1];psi.[mregisterstart+2];psi.[mregisterstart+3];psi.[mregisterstart+4];psi.[mregisterstart+5];psi.[mregisterstart+6];psi.[mregisterstart+7];psi.[u1position]]
+                | 9 -> Cgate (Cgate (Cgate (Cgate (Cgate (Cgate (Cgate (CCNOT)))))))  [psi.[mregisterstart];psi.[mregisterstart+1];psi.[mregisterstart+2];psi.[mregisterstart+3];psi.[mregisterstart+4];psi.[mregisterstart+5];psi.[mregisterstart+6];psi.[mregisterstart+7];psi.[mregisterstart+8];psi.[u1position]]
+                | 10 -> Cgate (Cgate (Cgate (Cgate (Cgate (Cgate (Cgate (Cgate (CCNOT))))))))  [psi.[mregisterstart];psi.[mregisterstart+1];psi.[mregisterstart+2];psi.[mregisterstart+3];psi.[mregisterstart+4];psi.[mregisterstart+5];psi.[mregisterstart+6];psi.[mregisterstart+7];psi.[mregisterstart+8];psi.[mregisterstart+9];psi.[u1position]]
+                | 11 -> show "n-CNOT gate not defined yet"
+                | 12 -> show "n-CNOT gate not defined yet"
+                | 13 -> show "n-CNOT gate not defined yet"
+                | 14 -> show "n-CNOT gate not defined yet"
+                | 15 -> show "n-CNOT gate not defined yet"
+                | 16 -> show "n-CNOT gate not defined yet"
+                | _ -> show "n-CNOT gate not defined yet"
+
+
+    /// <summary>
+    /// Collects the statistics for a qubit list with four qubits.
+    /// </summary>
+    /// <param name="qs">The qubit list of which the statistics shall be calculated from.</param>
+    /// <param name="stats">A float array with 16 items storing the stats for the states |0000>, |0001>, etc.</param>
+    /// <param name="stats01">A float array with 8 items collecting the stats for the individual qubits (ancilla, data, class and m)</param>
+    let collectstats (qs:Qubits) (stats:_[]) =
+
+            //measure all the qubits
+            M >< qs
+
+            //retrieve the bit values of the qubits in qubit list qs and convert to integer (v)
+            let a,b,c,d,e,f,g,h   = qs.[0].Bit.v, qs.[1].Bit.v, qs.[2].Bit.v, qs.[3].Bit.v, qs.[4].Bit.v, qs.[5].Bit.v, qs.[6].Bit.v, qs.[7].Bit.v
+
+            //show "%i %i %i %i %i %i %i %i" a b c d e f g h
+
+            //match qs.[0].Bit.v, qs.[1].Bit.v, qs.[2].Bit.v, qs.[3].Bit.v with
+            match a,b,c,d,e,f,g,h with
+                | 0,1,1,0,0,0,1,1 -> stats.[0] <- stats.[0] + 1
+                | 0,1,1,0,1,0,0,0 -> stats.[1] <- stats.[1] + 1
+                (*| 0,0,1,0 -> stats.[2] <- stats.[2] + 1.0
+                | 0,1,0,0 -> stats.[3] <- stats.[3] + 1.0
+                | 1,0,0,0 -> stats.[4] <- stats.[4] + 1.0
+                | 0,0,1,1 -> stats.[5] <- stats.[5] + 1.0
+                | 0,1,1,0 -> stats.[6] <- stats.[6] + 1.0
+                | 1,1,0,0 -> stats.[7] <- stats.[7] + 1.0
+                | 1,0,0,1 -> stats.[8] <- stats.[8] + 1.0
+                | 0,1,0,1 -> stats.[9] <- stats.[9] + 1.0
+                | 1,0,1,0 -> stats.[10] <- stats.[10] + 1.0
+                | 0,1,1,1 -> stats.[11] <- stats.[11] + 1.0
+                | 1,1,1,0 -> stats.[12] <- stats.[12] + 1.0
+                | 1,1,0,1 -> stats.[13] <- stats.[13] + 1.0
+                | 1,0,1,1 -> stats.[14] <- stats.[14] + 1.0
+                | 1,1,1,1 -> stats.[15] <- stats.[15] + 1.0*)
+                | _,_,_,_,_,_,_,_ -> show "error" //to handle all other cases (which won't occur any way)
+
+
+
+    /// <summary>
+    /// Prints the individual statistics of 4 qubits and their combinations (|0000>, |0001>, etc.).
+    /// </summary>
+    /// <param name="stats">A float array with 16 items storing the stats for the states |0000>, |0001>, etc.</param>
+    /// <param name="stats01">A float array with 8 items collecting the stats for the individual qubits (ancilla, data, class and m)</param>
+    let printstats (stats:_[]) (stats01:_[]) =
+
+        //printing etiquette:
+        //printfn "A string: %s. An int: %i. A float: %f. A bool: %b" "hello" 42 3.14 true
+
+        show "Measured ancilla qubit: |0>: %f |1>: %f" stats01.[0] stats01.[1]
+        //show "Old Measured ancilla qubit: 0-%d 1-%d" stats0.[0] stats0.[1]
+        show "Measured data register: |0> %f |1> %f" stats01.[2] stats01.[3]
+        //show "Old Measured data qubit: 0-%d 1-%d" stats1.[0] stats1.[1]
+        show "Measured class register: |0> %f |1> %f" stats01.[4] stats01.[5]
+        //show "Old Measured class qubit: 0-%d 1-%d" stats2.[0] stats2.[1]
+        show "Measured m register: |0> %f |1> %f" stats01.[6] stats01.[7]
+        //show "Old Measured m qubit: 0-%d 1-%d" stats3.[0] stats3.[1]
+        show "Measured |0000>: %f" stats.[0]
+        show "Measured |0001>: %f" stats.[1]
+        show "Measured |0010>: %f" stats.[2]
+        show "Measured |0100>: %f" stats.[3]
+        show "Measured |1000>: %f" stats.[4]
+        show "Measured |0011>: %f" stats.[5]
+        show "Measured |0110>: %f" stats.[6]
+        show "Measured |1100>: %f" stats.[7]
+        show "Measured |1001>: %f" stats.[8]
+        show "Measured |0101>: %f" stats.[9]
+        show "Measured |1010>: %f" stats.[10]
+        show "Measured |0111>: %f" stats.[11]
+        show "Measured |1110>: %f" stats.[12]
+        show "Measured |1101>: %f" stats.[13]
+        show "Measured |1011>: %f" stats.[14]
+        show "Measured |1111>: %f" stats.[15]
+        if stats01.[4] > stats01.[5] then
+            show "Input classified as: |0>"
+        else
+            show "Input classified as: |1>"
 
     //-----END: define new functions----\\
 
@@ -679,68 +777,85 @@ module TrugenbergerStorage =
         let patterncount = 2
 
         let patternstorage = Array.create patterncount "empty"
-        let stats = Array.create 4 0
+        let stats = Array.create 2 0
 
         //Defining the patterns that are to be stored
         //NEED TO BE SAME LENGTH!
         patternstorage.[0] <- "011"
-        patternstorage.[1] <- "101" 
+        patternstorage.[1] <- "101"
+        //patternstorage.[2] <- "111"
 
         //find the length of the patterns
         let patternlength = patternstorage.[0].Length
+        show "Binary pattern length: %i" patternlength
 
         //memory register (patternlength long); loading register (patternlength long); utility register (2 qubits)
-        let requiredqubits = 2*patternlength+2  
+        let requiredqubits = 2*patternlength+2
+        show "Number of required qubits: %i" requiredqubits
         let k = Ket(requiredqubits)
         let psi = k.Qubits
 
         //save the positions of the utility qubits
-        let u1position = patternlength 
+        let u1position = patternlength
         let u2position = patternlength + 1
         let mregisterstart = u2position + 1
 
         // --- START: INITIALIZATION --- \\
 
-        X   [psi.[u2position]] //flip the second utility qubit
+        (*X   [psi.[u2position]] //flip the second utility qubit
+
+        X   [psi.[1]]
+        X   [psi.[2]]*)
 
         // Load the first pattern
-        for a in 0..patternlength-1 do
+        //for a in 0..patternlength-1 do
             //if the pattern has a 1 at this point then flip the corresponding qubit
-            if patternstorage.[0].[a] = '1' then
-                X   [psi.[a]] 
-        
+            //if patternstorage.[0].[a] = '1' then
+                //X   [psi.[a]]
+
         // --- END: INITIALIZATION --- \\
 
         // --- START: STORAGE ALGORITHM --- \\
-
         (*
         // STEP 1
         for i in 0..(patternlength-1) do
             CCNOT [psi.[i];psi.[u2position];psi.[mregisterstart+i]]
-        
+
         // STEP 2
         for j=0 to patternlength-1 do
             CNOT [psi.[j];psi.[mregisterstart+j]]
             X    [psi.[mregisterstart+j]]
-        
-        // STEP 3
 
-        //make this more general!
-        Cgate (CCgate X)  [psi.[mregisterstart];psi.[mregisterstart+1];psi.[mregisterstart+2];psi.[u1position]]
+        // STEP 3
+        //applying the n-CNOT gate (all memory qubits as controls and u1 as target qubit)
+        nCNOT patternlength mregisterstart u1position psi
 
         // STEP 4
-
+        //separating out the new pattern >> automatically takes care of normalization
         TrugenbergerCS 1. (float patternstorage.Length)     [psi.[u1position];psi.[u2position]]
 
         // STEP 5
+        //undo STEP 3
+        nCNOT patternlength mregisterstart u1position psi
 
         // STEP 6
+        //undo STEP 2
+        for j=0 to patternlength-1 do
+            X    [psi.[mregisterstart+j]]
+            CNOT [psi.[j];psi.[mregisterstart+j]]
 
-        M   [psi.[u1position]]
+        // STEP 7
+        //undo STEP 1
+        for i in 0..(patternlength-1) do
+            CCNOT [psi.[i];psi.[u2position];psi.[mregisterstart+i]]
 
-        let v = psi.[u1position].Bit.v
-        stats.[v] <- stats.[v] + 1
-        show "Measured u1 as 1: %i" stats.[1]*)
+        collectstats psi stats*)
+
+        //M   [psi.[u1position]]
+
+        //let v = psi.[u1position].Bit.v
+        //stats.[v] <- stats.[v] + 1
+        //show "Measured u1 as 1: %i" stats.[1]
         // --- END: STORAGE ALGORITHM --- \\
 
 
@@ -749,32 +864,58 @@ module TrugenbergerStorage =
         //(TrugenbergerCS 2. 2.) initial
 
         for i in 0..999 do
-           
+
             let psi = k.Reset()
+
+            X   [psi.[u2position]] //flip the second utility qubit
+
+            for l in 0..patternlength-1 do
+            //if the pattern has a 1 at this point then flip the corresponding qubit
+                if patternstorage.[0].[l] = '1' then
+                    X   [psi.[l]]
 
             // STEP 1
             for i in 0..(patternlength-1) do
                 CCNOT [psi.[i];psi.[u2position];psi.[mregisterstart+i]]
-        
+
             // STEP 2
             for j=0 to patternlength-1 do
                 CNOT [psi.[j];psi.[mregisterstart+j]]
                 X    [psi.[mregisterstart+j]]
-        
-            // STEP 3
 
-            //make this more general!
-            Cgate (CCgate X)  [psi.[mregisterstart];psi.[mregisterstart+1];psi.[mregisterstart+2];psi.[u1position]]
+            // STEP 3
+            //applying the n-CNOT gate (all memory qubits as controls and u1 as target qubit)
+            nCNOT patternlength mregisterstart u1position psi
 
             // STEP 4
-
+            //separating out the new pattern >> automatically takes care of normalization
             TrugenbergerCS 1. (float patternstorage.Length)     [psi.[u1position];psi.[u2position]]
 
-            M   [psi.[u1position]]
+            // STEP 5
+            //undo STEP 3
+            nCNOT patternlength mregisterstart u1position psi
 
-            let v = psi.[u1position].Bit.v
-            stats.[v] <- stats.[v] + 1
-        show "Measured u1 as 1: %i" stats.[1]
+            // STEP 6
+            //undo STEP 2
+            for j=0 to patternlength-1 do
+                X    [psi.[mregisterstart+j]]
+                CNOT [psi.[j];psi.[mregisterstart+j]]
+
+            // STEP 7
+            //undo STEP 1
+            for i in 0..(patternlength-1) do
+                CCNOT [psi.[i];psi.[u2position];psi.[mregisterstart+i]]
+
+            collectstats psi stats
+            //M   [psi.[u1position]]
+
+            //let v = psi.[u1position].Bit.v
+            //stats.[v] <- stats.[v] + 1
+
+        //show "Measured u1 as 1: %i" stats.[1]
+        show "========= STATS ========="
+        show "Measured |01100011>: %i" stats.[0]
+        show "Measured |01101000>: %i" stats.[1]
 
 
             //show "qaH = %s" (initial.ToString())
