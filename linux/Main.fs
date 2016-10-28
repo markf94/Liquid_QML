@@ -758,7 +758,7 @@ module TrugenbergerStorage =
                 //create a string of the measured memory register
                 memoryqubitstring <- memoryqubitstring + (string memoryqubitvalue.[arraycounter])
                 arraycounter <- arraycounter + 1
-               
+
             for p in 0..patternstorage.Length-1 do
                 //increase the stats by 1 for the matching pattern!
                 if memoryqubitstring = patternstorage.[p] then
@@ -826,7 +826,7 @@ module TrugenbergerStorage =
                 CCNOT [psi.[i];psi.[u2position];psi.[mregisterstart+i]]
 
 
-    (*let TrugenbergerCore (runs:int) (patternlength:int) (patternstorage:string[]) (k:Ket) (psi:Qubits)  = 
+    (*let TrugenbergerCore (runs:int) (patternlength:int) (patternstorage:string[]) (k:Ket) (psi:Qubits)  =
 
         let u2position = patternlength + 1
 
@@ -840,7 +840,7 @@ module TrugenbergerStorage =
             //maybe put this into the StorageAlgorithm function
             //X   [psi.[u2position]] //flip the second utility qubit
 
-           
+
 
             for p in 1..patterncount do
                 StorageAlgorithm patternstorage patternlength p psi
@@ -895,7 +895,7 @@ module TrugenbergerStorage =
 
                 // Read user input
                 patternstorage.[c] <- Console.ReadLine()
-        
+
 
         //find the length of the patterns
         let patternlength = patternstorage.[0].Length
@@ -1133,19 +1133,19 @@ module TrugenbergerSchuld =
                 | 16 -> show "n-CNOT gate not defined yet"
                 | _ -> show "n-CNOT gate not defined yet"
 
-    let nCNOTforClasses (numberofcontrols:int) (memoryregisterstart:int) (controls:_[]) (classqubitposition:int) (psi:Qubits) =
+    let nCNOTforClasses (numberofcontrols:int) (memoryregisterstart:int) (controls:int[]) (classqubitposition:int) (psi:Qubits) =
 
             match numberofcontrols with
-                | 1 -> CNOT  [psi.[controls.[0]];psi.[classqubitposition]]
-                | 2 -> CCNOT  [psi.[memoryregisterstart+controls.[0]];psi.[memoryregisterstart+controls.[1]];psi.[classqubitposition]]  //[psi.[controls.[0]];psi.[controls.[1]];psi.[classqubitposition]]
-                | 3 -> Cgate (CCNOT)  [psi.[controls.[0]];psi.[controls.[1]];psi.[controls.[2]];psi.[classqubitposition]]
-                | 4 -> Cgate (Cgate (CCNOT))  [psi.[controls.[0]];psi.[controls.[1]];psi.[controls.[2]];psi.[controls.[3]];psi.[classqubitposition]]
-                | 5 -> Cgate (Cgate (Cgate (CCNOT)))  [psi.[controls.[0]];psi.[controls.[1]];psi.[controls.[2]];psi.[controls.[3]];psi.[controls.[4]];psi.[classqubitposition]]
-                | 6 -> Cgate (Cgate (Cgate (Cgate (CCNOT))))  [psi.[controls.[0]];psi.[controls.[1]];psi.[controls.[2]];psi.[controls.[3]];psi.[controls.[4]];psi.[controls.[5]];psi.[classqubitposition]]
-                | 7 -> Cgate (Cgate (Cgate (Cgate (Cgate (CCNOT)))))  [psi.[controls.[0]];psi.[controls.[1]];psi.[controls.[2]];psi.[controls.[3]];psi.[controls.[4]];psi.[controls.[5]];psi.[controls.[6]];psi.[classqubitposition]]
-                | 8 -> Cgate (Cgate (Cgate (Cgate (Cgate (Cgate (CCNOT))))))  [psi.[controls.[0]];psi.[controls.[1]];psi.[controls.[2]];psi.[controls.[3]];psi.[controls.[4]];psi.[controls.[5]];psi.[controls.[6]];psi.[controls.[7]];psi.[classqubitposition]]
-                | 9 -> Cgate (Cgate (Cgate (Cgate (Cgate (Cgate (Cgate (CCNOT)))))))  [psi.[controls.[0]];psi.[controls.[1]];psi.[controls.[2]];psi.[controls.[3]];psi.[controls.[4]];psi.[controls.[5]];psi.[controls.[6]];psi.[controls.[7]];psi.[controls.[8]];psi.[classqubitposition]]
-                | 10 -> Cgate (Cgate (Cgate (Cgate (Cgate (Cgate (Cgate (Cgate (CCNOT))))))))  [psi.[controls.[0]];psi.[controls.[1]];psi.[controls.[2]];psi.[controls.[3]];psi.[controls.[4]];psi.[controls.[5]];psi.[controls.[6]];psi.[controls.[7]];psi.[controls.[8]];psi.[controls.[9]];psi.[classqubitposition]]
+                | 1 -> CNOT  [psi.[memoryregisterstart+controls.[0]];psi.[classqubitposition]]
+                | 2 -> CCNOT  [psi.[memoryregisterstart+controls.[0]];psi.[memoryregisterstart+controls.[1]];psi.[classqubitposition]]
+                | 3 -> show "control1: %i" (memoryregisterstart+controls.[0]); show "control2: %i" (memoryregisterstart+controls.[1]); show "control3: %i" (memoryregisterstart+controls.[2]); Cgate (CCNOT)  [psi.[memoryregisterstart+controls.[0]];psi.[memoryregisterstart+controls.[1]];psi.[memoryregisterstart+controls.[2]];psi.[classqubitposition]]
+                | 4 -> Cgate (Cgate (CCNOT))  [psi.[memoryregisterstart+controls.[0]];psi.[memoryregisterstart+controls.[1]];psi.[memoryregisterstart+controls.[2]];psi.[memoryregisterstart+controls.[3]];psi.[classqubitposition]]
+                | 5 -> Cgate (Cgate (Cgate (CCNOT)))  [psi.[memoryregisterstart+controls.[0]];psi.[memoryregisterstart+controls.[1]];psi.[memoryregisterstart+controls.[2]];psi.[memoryregisterstart+controls.[3]];psi.[memoryregisterstart+controls.[4]];psi.[classqubitposition]]
+                | 6 -> Cgate (Cgate (Cgate (Cgate (CCNOT))))  [psi.[memoryregisterstart+controls.[0]];psi.[memoryregisterstart+controls.[1]];psi.[memoryregisterstart+controls.[2]];psi.[memoryregisterstart+controls.[3]];psi.[memoryregisterstart+controls.[4]];psi.[memoryregisterstart+controls.[5]];psi.[classqubitposition]]
+                | 7 -> Cgate (Cgate (Cgate (Cgate (Cgate (CCNOT)))))  [psi.[memoryregisterstart+controls.[0]];psi.[memoryregisterstart+controls.[1]];psi.[memoryregisterstart+controls.[2]];psi.[memoryregisterstart+controls.[3]];psi.[memoryregisterstart+controls.[4]];psi.[memoryregisterstart+controls.[5]];psi.[memoryregisterstart+controls.[6]];psi.[classqubitposition]]
+                | 8 -> Cgate (Cgate (Cgate (Cgate (Cgate (Cgate (CCNOT))))))  [psi.[memoryregisterstart+controls.[0]];psi.[memoryregisterstart+controls.[1]];psi.[memoryregisterstart+controls.[2]];psi.[memoryregisterstart+controls.[3]];psi.[memoryregisterstart+controls.[4]];psi.[memoryregisterstart+controls.[5]];psi.[memoryregisterstart+controls.[6]];psi.[memoryregisterstart+controls.[7]];psi.[classqubitposition]]
+                | 9 -> Cgate (Cgate (Cgate (Cgate (Cgate (Cgate (Cgate (CCNOT)))))))  [psi.[memoryregisterstart+controls.[0]];psi.[memoryregisterstart+controls.[1]];psi.[memoryregisterstart+controls.[2]];psi.[memoryregisterstart+controls.[3]];psi.[memoryregisterstart+controls.[4]];psi.[memoryregisterstart+controls.[5]];psi.[memoryregisterstart+controls.[6]];psi.[memoryregisterstart+controls.[7]];psi.[memoryregisterstart+controls.[8]];psi.[classqubitposition]]
+                | 10 -> Cgate (Cgate (Cgate (Cgate (Cgate (Cgate (Cgate (Cgate (CCNOT))))))))  [psi.[memoryregisterstart+controls.[0]];psi.[memoryregisterstart+controls.[1]];psi.[memoryregisterstart+controls.[2]];psi.[memoryregisterstart+controls.[3]];psi.[memoryregisterstart+controls.[4]];psi.[memoryregisterstart+controls.[5]];psi.[memoryregisterstart+controls.[6]];psi.[memoryregisterstart+controls.[7]];psi.[memoryregisterstart+controls.[8]];psi.[memoryregisterstart+controls.[9]];psi.[classqubitposition]]
                 | 11 -> show "n-CNOT gate not defined yet"
                 | 12 -> show "n-CNOT gate not defined yet"
                 | 13 -> show "n-CNOT gate not defined yet"
@@ -1177,7 +1177,7 @@ module TrugenbergerSchuld =
                 //create a string of the measured memory register
                 memoryqubitstring <- memoryqubitstring + (string memoryqubitvalue.[arraycounter])
                 arraycounter <- arraycounter + 1
-               
+
             for p in 0..patternstorage.Length-1 do
                 //increase the stats by 1 for the matching pattern!
                 if memoryqubitstring = patternstorage.[p] then
@@ -1186,11 +1186,16 @@ module TrugenbergerSchuld =
     let collectteststats (stats:_[]) (qs:Qubits) =
 
         M >< qs
-        let a,b,c,d,e,f,g,h = qs.[0].Bit.v, qs.[1].Bit.v, qs.[2].Bit.v, qs.[3].Bit.v, qs.[4].Bit.v, qs.[5].Bit.v, qs.[6].Bit.v, qs.[7].Bit.v
-        show "qubits: %i %i %i %i %i %i %i %i" a b c d e f g h
-        match a,b,c,d,e,f,g,h with
-                | 0,1,0,0,0,0,1,1 -> stats.[0] <- stats.[0] + 1
-                | 0,1,0,1,0,1,0,1 -> stats.[1] <- stats.[1] + 1
+        let a,b,c,d,e,f,g,h,i,j = qs.[0].Bit.v, qs.[1].Bit.v, qs.[2].Bit.v, qs.[3].Bit.v, qs.[4].Bit.v, qs.[5].Bit.v, qs.[6].Bit.v, qs.[7].Bit.v, qs.[8].Bit.v, qs.[9].Bit.v
+        show "qubits: %i %i %i %i %i %i %i %i %i %i" a b c d e f g h  i j
+        match a,b,c,d,e,f,g,h,i,j with
+                (*| 1,0,0,0,0,1,0,1 -> stats.[0] <- stats.[0] + 1
+                | 1,0,0,1,0,0,1,1 -> stats.[1] <- stats.[1] + 1
+                | 1,0,0,1,0,1,1,0 -> stats.[2] <- stats.[2] + 1
+                | 0,1,1,1,0,1,1,1 -> stats.[3] <- stats.[3] + 1*)
+                | 1,0,0,1,0,0,1,1,1,1 -> stats.[4] <- stats.[4] + 1
+                | 1,0,0,1,1,0,1,0,1,1 -> stats.[5] <- stats.[5] + 1
+                | 1,0,0,1,1,0,1,1,0,1 -> stats.[6] <- stats.[6] + 1
                 (*| 0,0,1,0 -> stats.[2] <- stats.[2] + 1.0
                 | 0,1,0,0 -> stats.[3] <- stats.[3] + 1.0
                 | 1,0,0,0 -> stats.[4] <- stats.[4] + 1.0
@@ -1205,7 +1210,7 @@ module TrugenbergerSchuld =
                 | 1,1,0,1 -> stats.[13] <- stats.[13] + 1.0
                 | 1,0,1,1 -> stats.[14] <- stats.[14] + 1.0
                 | 1,1,1,1 -> stats.[15] <- stats.[15] + 1.0*)
-                | _,_,_,_,_,_,_,_ -> show "error" //to handle all other cases (which won't occur any way)
+                | _,_,_,_,_,_,_,_,_,_ -> show "error" //to handle all other cases (which won't occur any way)
 
     let StorageAlgorithm (patternstorage:string[]) (patternlength:int) (patternnumber:int) (psi:Qubits)=
 
@@ -1316,18 +1321,20 @@ module TrugenbergerSchuld =
 
         if devmode = true then
             stats <- Array.create 10 0
-            trainingpatterncount <- 2
+            trainingpatterncount <- 3
             trainingpatternstorage <- Array.create trainingpatterncount "empty"
             classlabelstorage <- Array.create trainingpatterncount "empty"
             //Defining the patterns that are to be stored
             //NEED TO BE SAME LENGTH!
             //Any vector containing only of 0 must have class 0!!!
-            trainingpatternstorage.[0] <- "011"
+            trainingpatternstorage.[0] <- "1111"
             classlabelstorage.[0] <- "0"
-            trainingpatternstorage.[1] <- "101"
+            trainingpatternstorage.[1] <- "1011"
             classlabelstorage.[1] <- "1"
-            inputpatternstorage.[0] <- "010"
-            //patternstorage.[2] <- "111"
+            trainingpatternstorage.[2] <- "1101"
+            classlabelstorage.[2] <- "1"
+            inputpatternstorage.[0] <- "1001"
+
         else
             // Ask the user for the number of patterns
             Console.Write("Number of patterns to store: ")
@@ -1363,9 +1370,10 @@ module TrugenbergerSchuld =
         let u1position = trainingpatternlength
         let u2position = trainingpatternlength + 1
         let memoryregisterstart = u2position + 1
+       
 
         for i in 0..runs-1 do
-
+             
             //show "ITERATION %i" i
             let psi = k.Reset()
 
@@ -1401,27 +1409,45 @@ module TrugenbergerSchuld =
             //needs to be generalized!
 
             for k in 0..trainingpatterncount-1 do
+                let savepos = Array.create (trainingpatternlength) 0
                 //only need to flip when class label should be 1
                 if classlabelstorage.[k] = "1" then
-                    let mutable poscounter = 0
+                    //let mutable poscounter = 0
                     for m in 0..trainingpatternlength-1 do
+                        if trainingpatternstorage.[k].[m] = '0' then
+                            X   [psi.[memoryregisterstart+m]]
+                            savepos.[m] <- 1
+                            //show "savespos: %A" savepos
+                        controlqubitpositions.[m] <- m
+                        //show "controlqubits filled: %A" controlqubitpositions
+                    nCNOTforClasses trainingpatternlength memoryregisterstart controlqubitpositions classqubitposition psi
+
+                    //apply NOT again to all the previously flipped qubits (reverse the previous action)
+                    for m in 0..trainingpatternlength-1 do
+                        if savepos.[m] = 1 then
+                            X   [psi.[memoryregisterstart+m]]
                         //find the positions where 1's occur
-                        if trainingpatternstorage.[k].[m] = '1' then
+                    (*    if trainingpatternstorage.[k].[m] = '1' then
                                 //save the position of the one!
                                 controlqubitpositions.[poscounter] <- m
                                 poscounter <- poscounter + 1
                                 //show "1pos: %i" m
                     //show "poscounter: %i" poscounter
+                    //show "controlqubits filled: %A" controlqubitpositions
                     match poscounter with
                         | 1 -> nCNOTforClasses poscounter memoryregisterstart controlqubitpositions classqubitposition psi
                         | 2 -> nCNOTforClasses poscounter memoryregisterstart controlqubitpositions classqubitposition psi
                         | 3 -> nCNOTforClasses poscounter memoryregisterstart controlqubitpositions classqubitposition psi
-                        | 4 -> nCNOTforClasses poscounter memoryregisterstart controlqubitpositions classqubitposition psi    
-                        | _ -> show "undefined nCNOT class operation!"
+                        | 4 -> nCNOTforClasses poscounter memoryregisterstart controlqubitpositions classqubitposition psi
+                        | _ -> show "undefined nCNOT class operation!"*)
                     //restore the controlqubitpositions
-                    for r in 0..poscounter do
-                        controlqubitpositions.[poscounter] <- 0
-
+                    for r in 0..trainingpatternlength-1 do
+                        controlqubitpositions.[r] <- 0
+                        //savepos.[r] <- 0
+                    //show "controlqubits empty: %A" controlqubitpositions
+            //let test = Array.create 4 0; 
+            //test.[0] <- 0; test.[1] <- 1; test.[2] <- 2; test.[3] <- 3;
+            //nCNOTforClasses 4 memoryregisterstart test classqubitposition psi
             //RUNNING THE KNN ALGORITHM
             //SchuldQMLAlg inputregisterend memoryregisterstart classqubitposition ancillaqubitposition psi
 
@@ -1453,10 +1479,14 @@ module TrugenbergerSchuld =
         show "========= STATS ========="
 
         show "Measured |01000011>: %i" stats.[0]
-        show "Measured |01001101>: %i" stats.[1]
-        (*show "Measured |10100011>: %i" stats.[2]
-        show "Measured |10100101>: %i" stats.[3]
-        show "Measured |10101000>: %i" stats.[4]
+        show "Measured |01010101>: %i" stats.[1]
+        show "Measured |01100100>: %i" stats.[2]
+        show "Measured |01110111>: %i" stats.[3]
+        show "Measured |1001001111>: %i" stats.[4]
+        show "Measured |1001101011>: %i" stats.[5]
+        show "Measured |1001101101>: %i" stats.[6]
+
+        (*show "Measured |10101000>: %i" stats.[4]
         show "Measured |11100111>: %i" stats.[5]
         show "Measured |11100011>: %i" stats.[6]
         show "Measured |11100101>: %i" stats.[7]*)
