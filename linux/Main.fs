@@ -1366,7 +1366,7 @@ module TrugenbergerSchuld =
             stats <- Array.create trainingpatterncount 0
             classlabelstorage <- Array.create trainingpatterncount "empty"
 
-            Console.Write("\nNOTE: All trainingspattern must have the same length! \nAny vector containing only of 0's must have class 0! (code restriction) \n")
+            Console.Write("\nNOTE: \nAll trainingspattern must have the same length! \nAny vector containing only of 0's must have class 0! (code restriction) \n")
 
             for c in 0..trainingpatterncount-1 do
                 // Ask the user for pattern

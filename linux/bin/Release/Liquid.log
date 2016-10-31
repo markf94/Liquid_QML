@@ -6,3 +6,22 @@
 0:0000.3/
 0:0000.3/Binary pattern length: 8
 0:0000.3/Number of required qubits: 18
+0:0001.5/
+0:0001.5/=========== STATS ===========
+0:0001.5/
+0:0001.5/Ancilla measured as 0: 2
+0:0001.5/Ancilla measured as 1: 8
+0:0001.5/Prediction: 0.500000
+0:0001.5/
+0:0001.5/Class measured as 0: 2
+0:0001.5/Experimental prob class 0: 1.000000
+0:0001.5/Prediction class 0: 0.308658
+0:0001.5/
+0:0001.5/Class measured as 1: 0
+0:0001.5/Experimental prob class 1: 0.000000
+0:0001.5/Prediction class 1: 0.691342
+0:0001.5/
+0:0001.5/=========== CLASSIFICATION ===========
+0:0001.5/
+0:0001.5/Input classified as |0>
+0:0001.5/=============== Logging to: Liquid.log closed ================
