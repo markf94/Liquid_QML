@@ -1187,15 +1187,17 @@ module TrugenbergerSchuld =
 
         M >< qs
         let a,b,c,d,e,f,g,h,i,j = qs.[0].Bit.v, qs.[1].Bit.v, qs.[2].Bit.v, qs.[3].Bit.v, qs.[4].Bit.v, qs.[5].Bit.v, qs.[6].Bit.v, qs.[7].Bit.v, qs.[8].Bit.v, qs.[9].Bit.v
-        show "qubits: %i %i %i %i %i %i %i %i %i %i" a b c d e f g h  i j
+        //show "qubits: %i %i %i %i %i %i %i %i %i %i" a b c d e f g h  i j
+
         match a,b,c,d,e,f,g,h,i,j with
                 (*| 1,0,0,0,0,1,0,1 -> stats.[0] <- stats.[0] + 1
                 | 1,0,0,1,0,0,1,1 -> stats.[1] <- stats.[1] + 1
                 | 1,0,0,1,0,1,1,0 -> stats.[2] <- stats.[2] + 1
                 | 0,1,1,1,0,1,1,1 -> stats.[3] <- stats.[3] + 1*)
-                | 1,0,0,1,0,0,1,1,1,1 -> stats.[4] <- stats.[4] + 1
-                | 1,0,0,1,1,0,1,0,1,1 -> stats.[5] <- stats.[5] + 1
-                | 1,0,0,1,1,0,1,1,0,1 -> stats.[6] <- stats.[6] + 1
+                | 1,0,0,1,0,0,1,1,1,1 -> stats.[0] <- stats.[0] + 1
+                | 1,0,0,1,0,0,0,0,0,0 -> stats.[1] <- stats.[1] + 1
+                | 1,0,0,1,1,0,1,0,1,1 -> stats.[2] <- stats.[2] + 1
+                | 1,0,0,1,1,0,1,1,0,1 -> stats.[3] <- stats.[3] + 1
                 (*| 0,0,1,0 -> stats.[2] <- stats.[2] + 1.0
                 | 0,1,0,0 -> stats.[3] <- stats.[3] + 1.0
                 | 1,0,0,0 -> stats.[4] <- stats.[4] + 1.0
@@ -1307,7 +1309,7 @@ module TrugenbergerSchuld =
 
         // RUNNING THE PROGRAM IN VISUAL STUDIO/MONODEVELOP (DEV MODE) OR EXTERNAL CONSOLE?
         // if DEV MODE -> set the variable to true
-        let devmode = true
+        let devmode = false
 
         //Need to dummy initialize these variables to prevent errors
         //Will be redefined below
@@ -1321,36 +1323,58 @@ module TrugenbergerSchuld =
 
         if devmode = true then
             stats <- Array.create 10 0
-            trainingpatterncount <- 3
+            trainingpatterncount <- 4
             trainingpatternstorage <- Array.create trainingpatterncount "empty"
             classlabelstorage <- Array.create trainingpatterncount "empty"
             //Defining the patterns that are to be stored
             //NEED TO BE SAME LENGTH!
-            //Any vector containing only of 0 must have class 0!!!
-            trainingpatternstorage.[0] <- "1111"
+            //Any vector containing only of 0's must have class 0!!! (code restriction)
+            trainingpatternstorage.[0] <- "0001"
             classlabelstorage.[0] <- "0"
-            trainingpatternstorage.[1] <- "1011"
-            classlabelstorage.[1] <- "1"
-            trainingpatternstorage.[2] <- "1101"
+            trainingpatternstorage.[1] <- "0010"
+            classlabelstorage.[1] <- "0"
+            trainingpatternstorage.[2] <- "1111"
             classlabelstorage.[2] <- "1"
-            inputpatternstorage.[0] <- "1001"
+            trainingpatternstorage.[3] <- "1101"
+            classlabelstorage.[3] <- "1"
+            inputpatternstorage.[0] <- "0011"
 
         else
+            Console.Write("\n=========== USER INPUT =========== \n")
             // Ask the user for the number of patterns
-            Console.Write("Number of patterns to store: ")
+            Console.Write("Number of trainingspatterns to store: ")
 
             // Read user input
             trainingpatterncount <- int (Console.ReadLine())
 
             trainingpatternstorage <- Array.create trainingpatterncount "empty"
             stats <- Array.create trainingpatterncount 0
+            classlabelstorage <- Array.create trainingpatterncount "empty"
+
+            Console.Write("\nNOTE: All trainingspattern must have the same length! \n")
+
             for c in 0..trainingpatterncount-1 do
                 // Ask the user for pattern
-                //NEED TO BE SAME LENGTH!
-                Console.Write("Pattern {0}: ", (c+1))
-
+                Console.Write("\nPattern {0}: ", (c+1))
                 // Read user input
                 trainingpatternstorage.[c] <- Console.ReadLine()
+
+                //Retrieve class for current pattern
+                Console.Write("Class (0 or 1) of Pattern {0}: ", (c+1))
+                classlabelstorage.[c] <- Console.ReadLine()
+
+            // Ask the user for pattern
+            Console.Write("\nInputpattern to be classified: ")
+            // Read user input
+            inputpatternstorage.[0] <- Console.ReadLine()
+        
+        Console.Write("\n=========== START =========== \n")
+
+        //FOR TESTING!
+        //produce the expected outcomes
+        //let expect = Array.create trainingpatterncount "empty"
+        //for k in 0..trainingpatterncount-1 do
+            //expect.[k] <- inputpatternstorage.[0] + classlabelstorage.[k] + "0" + trainingpatternstorage.[k]
 
         //find the length of the patterns
         let trainingpatternlength = trainingpatternstorage.[0].Length
@@ -1406,7 +1430,6 @@ module TrugenbergerSchuld =
 
             //FLIPPING THE CLASS LABEL
             //All class labels are currently 0!
-            //needs to be generalized!
 
             for k in 0..trainingpatterncount-1 do
                 let savepos = Array.create (trainingpatternlength) 0
@@ -1426,8 +1449,72 @@ module TrugenbergerSchuld =
                     for m in 0..trainingpatternlength-1 do
                         if savepos.[m] = 1 then
                             X   [psi.[memoryregisterstart+m]]
+
+                    //restore the controlqubitpositions
+                    for r in 0..trainingpatternlength-1 do
+                        controlqubitpositions.[r] <- 0
+
+
+            //RUNNING THE KNN ALGORITHM
+            SchuldQMLAlg inputregisterend memoryregisterstart classqubitposition ancillaqubitposition psi
+
+            //retrieve the ancilla stats
+
+            let w = psi.[ancillaqubitposition].Bit.v
+            stats.[w] <- stats.[w] + 1
+
+            //Conditional measurement (CM)
+            if w = 0 then
+              //if CM was successful measure the class qubit
+              M [psi.[classqubitposition]]
+              let c = psi.[classqubitposition].Bit.v
+              cstats.[c] <- cstats.[c] + 1
+
+        //---OUTPUT---\\
+        show "=========== STATS ===========\n"
+        show "Ancilla measured as 0: %d" stats.[0]
+        show "Ancilla measured as 1: %d" stats.[1]
+        show "Class measured as 0: %d" cstats.[0]
+        show "Class measured as 1: %d" cstats.[1]
+
+        show "\n=========== CLASSIFICATION ===========\n"
+        if cstats.[0] > cstats.[1] then
+          show "Input classified as |0>"
+        else
+          show "Input classied as |1>"
+        
+        //TESTSTATS
+
+        (*    //collectstats requiredqubits patternstorage stats psi
+            collectteststats stats psi
+
+        show "========= STATS ========="
+
+        //let expect = Array.create trainingpatterncount "empty"
+        for t in 0..trainingpatterncount-1 do
+            show "expected outcome %i: " (t+1)
+            show "|%s>" expect.[t]
+            show "count: %i" stats.[t]*)
+
+        (*show "Measured |01000011>: %i" stats.[0]
+        show "Measured |01010101>: %i" stats.[1]
+        show "Measured |01100100>: %i" stats.[2]
+        show "Measured |01110111>: %i" stats.[3]
+        show "Measured |1001001111>: %i" stats.[4]
+        show "Measured |1001101011>: %i" stats.[5]
+        show "Measured |1001101101>: %i" stats.[6]*)
+
+        (*show "Measured |10101000>: %i" stats.[4]
+        show "Measured |11100111>: %i" stats.[5]
+        show "Measured |11100011>: %i" stats.[6]
+        show "Measured |11100101>: %i" stats.[7]*)
+
+        //LEFT OVER CODE SNIPPETS
+        (*
+
+
                         //find the positions where 1's occur
-                    (*    if trainingpatternstorage.[k].[m] = '1' then
+                        if trainingpatternstorage.[k].[m] = '1' then
                                 //save the position of the one!
                                 controlqubitpositions.[poscounter] <- m
                                 poscounter <- poscounter + 1
@@ -1439,60 +1526,9 @@ module TrugenbergerSchuld =
                         | 2 -> nCNOTforClasses poscounter memoryregisterstart controlqubitpositions classqubitposition psi
                         | 3 -> nCNOTforClasses poscounter memoryregisterstart controlqubitpositions classqubitposition psi
                         | 4 -> nCNOTforClasses poscounter memoryregisterstart controlqubitpositions classqubitposition psi
-                        | _ -> show "undefined nCNOT class operation!"*)
-                    //restore the controlqubitpositions
-                    for r in 0..trainingpatternlength-1 do
-                        controlqubitpositions.[r] <- 0
-                        //savepos.[r] <- 0
-                    //show "controlqubits empty: %A" controlqubitpositions
-            //let test = Array.create 4 0; 
-            //test.[0] <- 0; test.[1] <- 1; test.[2] <- 2; test.[3] <- 3;
-            //nCNOTforClasses 4 memoryregisterstart test classqubitposition psi
-            //RUNNING THE KNN ALGORITHM
-            //SchuldQMLAlg inputregisterend memoryregisterstart classqubitposition ancillaqubitposition psi
+                        | _ -> show "undefined nCNOT class operation!"
 
-            //retrieve the ancilla stats
-            (*let w = psi.[ancillaqubitposition].Bit.v
-            stats.[w] <- stats.[w] + 1
-
-            //Conditional measurement (CM)
-            if w = 0 then
-              //if CM was successful measure the class qubit
-              M [psi.[classqubitposition]]
-              let c = psi.[classqubitposition].Bit.v
-              cstats.[c] <- cstats.[c] + 1
-
-        //---OUTPUT---\\
-        show "Ancilla measured as 0: %d" stats.[0]
-        show "Ancilla measured as 1: %d" stats.[1]
-        show "Class measured as 0: %d" cstats.[0]
-        show "Class measured as 1: %d" cstats.[1]
-
-        if cstats.[0] > cstats.[1] then
-          show "Input classified as |0>"
-        else
-          show "Input classied as |1>"*)
-
-            //collectstats requiredqubits patternstorage stats psi
-            collectteststats stats psi
-
-        show "========= STATS ========="
-
-        show "Measured |01000011>: %i" stats.[0]
-        show "Measured |01010101>: %i" stats.[1]
-        show "Measured |01100100>: %i" stats.[2]
-        show "Measured |01110111>: %i" stats.[3]
-        show "Measured |1001001111>: %i" stats.[4]
-        show "Measured |1001101011>: %i" stats.[5]
-        show "Measured |1001101101>: %i" stats.[6]
-
-        (*show "Measured |10101000>: %i" stats.[4]
-        show "Measured |11100111>: %i" stats.[5]
-        show "Measured |11100011>: %i" stats.[6]
-        show "Measured |11100101>: %i" stats.[7]*)
-
-        (*for m in 0..patternstorage.Length-1 do
-            show "Measured |%s>: %i" patternstorage.[m] stats.[m]*)
+        *)
 
 
 module Main =
