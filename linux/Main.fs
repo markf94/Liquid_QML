@@ -1138,7 +1138,7 @@ module TrugenbergerSchuld =
             match numberofcontrols with
                 | 1 -> CNOT  [psi.[memoryregisterstart+controls.[0]];psi.[classqubitposition]]
                 | 2 -> CCNOT  [psi.[memoryregisterstart+controls.[0]];psi.[memoryregisterstart+controls.[1]];psi.[classqubitposition]]
-                | 3 -> show "control1: %i" (memoryregisterstart+controls.[0]); show "control2: %i" (memoryregisterstart+controls.[1]); show "control3: %i" (memoryregisterstart+controls.[2]); Cgate (CCNOT)  [psi.[memoryregisterstart+controls.[0]];psi.[memoryregisterstart+controls.[1]];psi.[memoryregisterstart+controls.[2]];psi.[classqubitposition]]
+                | 3 -> Cgate (CCNOT)  [psi.[memoryregisterstart+controls.[0]];psi.[memoryregisterstart+controls.[1]];psi.[memoryregisterstart+controls.[2]];psi.[classqubitposition]]
                 | 4 -> Cgate (Cgate (CCNOT))  [psi.[memoryregisterstart+controls.[0]];psi.[memoryregisterstart+controls.[1]];psi.[memoryregisterstart+controls.[2]];psi.[memoryregisterstart+controls.[3]];psi.[classqubitposition]]
                 | 5 -> Cgate (Cgate (Cgate (CCNOT)))  [psi.[memoryregisterstart+controls.[0]];psi.[memoryregisterstart+controls.[1]];psi.[memoryregisterstart+controls.[2]];psi.[memoryregisterstart+controls.[3]];psi.[memoryregisterstart+controls.[4]];psi.[classqubitposition]]
                 | 6 -> Cgate (Cgate (Cgate (Cgate (CCNOT))))  [psi.[memoryregisterstart+controls.[0]];psi.[memoryregisterstart+controls.[1]];psi.[memoryregisterstart+controls.[2]];psi.[memoryregisterstart+controls.[3]];psi.[memoryregisterstart+controls.[4]];psi.[memoryregisterstart+controls.[5]];psi.[classqubitposition]]
@@ -1186,18 +1186,18 @@ module TrugenbergerSchuld =
     let collectteststats (stats:_[]) (qs:Qubits) =
 
         M >< qs
-        let a,b,c,d,e,f,g,h,i,j = qs.[0].Bit.v, qs.[1].Bit.v, qs.[2].Bit.v, qs.[3].Bit.v, qs.[4].Bit.v, qs.[5].Bit.v, qs.[6].Bit.v, qs.[7].Bit.v, qs.[8].Bit.v, qs.[9].Bit.v
-        //show "qubits: %i %i %i %i %i %i %i %i %i %i" a b c d e f g h  i j
+        let a,b,c,d,e,f,g,h,i,j = qs.[0].Bit.v, qs.[1].Bit.v, qs.[2].Bit.v, qs.[3].Bit.v, qs.[4].Bit.v, qs.[5].Bit.v, qs.[6].Bit.v, qs.[7].Bit.v,qs.[8].Bit.v, qs.[9].Bit.v
+        show "qubits: %i %i %i %i %i %i %i %i %i %i" a b c d e f g h  i j
 
-        match a,b,c,d,e,f,g,h,i,j with
-                (*| 1,0,0,0,0,1,0,1 -> stats.[0] <- stats.[0] + 1
-                | 1,0,0,1,0,0,1,1 -> stats.[1] <- stats.[1] + 1
-                | 1,0,0,1,0,1,1,0 -> stats.[2] <- stats.[2] + 1
-                | 0,1,1,1,0,1,1,1 -> stats.[3] <- stats.[3] + 1*)
-                | 1,0,0,1,0,0,1,1,1,1 -> stats.[0] <- stats.[0] + 1
+        (*match a,b,c,d,e,f,g,h with
+                | 0,1,0,0,0,0,0,1 -> stats.[0] <- stats.[0] + 1
+                | 0,1,0,0,0,0,1,1 -> stats.[1] <- stats.[1] + 1
+                | 0,1,0,1,0,1,1,1 -> stats.[2] <- stats.[2] + 1
+                | 0,1,0,1,0,1,0,0 -> stats.[3] <- stats.[3] + 1*)
+                (*| 1,0,0,1,0,0,1,1,1,1 -> stats.[0] <- stats.[0] + 1
                 | 1,0,0,1,0,0,0,0,0,0 -> stats.[1] <- stats.[1] + 1
                 | 1,0,0,1,1,0,1,0,1,1 -> stats.[2] <- stats.[2] + 1
-                | 1,0,0,1,1,0,1,1,0,1 -> stats.[3] <- stats.[3] + 1
+                | 1,0,0,1,1,0,1,1,0,1 -> stats.[3] <- stats.[3] + 1*)
                 (*| 0,0,1,0 -> stats.[2] <- stats.[2] + 1.0
                 | 0,1,0,0 -> stats.[3] <- stats.[3] + 1.0
                 | 1,0,0,0 -> stats.[4] <- stats.[4] + 1.0
@@ -1212,7 +1212,7 @@ module TrugenbergerSchuld =
                 | 1,1,0,1 -> stats.[13] <- stats.[13] + 1.0
                 | 1,0,1,1 -> stats.[14] <- stats.[14] + 1.0
                 | 1,1,1,1 -> stats.[15] <- stats.[15] + 1.0*)
-                | _,_,_,_,_,_,_,_,_,_ -> show "error" //to handle all other cases (which won't occur any way)
+                //| _,_,_,_,_,_,_,_ -> show "error" //to handle all other cases (which won't occur any way)
 
     let StorageAlgorithm (patternstorage:string[]) (patternlength:int) (patternnumber:int) (psi:Qubits)=
 
@@ -1304,40 +1304,55 @@ module TrugenbergerSchuld =
 
     [<LQD>] //means it can be called from the command line
     let __TrugenbergerSchuld(runs:int) =
-        show "The memory storage algorithm combined with Maria's qubit KNN"
-        show "_____________________________________________________________"
+        show "Trugenberger's (2001) storage algorithm combined with Schuld et al.(2014) qubit KNN"
+        show "____________________________________________________________________________________"
 
+        // ---- GENERAL INFO ---- \\
+
+        //THIS ALGORITHM IS BASED ON THE PAPER "QUANTUM COMPUTING FOR PATTERN CLASSIFICATION" BY SCHULD ET AL. (2014)
+        //PAPER CAN BE FOUND AT: http://arxiv.org/abs/1412.3646
+        //THE CODE WAS WRITTEN BY MARK FINGERHUTH FOR HIS BACHELOR THESIS AT THE MAASTRICHT SCIENCE PROGRAMME, MAASTRICHT UNIVERSITY
+
+        // ---- DEVELOPER MODE ---- \\
         // RUNNING THE PROGRAM IN VISUAL STUDIO/MONODEVELOP (DEV MODE) OR EXTERNAL CONSOLE?
         // if DEV MODE -> set the variable to true
         let devmode = false
+        let test = false
 
-        //Need to dummy initialize these variables to prevent errors
-        //Will be redefined below
+        // ---- INITIALIZING VARIABLES AND ARRAYS ---- \\
         let mutable trainingpatternstorage = Array.create 1 "empty"
         let mutable classlabelstorage = Array.create 1 "empty"
         let inputpatternstorage = Array.create 1 "empty"
-        let mutable trainingpatterncount = 0
         let mutable stats = Array.create 1 0
         let cstats = Array.create 2 0
+        let mutable hd = Array.create 2 0.
+        let mutable expect = Array.create 1 "empty"
+        let mutable trainingpatterncount = 0
+        let mutable conditionalcounter = 0
 
-
+        // ---- DEFINING THE TRAINING AND INPUT SAMPLES ---- \\
         if devmode = true then
             stats <- Array.create 10 0
-            trainingpatterncount <- 4
+            trainingpatterncount <- 6
             trainingpatternstorage <- Array.create trainingpatterncount "empty"
             classlabelstorage <- Array.create trainingpatterncount "empty"
+
             //Defining the patterns that are to be stored
             //NEED TO BE SAME LENGTH!
             //Any vector containing only of 0's must have class 0!!! (code restriction)
             trainingpatternstorage.[0] <- "0001"
             classlabelstorage.[0] <- "0"
-            trainingpatternstorage.[1] <- "0010"
+            trainingpatternstorage.[1] <- "0011"
             classlabelstorage.[1] <- "0"
-            trainingpatternstorage.[2] <- "1111"
-            classlabelstorage.[2] <- "1"
-            trainingpatternstorage.[3] <- "1101"
+            trainingpatternstorage.[2] <- "0000"
+            classlabelstorage.[2] <- "0"
+            trainingpatternstorage.[3] <- "1111"
             classlabelstorage.[3] <- "1"
-            inputpatternstorage.[0] <- "0011"
+            trainingpatternstorage.[4] <- "1000"
+            classlabelstorage.[4] <- "1"
+            trainingpatternstorage.[5] <- "1100"
+            classlabelstorage.[5] <- "1"
+            inputpatternstorage.[0] <- "0010"
 
         else
             Console.Write("\n=========== USER INPUT =========== \n")
@@ -1351,7 +1366,7 @@ module TrugenbergerSchuld =
             stats <- Array.create trainingpatterncount 0
             classlabelstorage <- Array.create trainingpatterncount "empty"
 
-            Console.Write("\nNOTE: All trainingspattern must have the same length! \n")
+            Console.Write("\nNOTE: All trainingspattern must have the same length! \nAny vector containing only of 0's must have class 0! (code restriction) \n")
 
             for c in 0..trainingpatterncount-1 do
                 // Ask the user for pattern
@@ -1367,46 +1382,63 @@ module TrugenbergerSchuld =
             Console.Write("\nInputpattern to be classified: ")
             // Read user input
             inputpatternstorage.[0] <- Console.ReadLine()
-        
-        Console.Write("\n=========== START =========== \n")
 
-        //FOR TESTING!
-        //produce the expected outcomes
-        //let expect = Array.create trainingpatterncount "empty"
-        //for k in 0..trainingpatterncount-1 do
-            //expect.[k] <- inputpatternstorage.[0] + classlabelstorage.[k] + "0" + trainingpatternstorage.[k]
+        show ""
+        show "=========== START ==========="
+        show ""
+
+        // ---- STRING MANIPULATION IF TEST MODE IS ON ---- \\
+        if test = true then
+            //FOR TESTING!
+            //produce the expected outcomes
+            expect <- Array.create trainingpatterncount "empty"
+            for k in 0..trainingpatterncount-1 do
+                expect.[k] <- inputpatternstorage.[0] + classlabelstorage.[k] + "0" + trainingpatternstorage.[k]
+
+
+        // ---- COMPUTING THE PATTERN LENGTH AND NUMBER OF REQUIRED QUBITS ---- \\
 
         //find the length of the patterns
         let trainingpatternlength = trainingpatternstorage.[0].Length
         show "Binary pattern length: %i" trainingpatternlength
 
-        //initialize empty spots with -1
-        let controlqubitpositions = Array.create trainingpatternlength 0
-
-
         //memory register (patternlength long); loading register (patternlength long); utility register (2 qubits)
         let requiredqubits = 2*trainingpatternlength+2
         show "Number of required qubits: %i" requiredqubits
-        let k = Ket(requiredqubits)
-        let psi = k.Qubits
+        let k = Ket(requiredqubits) //initialize state vector
+        let psi = k.Qubits //create qubit list
+
+        //initialize controlqubits array (needed for class qubit flipping)
+        let controlqubitpositions = Array.create trainingpatternlength 0
 
         //Save important positionmarkers
         let u1position = trainingpatternlength
         let u2position = trainingpatternlength + 1
         let memoryregisterstart = u2position + 1
-       
 
+
+        // ---- MAIN LOOP ---- \\
         for i in 0..runs-1 do
-             
+
             //show "ITERATION %i" i
-            let psi = k.Reset()
+            let psi = k.Reset() //reset the state vector
+
+
+
+
+            // ---- STATE PREPARATION (see Trugenberger, 2001) ---- \\
 
             X   [psi.[u2position]] //flip the second utility qubit
 
             for p in 1..trainingpatterncount do
                 StorageAlgorithm trainingpatternstorage trainingpatternlength p psi
 
-            // ---- MEMORY REGISTER IS PREPARED NOW ---- \\
+            // ---- MEMORY REGISTER IS NOW PREPARED ---- \\
+
+
+
+
+            // ---- QUANTUM KNN ALGORITHM (see Schuld et al., 2014) ---- \\
 
             // TO KEEP TRACK OF WHAT'S HAPPENING
             // trainings register --> all qubits from psi.[memoryregisterstart] are part of the initialized memory register superposition
@@ -1419,17 +1451,16 @@ module TrugenbergerSchuld =
             let ancillaqubitposition = u2position
             let inputregisterend = u1position - 1
 
-            //MODIFYING THE FIRST REGISTER:
-            //Loading the inputvector
+            // ---- MODIFYING THE FIRST REGISTER ---- \\
 
+            //Loading the inputvector
             for h in 0..inputregisterend do
                 //compare the inputpattern with the last trainingpattern (which is still loaded in the first register)
                 if inputpatternstorage.[0].[h] <> trainingpatternstorage.[trainingpatterncount-1].[h] then
-                    //show "%i" h
                     X   [psi.[h]] //flip the qubit if appropriate
-
-            //FLIPPING THE CLASS LABEL
-            //All class labels are currently 0!
+            
+            // ---- FLIPPING THE CLASS LABEL ---- \\
+            //since all class labels are currently 0!
 
             for k in 0..trainingpatterncount-1 do
                 let savepos = Array.create (trainingpatternlength) 0
@@ -1440,9 +1471,7 @@ module TrugenbergerSchuld =
                         if trainingpatternstorage.[k].[m] = '0' then
                             X   [psi.[memoryregisterstart+m]]
                             savepos.[m] <- 1
-                            //show "savespos: %A" savepos
                         controlqubitpositions.[m] <- m
-                        //show "controlqubits filled: %A" controlqubitpositions
                     nCNOTforClasses trainingpatternlength memoryregisterstart controlqubitpositions classqubitposition psi
 
                     //apply NOT again to all the previously flipped qubits (reverse the previous action)
@@ -1450,51 +1479,92 @@ module TrugenbergerSchuld =
                         if savepos.[m] = 1 then
                             X   [psi.[memoryregisterstart+m]]
 
-                    //restore the controlqubitpositions
+                    //restore the controlqubitpositions to 0
                     for r in 0..trainingpatternlength-1 do
                         controlqubitpositions.[r] <- 0
 
+            // ---- RUNNING THE HEART OF THE KNN ALGORITHM ---- \\
+            if test = false then
+                SchuldQMLAlg inputregisterend memoryregisterstart classqubitposition ancillaqubitposition psi
 
-            //RUNNING THE KNN ALGORITHM
-            SchuldQMLAlg inputregisterend memoryregisterstart classqubitposition ancillaqubitposition psi
 
-            //retrieve the ancilla stats
+            // ---- RETRIEVING STATS ---- \\
 
-            let w = psi.[ancillaqubitposition].Bit.v
-            stats.[w] <- stats.[w] + 1
+            if test = false then
+                //retrieve the ancilla stats
+                let w = psi.[ancillaqubitposition].Bit.v
+                stats.[w] <- stats.[w] + 1
 
-            //Conditional measurement (CM)
-            if w = 0 then
-              //if CM was successful measure the class qubit
-              M [psi.[classqubitposition]]
-              let c = psi.[classqubitposition].Bit.v
-              cstats.[c] <- cstats.[c] + 1
+                //Conditional measurement (CM)
+                if w = 0 then
+                    //if CM was successful measure the class qubit
+                    M [psi.[classqubitposition]]
+                    let c = psi.[classqubitposition].Bit.v
+                    cstats.[c] <- cstats.[c] + 1
+                    //count the number of successful CMs for statistics later on
+                    conditionalcounter <- conditionalcounter + 1
+            else
+                //collectstats requiredqubits patternstorage stats psi
+                collectteststats stats psi
+        // ---- CALCULATE THEORETICAL PREDICTIONS (see Schuld et al., 2014) ---- \\
 
-        //---OUTPUT---\\
-        show "=========== STATS ===========\n"
-        show "Ancilla measured as 0: %d" stats.[0]
-        show "Ancilla measured as 1: %d" stats.[1]
-        show "Class measured as 0: %d" cstats.[0]
-        show "Class measured as 1: %d" cstats.[1]
+        hd <- Array.create trainingpatterncount 0.
+        let mutable probancpart2 = 0.
+        let mutable probclass0part2 = 0.
+        let mutable probclass1part2 = 0.
 
-        show "\n=========== CLASSIFICATION ===========\n"
-        if cstats.[0] > cstats.[1] then
-          show "Input classified as |0>"
+        //Calculate Hamming distances between input and training vectors
+        for s in 0..trainingpatterncount-1 do
+            for m in 0..trainingpatternlength-1 do
+                if trainingpatternstorage.[s].[m] <> inputpatternstorage.[0].[m] then
+                    hd.[s] <- hd.[s] + 1.
+            probancpart2 <- probancpart2 + ((cos (System.Math.PI/(2.*(float trainingpatternlength))*hd.[s]))**2.)
+            if classlabelstorage.[s] = "0" then
+                probclass0part2 <- probclass0part2 + ((cos (System.Math.PI/(2.*(float trainingpatternlength))*hd.[s]))**2.)
+            else
+                probclass1part2 <- probclass1part2 + ((cos (System.Math.PI/(2.*(float trainingpatternlength))*hd.[s]))**2.)
+
+        let probanc = (1./(float trainingpatterncount))*probancpart2
+        let probclass0 = (1./((float trainingpatterncount)*probanc))*probclass0part2
+        let probclass1 = (1./((float trainingpatterncount)*probanc))*probclass1part2
+
+
+        // ---- OUTPUT RESULTS ---- \\
+
+        if test = false then
+          show ""
+          show "=========== STATS ==========="
+          show ""
+          show "Ancilla measured as 0: %d" stats.[0]
+          show "Ancilla measured as 1: %d" stats.[1]
+          show "Prediction: %f" probanc
+          show ""
+          show "Class measured as 0: %d" cstats.[0]
+          show "Experimental prob class 0: %f" ((float cstats.[0])/(float conditionalcounter))
+          show "Prediction class 0: %f" probclass0
+          show ""
+          show "Class measured as 1: %d" cstats.[1]
+          show "Experimental prob class 1: %f" ((float cstats.[1])/(float conditionalcounter))
+          show "Prediction class 1: %f" probclass1
+
+          show ""
+          show "=========== CLASSIFICATION ==========="
+          show ""
+          if cstats.[0] > cstats.[1] then
+            show "Input classified as |0>"
+          else
+            show "Input classied as |1>"
         else
-          show "Input classied as |1>"
-        
-        //TESTSTATS
 
-        (*    //collectstats requiredqubits patternstorage stats psi
-            collectteststats stats psi
+        // ---- TESTSTATS FOR DEBUGGING ---- \\
 
-        show "========= STATS ========="
+          show "========= STATS ========="
 
-        //let expect = Array.create trainingpatterncount "empty"
-        for t in 0..trainingpatterncount-1 do
-            show "expected outcome %i: " (t+1)
-            show "|%s>" expect.[t]
-            show "count: %i" stats.[t]*)
+          //let expect = Array.create trainingpatterncount "empty"
+          for t in 0..trainingpatterncount-1 do
+              show "expected outcome %i: " (t+1)
+              show "|%s>" expect.[t]
+              show "count: %i" stats.[t]
 
         (*show "Measured |01000011>: %i" stats.[0]
         show "Measured |01010101>: %i" stats.[1]
@@ -1508,27 +1578,6 @@ module TrugenbergerSchuld =
         show "Measured |11100111>: %i" stats.[5]
         show "Measured |11100011>: %i" stats.[6]
         show "Measured |11100101>: %i" stats.[7]*)
-
-        //LEFT OVER CODE SNIPPETS
-        (*
-
-
-                        //find the positions where 1's occur
-                        if trainingpatternstorage.[k].[m] = '1' then
-                                //save the position of the one!
-                                controlqubitpositions.[poscounter] <- m
-                                poscounter <- poscounter + 1
-                                //show "1pos: %i" m
-                    //show "poscounter: %i" poscounter
-                    //show "controlqubits filled: %A" controlqubitpositions
-                    match poscounter with
-                        | 1 -> nCNOTforClasses poscounter memoryregisterstart controlqubitpositions classqubitposition psi
-                        | 2 -> nCNOTforClasses poscounter memoryregisterstart controlqubitpositions classqubitposition psi
-                        | 3 -> nCNOTforClasses poscounter memoryregisterstart controlqubitpositions classqubitposition psi
-                        | 4 -> nCNOTforClasses poscounter memoryregisterstart controlqubitpositions classqubitposition psi
-                        | _ -> show "undefined nCNOT class operation!"
-
-        *)
 
 
 module Main =

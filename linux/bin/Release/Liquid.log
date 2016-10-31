@@ -1,16 +1,8 @@
 0:0000.0/=============== Logging to: Liquid.log opened ================
-0:0000.0/The memory storage algorithm combined with Maria's qubit KNN
-0:0000.0/_____________________________________________________________
-0:0000.4/Binary pattern length: 4
-0:0000.4/Number of required qubits: 10
-0:0001.7/=========== STATS ===========
-
-0:0001.7/Ancilla measured as 0: 49
-0:0001.7/Ancilla measured as 1: 51
-0:0001.7/Class measured as 0: 32
-0:0001.7/Class measured as 1: 17
-0:0001.7/
-=========== CLASSIFICATION ===========
-
-0:0001.7/Input classified as |0>
-0:0001.7/=============== Logging to: Liquid.log closed ================
+0:0000.0/Trugenberger's (2001) storage algorithm combined with Schuld et al.(2014) qubit KNN
+0:0000.0/____________________________________________________________________________________
+0:0000.3/
+0:0000.3/=========== START ===========
+0:0000.3/
+0:0000.3/Binary pattern length: 8
+0:0000.3/Number of required qubits: 18
