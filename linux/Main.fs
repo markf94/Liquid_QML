@@ -1611,6 +1611,18 @@ module ParsingWindowDiffusion =
             ))
         gate.Run qs
 
+    let DiffusionGateAdapted2 (delta:float) (qs:Qubits) = 
+        let gate =
+            Gate.Build("DiffusionGateAdapted2", fun () ->
+                new Gate(
+                    //Qubits = qs.Length,
+                    Name = "DiffusionGateAdapted2",
+                    Help = "Diffusion operator as intended by Maria Schuld",
+                    Mat  = (CSMat(2,[(0,0,sqrt (delta),0.);(0,1,sqrt (1.-delta),0.);(1,0,sqrt (1.-delta),0.);(1,1,-sqrt (delta),0.)]))
+                    //Draw = .....,
+            ))
+        gate.Run qs
+
     //-----END: define new gates----\\
 
     //-----START: define new functions----\\
@@ -1632,18 +1644,113 @@ module ParsingWindowDiffusion =
                 | 1,1,1 -> stats.[7] <- stats.[7] + 1.0
                 | _,_,_ -> show "error" //to handle all other cases
 
+    let collectteststats2 (stats:_[]) (qs:Qubits) =
+
+        M >< qs
+        let a,b,c,d = qs.[0].Bit.v, qs.[1].Bit.v, qs.[2].Bit.v, qs.[3].Bit.v
+        //show "qubits: %i %i %i" a b c
+
+        match a,b,c,d with
+                | 0,0,0,0 -> stats.[0] <- stats.[0] + 1.0
+                | 1,0,0,0 -> stats.[1] <- stats.[1] + 1.0
+                | 0,1,0,0 -> stats.[2] <- stats.[2] + 1.0
+                | 0,0,1,0 -> stats.[3] <- stats.[3] + 1.0
+                | 0,0,0,1 -> stats.[4] <- stats.[4] + 1.0
+                | 1,1,0,0 -> stats.[5] <- stats.[5] + 1.0
+                | 1,0,1,0 -> stats.[6] <- stats.[6] + 1.0
+                | 1,0,0,1 -> stats.[7] <- stats.[7] + 1.0
+                | 0,1,1,0 -> stats.[8] <- stats.[8] + 1.0
+                | 0,1,0,1 -> stats.[9] <- stats.[9] + 1.0
+                | 0,0,1,1 -> stats.[10] <- stats.[10] + 1.0
+                | 1,0,1,1 -> stats.[11] <- stats.[11] + 1.0
+                | 1,1,1,0 -> stats.[12] <- stats.[12] + 1.0
+                | 1,1,0,1 -> stats.[13] <- stats.[13] + 1.0
+                | 0,1,1,1 -> stats.[14] <- stats.[14] + 1.0
+                | 1,1,1,1 -> stats.[15] <- stats.[15] + 1.0
+                | _,_,_,_ -> show "error" //to handle all other cases
+
     //-----END: define new functions----\\
 
     [<LQD>]
     let __ParsingWindowDiffusion() = 
 
         //Initialize a three qubit state
-        let k = Ket(3)
+        let qubitnumber = 4
+        let mutable three = true
+
+        if qubitnumber <> 3 then
+            three <- false
+        
+        let statsize = 2.**(float qubitnumber)
+
+
+
+        let k = Ket(qubitnumber)
         let qs = k.Qubits
         let delta = 0.9
-        let stats = Array.create 8 0.
+        let stats = Array.create (int statsize) 0.
         let runs = 100000
 
+
+        for m in 0..runs-1 do
+
+            let qs = k.Reset()
+
+            // 3 qubit case: prepare the state |010>
+            // 4 qubit case: prepare the state |0100>
+            X   [qs.[1]]
+
+            // Apply the diffusion operator to all qubits
+            for i in 0..qubitnumber-1 do
+                DiffusionGateAdapted   delta   [qs.[i]]
+            // Apply the diffusion operator to all qubits
+            //for i in 0..qubitnumber-1 do
+                //DiffusionGateAdapted2   0.7   [qs.[i]]
+          
+            if three = true then
+                // Retrieve the output
+                collectteststats stats qs
+            else
+                // Retrieve the output
+                collectteststats2 stats qs
+
+        let floatruns = float (runs)
+        if three = true then
+            
+            show "-----------------------------"
+            show "--------_- RESULTS ----------"
+            show "With sqrt(d) and -sqrt(d) on the diagonal"
+            show "Measured |000>: %f" (stats.[0]/(floatruns))
+            show "Measured |100>: %f" (stats.[1]/(floatruns))
+            show "Measured |010>: %f" (stats.[2]/(floatruns))
+            show "Measured |001>: %f" (stats.[3]/(floatruns))
+            show "Measured |110>: %f" (stats.[4]/(floatruns))
+            show "Measured |011>: %f" (stats.[5]/(floatruns))
+            show "Measured |101>: %f" (stats.[6]/(floatruns))
+            show "Measured |111>: %f" (stats.[7]/(floatruns))
+        else
+            show "-----------------------------"
+            show "--------_- RESULTS ----------"
+            show "With sqrt(d) and -sqrt(d) on the diagonal"
+            show "Measured |0000>: %f" (stats.[0]/(floatruns))
+            show "Measured |1000>: %f" (stats.[1]/(floatruns))
+            show "Measured |0100>: %f" (stats.[2]/(floatruns))
+            show "Measured |0010>: %f" (stats.[3]/(floatruns))
+            show "Measured |0001>: %f" (stats.[4]/(floatruns))
+            show "Measured |1100>: %f" (stats.[5]/(floatruns))
+            show "Measured |1010>: %f" (stats.[6]/(floatruns))
+            show "Measured |1001>: %f" (stats.[7]/(floatruns))
+            show "Measured |0110>: %f" (stats.[8]/(floatruns))
+            show "Measured |0101>: %f" (stats.[9]/(floatruns))
+            show "Measured |0011>: %f" (stats.[10]/(floatruns))
+            show "Measured |1011>: %f" (stats.[11]/(floatruns))
+            show "Measured |1110>: %f" (stats.[12]/(floatruns))
+            show "Measured |1101>: %f" (stats.[13]/(floatruns))
+            show "Measured |0111>: %f" (stats.[14]/(floatruns))
+            show "Measured |1111>: %f" (stats.[15]/(floatruns))
+
+        (*
+        let stats = Array.create 8 0.
         for m in 0..runs-1 do
 
             let qs = k.Reset()
@@ -1655,12 +1762,12 @@ module ParsingWindowDiffusion =
             for i in 0..2 do
                 DiffusionGateOriginal   delta   [qs.[i]]
 
+
             // Retrieve the output
             collectteststats stats qs
         
-        let floatruns = float (runs)
         show "-----------------------------"
-        show "--------_- RESULTS ----------"
+        show "---------- RESULTS ----------"
         show "With sqrt(1-d) and -sqrt(1-d) on the diagonal"
         show "Measured |000>: %f" (stats.[0]/(floatruns))
         show "Measured |100>: %f" (stats.[1]/(floatruns))
@@ -1670,34 +1777,9 @@ module ParsingWindowDiffusion =
         show "Measured |011>: %f" (stats.[5]/(floatruns))
         show "Measured |101>: %f" (stats.[6]/(floatruns))
         show "Measured |111>: %f" (stats.[7]/(floatruns))
+        *)
 
-        let stats = Array.create 8 0.
-        for m in 0..runs-1 do
 
-            let qs = k.Reset()
-
-            // prepare the state |010>
-            X   [qs.[1]]
-
-            // Apply the diffusion operator to all qubits
-            for i in 0..2 do
-                DiffusionGateAdapted   delta   [qs.[i]]
-
-            // Retrieve the output
-            collectteststats stats qs
-        
-        show "-----------------------------"
-        show "---------- RESULTS ----------"
-        show "With sqrt(d) and -sqrt(d) on the diagonal"
-        show "Measured |000>: %f" (stats.[0]/(floatruns))
-        show "Measured |100>: %f" (stats.[1]/(floatruns))
-        show "Measured |010>: %f" (stats.[2]/(floatruns))
-        show "Measured |001>: %f" (stats.[3]/(floatruns))
-        show "Measured |110>: %f" (stats.[4]/(floatruns))
-        show "Measured |011>: %f" (stats.[5]/(floatruns))
-        show "Measured |101>: %f" (stats.[6]/(floatruns))
-        show "Measured |111>: %f" (stats.[7]/(floatruns))
-        
 module Main =
     open App
 
