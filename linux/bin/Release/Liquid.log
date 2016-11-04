@@ -1,27 +1,24 @@
 0:0000.0/=============== Logging to: Liquid.log opened ================
-0:0000.0/Trugenberger's (2001) storage algorithm combined with Schuld et al.(2014) qubit KNN
-0:0000.0/____________________________________________________________________________________
-0:0000.3/
-0:0000.3/=========== START ===========
-0:0000.3/
-0:0000.3/Binary pattern length: 8
-0:0000.3/Number of required qubits: 18
-0:0001.5/
-0:0001.5/=========== STATS ===========
-0:0001.5/
-0:0001.5/Ancilla measured as 0: 2
-0:0001.5/Ancilla measured as 1: 8
-0:0001.5/Prediction: 0.500000
-0:0001.5/
-0:0001.5/Class measured as 0: 2
-0:0001.5/Experimental prob class 0: 1.000000
-0:0001.5/Prediction class 0: 0.308658
-0:0001.5/
-0:0001.5/Class measured as 1: 0
-0:0001.5/Experimental prob class 1: 0.000000
-0:0001.5/Prediction class 1: 0.691342
-0:0001.5/
-0:0001.5/=========== CLASSIFICATION ===========
-0:0001.5/
-0:0001.5/Input classified as |0>
-0:0001.5/=============== Logging to: Liquid.log closed ================
+0:0000.1/-----------------------------
+0:0000.1/--------_- RESULTS ----------
+0:0000.1/With sqrt(1-d) and -sqrt(1-d) on the diagonal
+0:0000.1/Measured |000>: 0.009210
+0:0000.1/Measured |100>: 0.081040
+0:0000.1/Measured |010>: 0.001000
+0:0000.1/Measured |001>: 0.080990
+0:0000.1/Measured |110>: 0.009150
+0:0000.1/Measured |011>: 0.008800
+0:0000.1/Measured |101>: 0.728780
+0:0000.1/Measured |111>: 0.081030
+0:0000.3/-----------------------------
+0:0000.3/---------- RESULTS ----------
+0:0000.3/With sqrt(d) and -sqrt(d) on the diagonal
+0:0000.3/Measured |000>: 0.081570
+0:0000.3/Measured |100>: 0.009110
+0:0000.3/Measured |010>: 0.730840
+0:0000.3/Measured |001>: 0.008790
+0:0000.3/Measured |110>: 0.081000
+0:0000.3/Measured |011>: 0.078770
+0:0000.3/Measured |101>: 0.001100
+0:0000.3/Measured |111>: 0.008820
+0:0000.3/=============== Logging to: Liquid.log closed ================

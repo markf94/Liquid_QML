@@ -1425,7 +1425,6 @@ module TrugenbergerSchuld =
 
 
 
-
             // ---- STATE PREPARATION (see Trugenberger, 2001) ---- \\
 
             X   [psi.[u2position]] //flip the second utility qubit
@@ -1434,7 +1433,6 @@ module TrugenbergerSchuld =
                 StorageAlgorithm trainingpatternstorage trainingpatternlength p psi
 
             // ---- MEMORY REGISTER IS NOW PREPARED ---- \\
-
 
 
 
@@ -1486,7 +1484,6 @@ module TrugenbergerSchuld =
             // ---- RUNNING THE HEART OF THE KNN ALGORITHM ---- \\
             if test = false then
                 SchuldQMLAlg inputregisterend memoryregisterstart classqubitposition ancillaqubitposition psi
-
 
             // ---- RETRIEVING STATS ---- \\
 
@@ -1580,6 +1577,127 @@ module TrugenbergerSchuld =
         show "Measured |11100101>: %i" stats.[7]*)
 
 
+module ParsingWindowDiffusion =
+    open System
+    open Util
+    open Operations
+    //open Native             // Support for Native Interop
+    //open HamiltonianGates   // Extra gates for doing Hamiltonian simulations
+    //open Tests              // All the built-in tests
+
+    //-----START: define new gates----\\
+
+    let DiffusionGateOriginal (delta:float) (qs:Qubits) = 
+        let gate =
+            Gate.Build("DiffusionGateOriginal", fun () ->
+                new Gate(
+                    //Qubits = qs.Length,
+                    Name = "DiffusionGateOriginal",
+                    Help = "Diffusion operator as originally proposed by Maria Schuld",
+                    Mat  = (CSMat(2,[(0,0,sqrt (1.-delta),0.);(0,1,sqrt delta,0.);(1,0,sqrt delta,0.);(1,1,-sqrt (1.-delta),0.)]))
+                    //Draw = .....,
+            ))
+        gate.Run qs
+
+    let DiffusionGateAdapted (delta:float) (qs:Qubits) = 
+        let gate =
+            Gate.Build("DiffusionGateAdapted", fun () ->
+                new Gate(
+                    //Qubits = qs.Length,
+                    Name = "DiffusionGateAdapted",
+                    Help = "Diffusion operator as intended by Maria Schuld",
+                    Mat  = (CSMat(2,[(0,0,sqrt (delta),0.);(0,1,sqrt (1.-delta),0.);(1,0,sqrt (1.-delta),0.);(1,1,-sqrt (delta),0.)]))
+                    //Draw = .....,
+            ))
+        gate.Run qs
+
+    //-----END: define new gates----\\
+
+    //-----START: define new functions----\\
+
+    let collectteststats (stats:_[]) (qs:Qubits) =
+
+        M >< qs
+        let a,b,c = qs.[0].Bit.v, qs.[1].Bit.v, qs.[2].Bit.v
+        //show "qubits: %i %i %i" a b c
+
+        match a,b,c with
+                | 0,0,0 -> stats.[0] <- stats.[0] + 1.0
+                | 1,0,0-> stats.[1] <- stats.[1] + 1.0
+                | 0,1,0 -> stats.[2] <- stats.[2] + 1.0
+                | 0,0,1 -> stats.[3] <- stats.[3] + 1.0
+                | 1,1,0 -> stats.[4] <- stats.[4] + 1.0
+                | 0,1,1 -> stats.[5] <- stats.[5] + 1.0
+                | 1,0,1 -> stats.[6] <- stats.[6] + 1.0
+                | 1,1,1 -> stats.[7] <- stats.[7] + 1.0
+                | _,_,_ -> show "error" //to handle all other cases
+
+    //-----END: define new functions----\\
+
+    [<LQD>]
+    let __ParsingWindowDiffusion() = 
+
+        //Initialize a three qubit state
+        let k = Ket(3)
+        let qs = k.Qubits
+        let delta = 0.9
+        let stats = Array.create 8 0.
+        let runs = 100000
+
+        for m in 0..runs-1 do
+
+            let qs = k.Reset()
+
+            // prepare the state |010>
+            X   [qs.[1]]
+
+            // Apply the diffusion operator to all qubits
+            for i in 0..2 do
+                DiffusionGateOriginal   delta   [qs.[i]]
+
+            // Retrieve the output
+            collectteststats stats qs
+        
+        let floatruns = float (runs)
+        show "-----------------------------"
+        show "--------_- RESULTS ----------"
+        show "With sqrt(1-d) and -sqrt(1-d) on the diagonal"
+        show "Measured |000>: %f" (stats.[0]/(floatruns))
+        show "Measured |100>: %f" (stats.[1]/(floatruns))
+        show "Measured |010>: %f" (stats.[2]/(floatruns))
+        show "Measured |001>: %f" (stats.[3]/(floatruns))
+        show "Measured |110>: %f" (stats.[4]/(floatruns))
+        show "Measured |011>: %f" (stats.[5]/(floatruns))
+        show "Measured |101>: %f" (stats.[6]/(floatruns))
+        show "Measured |111>: %f" (stats.[7]/(floatruns))
+
+        let stats = Array.create 8 0.
+        for m in 0..runs-1 do
+
+            let qs = k.Reset()
+
+            // prepare the state |010>
+            X   [qs.[1]]
+
+            // Apply the diffusion operator to all qubits
+            for i in 0..2 do
+                DiffusionGateAdapted   delta   [qs.[i]]
+
+            // Retrieve the output
+            collectteststats stats qs
+        
+        show "-----------------------------"
+        show "---------- RESULTS ----------"
+        show "With sqrt(d) and -sqrt(d) on the diagonal"
+        show "Measured |000>: %f" (stats.[0]/(floatruns))
+        show "Measured |100>: %f" (stats.[1]/(floatruns))
+        show "Measured |010>: %f" (stats.[2]/(floatruns))
+        show "Measured |001>: %f" (stats.[3]/(floatruns))
+        show "Measured |110>: %f" (stats.[4]/(floatruns))
+        show "Measured |011>: %f" (stats.[5]/(floatruns))
+        show "Measured |101>: %f" (stats.[6]/(floatruns))
+        show "Measured |111>: %f" (stats.[7]/(floatruns))
+        
 module Main =
     open App
 
