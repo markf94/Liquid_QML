@@ -1674,26 +1674,27 @@ module ParsingWindowDiffusion =
     [<LQD>]
     let __ParsingWindowDiffusion() = 
 
-        //Initialize a three qubit state
+        //Choose number of qubits, number of runs and diffusion delta value
         let qubitnumber = 4
+        let runs = 100000
+        let delta = 0.5
+
+        //initialize the boolean for stats output
         let mutable three = true
 
         if qubitnumber <> 3 then
             three <- false
         
+        //Initialize stats array
         let statsize = 2.**(float qubitnumber)
+        let stats = Array.create (int statsize) 0.
 
-
-
+        //Initialize a  qubit state
         let k = Ket(qubitnumber)
         let qs = k.Qubits
-        let delta = 0.9
-        let stats = Array.create (int statsize) 0.
-        let runs = 100000
 
-
+        //MAIN LOOP
         for m in 0..runs-1 do
-
             let qs = k.Reset()
 
             // 3 qubit case: prepare the state |010>
