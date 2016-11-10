@@ -1456,7 +1456,7 @@ module TrugenbergerSchuld =
                 //compare the inputpattern with the last trainingpattern (which is still loaded in the first register)
                 if inputpatternstorage.[0].[h] <> trainingpatternstorage.[trainingpatterncount-1].[h] then
                     X   [psi.[h]] //flip the qubit if appropriate
-            
+
             // ---- FLIPPING THE CLASS LABEL ---- \\
             //since all class labels are currently 0!
 
@@ -1587,7 +1587,7 @@ module ParsingWindowDiffusion =
 
     //-----START: define new gates----\\
 
-    let DiffusionGateOriginal (delta:float) (qs:Qubits) = 
+    let DiffusionGateOriginal (delta:float) (qs:Qubits) =
         let gate =
             Gate.Build("DiffusionGateOriginal", fun () ->
                 new Gate(
@@ -1599,7 +1599,7 @@ module ParsingWindowDiffusion =
             ))
         gate.Run qs
 
-    let DiffusionGateAdapted (delta:float) (qs:Qubits) = 
+    let DiffusionGateAdapted (delta:float) (qs:Qubits) =
         let gate =
             Gate.Build("DiffusionGateAdapted", fun () ->
                 new Gate(
@@ -1611,7 +1611,7 @@ module ParsingWindowDiffusion =
             ))
         gate.Run qs
 
-    let DiffusionGateAdapted2 (delta:float) (qs:Qubits) = 
+    let DiffusionGateAdapted2 (delta:float) (qs:Qubits) =
         let gate =
             Gate.Build("DiffusionGateAdapted2", fun () ->
                 new Gate(
@@ -1672,19 +1672,19 @@ module ParsingWindowDiffusion =
     //-----END: define new functions----\\
 
     [<LQD>]
-    let __ParsingWindowDiffusion() = 
+    let __ParsingWindowDiffusion() =
 
         //Choose number of qubits, number of runs and diffusion delta value
         let qubitnumber = 4
         let runs = 100000
-        let delta = 0.5
+        let delta = 0.7
 
         //initialize the boolean for stats output
         let mutable three = true
 
         if qubitnumber <> 3 then
             three <- false
-        
+
         //Initialize stats array
         let statsize = 2.**(float qubitnumber)
         let stats = Array.create (int statsize) 0.
@@ -1699,7 +1699,7 @@ module ParsingWindowDiffusion =
 
             // 3 qubit case: prepare the state |010>
             // 4 qubit case: prepare the state |0100>
-            X   [qs.[1]]
+            //X   [qs.[1]]
 
             // Apply the diffusion operator to all qubits
             for i in 0..qubitnumber-1 do
@@ -1707,7 +1707,7 @@ module ParsingWindowDiffusion =
             // Apply the diffusion operator to all qubits
             //for i in 0..qubitnumber-1 do
                 //DiffusionGateAdapted2   0.7   [qs.[i]]
-          
+
             if three = true then
                 // Retrieve the output
                 collectteststats stats qs
@@ -1717,9 +1717,9 @@ module ParsingWindowDiffusion =
 
         let floatruns = float (runs)
         if three = true then
-            
+
             show "-----------------------------"
-            show "--------_- RESULTS ----------"
+            show "---------- RESULTS ----------"
             show "With sqrt(d) and -sqrt(d) on the diagonal"
             show "Measured |000>: %f" (stats.[0]/(floatruns))
             show "Measured |100>: %f" (stats.[1]/(floatruns))
@@ -1731,7 +1731,7 @@ module ParsingWindowDiffusion =
             show "Measured |111>: %f" (stats.[7]/(floatruns))
         else
             show "-----------------------------"
-            show "--------_- RESULTS ----------"
+            show "---------- RESULTS ----------"
             show "With sqrt(d) and -sqrt(d) on the diagonal"
             show "Measured |0000>: %f" (stats.[0]/(floatruns))
             show "Measured |1000>: %f" (stats.[1]/(floatruns))
@@ -1766,7 +1766,7 @@ module ParsingWindowDiffusion =
 
             // Retrieve the output
             collectteststats stats qs
-        
+
         show "-----------------------------"
         show "---------- RESULTS ----------"
         show "With sqrt(1-d) and -sqrt(1-d) on the diagonal"
@@ -1780,7 +1780,252 @@ module ParsingWindowDiffusion =
         show "Measured |111>: %f" (stats.[7]/(floatruns))
         *)
 
+module diffusionKNN =
+    open System
+    open Util
+    open Operations
+    //open Native             // Support for Native Interop
+    //open HamiltonianGates   // Extra gates for doing Hamiltonian simulations
+    //open Tests              // All the built-in tests
 
+    //-----START: define new gates----\\
+
+    let InverseDiffusionGate (delta:float) (qs:Qubits) =
+        let gate =
+            Gate.Build("InverseDiffusionGate*", fun () ->
+                new Gate(
+                    //Qubits = qs.Length,
+                    Name = "InverseDiffusionGate*",
+                    Help = "Inverse Diffusion operator as originally proposed by Maria Schuld",
+                    Mat  = (CSMat(2,[(0,0,sqrt (1.-delta),0.);(0,1,sqrt delta,0.);(1,0,sqrt delta,0.);(1,1,-sqrt (1.-delta),0.)]))
+                    //Draw = .....,
+            ))
+        gate.Run qs
+
+    let DiffusionGate (delta:float) (qs:Qubits) =
+        let gate =
+            Gate.Build("DiffusionGate", fun () ->
+                new Gate(
+                    //Qubits = qs.Length,
+                    Name = "DiffusionGate",
+                    Help = "Diffusion operator as intended by Maria Schuld",
+                    Mat  = (CSMat(2,[(0,0,sqrt (delta),0.);(0,1,sqrt (1.-delta),0.);(1,0,sqrt (1.-delta),0.);(1,1,-sqrt (delta),0.)]))
+                    //Draw = .....,
+            ))
+        gate.Run qs
+
+    let DiffusionGate2 (delta:float) (qs:Qubits) =
+        let gate =
+            Gate.Build("DiffusionGate2", fun () ->
+                new Gate(
+                    //Qubits = qs.Length,
+                    Name = "DiffusionGate2",
+                    Help = "Diffusion operator as intended by Maria Schuld",
+                    Mat  = (CSMat(2,[(0,0,sqrt (delta),0.);(0,1,sqrt (1.-delta),0.);(1,0,sqrt (1.-delta),0.);(1,1,-sqrt (delta),0.)]))
+                    //Draw = .....,
+            ))
+        gate.Run qs
+
+    let DiffusionGateAdapted2 (delta:float) (qs:Qubits) =
+        let gate =
+            Gate.Build("DiffusionGateAdapted2", fun () ->
+                new Gate(
+                    //Qubits = qs.Length,
+                    Name = "DiffusionGateAdapted2",
+                    Help = "Diffusion operator as intended by Maria Schuld",
+                    Mat  = (CSMat(2,[(0,0,sqrt (delta),0.);(0,1,sqrt (1.-delta),0.);(1,0,sqrt (1.-delta),0.);(1,1,-sqrt (delta),0.)]))
+                    //Draw = .....,
+            ))
+        gate.Run qs
+
+    //-----END: define new gates----\\
+
+    //-----START: define new functions----\\
+
+    let collectteststats (stats:_[]) (qs:Qubits) =
+
+        M >< qs
+        let a,b,c = qs.[0].Bit.v, qs.[1].Bit.v, qs.[2].Bit.v
+        //show "qubits: %i %i %i" a b c
+
+        match a,b,c with
+                | 0,0,0 -> stats.[0] <- stats.[0] + 1.0
+                | 1,0,0-> stats.[1] <- stats.[1] + 1.0
+                | 0,1,0 -> stats.[2] <- stats.[2] + 1.0
+                | 0,0,1 -> stats.[3] <- stats.[3] + 1.0
+                | 1,1,0 -> stats.[4] <- stats.[4] + 1.0
+                | 0,1,1 -> stats.[5] <- stats.[5] + 1.0
+                | 1,0,1 -> stats.[6] <- stats.[6] + 1.0
+                | 1,1,1 -> stats.[7] <- stats.[7] + 1.0
+                | _,_,_ -> show "error" //to handle all other cases
+
+    let collectteststats2 (stats:_[]) (qs:Qubits) =
+
+
+        let a,b,c,d = qs.[1].Bit.v, qs.[2].Bit.v, qs.[3].Bit.v, qs.[4].Bit.v
+        //show "qubits: %i %i %i" a b c
+
+        match a,b,c,d with
+                | 0,0,0,0 -> stats.[0] <- stats.[0] + 1.0
+                | 1,0,0,0 -> stats.[1] <- stats.[1] + 1.0
+                | 0,1,0,0 -> stats.[2] <- stats.[2] + 1.0
+                | 0,0,1,0 -> stats.[3] <- stats.[3] + 1.0
+                | 0,0,0,1 -> stats.[4] <- stats.[4] + 1.0
+                | 1,1,0,0 -> stats.[5] <- stats.[5] + 1.0
+                | 1,0,1,0 -> stats.[6] <- stats.[6] + 1.0
+                | 1,0,0,1 -> stats.[7] <- stats.[7] + 1.0
+                | 0,1,1,0 -> stats.[8] <- stats.[8] + 1.0
+                | 0,1,0,1 -> stats.[9] <- stats.[9] + 1.0
+                | 0,0,1,1 -> stats.[10] <- stats.[10] + 1.0
+                | 1,0,1,1 -> stats.[11] <- stats.[11] + 1.0
+                | 1,1,1,0 -> stats.[12] <- stats.[12] + 1.0
+                | 1,1,0,1 -> stats.[13] <- stats.[13] + 1.0
+                | 0,1,1,1 -> stats.[14] <- stats.[14] + 1.0
+                | 1,1,1,1 -> stats.[15] <- stats.[15] + 1.0
+                | _,_,_,_ -> show "error" //to handle all other cases
+
+    //-----END: define new functions----\\
+
+    [<LQD>]
+    let __DiffusionKNN() =
+
+        //Choose number of qubits, number of runs and diffusion delta value
+        let diffusionqubitnumber = 4
+        let qubitnumber = 3+diffusionqubitnumber
+        let runs = 10000
+        let delta = 0.6
+        //let delta1 = 0.6
+        //let delta2 = 0.8
+
+        //initialize the boolean for stats output
+        let mutable conditionalcounter = 0
+
+        //Initialize cstats array
+        let cstats = Array.create 2 0.
+
+        //Initialize stats array
+        let statsize = 2.**(float qubitnumber)
+        let stats = Array.create (int statsize) 0.
+
+        //Initialize a  qubit state
+        let k = Ket(qubitnumber)
+        let qs = k.Qubits
+
+        // ------ INFO: QUBIT STATE SETUP ----\\
+        // |1 ancilla qubit; 4 qubits for diffusion; 1 class qubit; 1 m-qubit>
+        let ancillaqubitpos = 0
+        let diffusionregisterstart = 1
+        let diffusionregisterend = diffusionqubitnumber
+        let classqubitpos = qubitnumber-2
+        let mqubitpos = qubitnumber-1
+
+        //MAIN LOOP
+        for m in 0..runs-1 do
+
+            let qs = k.Reset()
+
+            // ---- STATE PREPARATION ---- \\
+
+            //put the m-qubit into superposition
+            H   [qs.[mqubitpos]]
+
+            //put the ancilla qubit into superposition
+            H   [qs.[ancillaqubitpos]]
+
+            // 4 qubits for diffusion remain in the state |0000> for the input vector preparation
+
+            //|1100>
+            //CNOT [qs.[ancillaqubitpos];qs.[1]]
+            //CNOT [qs.[ancillaqubitpos];qs.[2]]
+
+            // Apply the diffusion operator to all qubits in the diffusion register
+            for i in 1..diffusionregisterend do
+                Cgate (DiffusionGate   delta)   [qs.[ancillaqubitpos];qs.[i]]
+            
+            //flip the ancilla and move the input vector onto the |0> ancilla state
+            X   [qs.[ancillaqubitpos]]
+
+            //prepare the |0100> state in the diffusion register
+            //only when ancilla is |1>
+            CNOT [qs.[ancillaqubitpos];qs.[2]]
+
+            // Apply the diffusion operator to all qubits in the diffusion register
+            // controlled by ancilla and m register!
+            for i in 1..diffusionregisterend do
+                Cgate (Cgate (DiffusionGate   delta))   [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[i]]
+            
+            //flip the m qubit and move the trainingsvector 1 to the |0> state of the m qubit
+            X   [qs.[mqubitpos]]
+
+            //prepare the |1111> state in the diffusion register
+            //only when ancilla and m qubit are both |1>
+            //Cgate CNOT [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[1]]
+            //Cgate CNOT [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[3]]
+            //Cgate CNOT [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[4]]
+            //Cgate CNOT [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[2]]
+
+            for i in 1..diffusionregisterend do
+                Cgate (Cgate (InverseDiffusionGate   delta))   [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[i]]
+            
+            
+            //flip the class label when the m qubit is |1>
+            CNOT [qs.[mqubitpos];qs.[classqubitpos]]
+
+            //--- THE QML ALGORITHM ---\\
+
+            //Hadamard on ancilla interferes trainings and input vectors
+            H   [qs.[ancillaqubitpos]]
+            //M >< qs
+            //if qs.[ancillaqubitpos].Bit.v = 1 && qs.[mqubitpos].Bit.v = 1 then
+              //collectteststats2 stats qs
+              //conditionalcounter <- conditionalcounter + 1
+              (**)
+            //Measure the ancilla
+            M   [qs.[ancillaqubitpos]]
+
+            //if ancilla was found in 0> state
+            if qs.[ancillaqubitpos].Bit.v = 0 then
+                    //measure class qubit
+                    M   [qs.[classqubitpos]]
+                    if qs.[classqubitpos].Bit.v = 0 then
+                        cstats.[0] <- cstats.[0]+1.0
+                    else
+                        cstats.[1] <- cstats.[1]+1.0
+                    conditionalcounter <- conditionalcounter + 1
+            
+        let floatruns = float (runs)
+        let floatruns = float (conditionalcounter)
+        show "-----------------------------"
+        show "---------- RESULTS ----------"
+        show " "
+        show "Ancilla measured in |0> state: %i" conditionalcounter
+        show "Ancilla measured in |1> state: %i" (runs-conditionalcounter)
+        show "-----------------------------"
+        show "Class qubit measured in |0> state: %f" cstats.[0]
+        show "Class qubit measured in |1> state: %f" cstats.[1]
+
+
+        show "-----------------------------"
+        show "---------- RESULTS ----------"
+        show "With sqrt(d) and -sqrt(d) on the diagonal"
+        show "Measured |0000>: %f" (stats.[0]/(floatruns))
+        show "Measured |1000>: %f" (stats.[1]/(floatruns))
+        show "Measured |0100>: %f" (stats.[2]/(floatruns))
+        show "Measured |0010>: %f" (stats.[3]/(floatruns))
+        show "Measured |0001>: %f" (stats.[4]/(floatruns))
+        show "Measured |1100>: %f" (stats.[5]/(floatruns))
+        show "Measured |1010>: %f" (stats.[6]/(floatruns))
+        show "Measured |1001>: %f" (stats.[7]/(floatruns))
+        show "Measured |0110>: %f" (stats.[8]/(floatruns))
+        show "Measured |0101>: %f" (stats.[9]/(floatruns))
+        show "Measured |0011>: %f" (stats.[10]/(floatruns))
+        show "Measured |1011>: %f" (stats.[11]/(floatruns))
+        show "Measured |1110>: %f" (stats.[12]/(floatruns))
+        show "Measured |1101>: %f" (stats.[13]/(floatruns))
+        show "Measured |0111>: %f" (stats.[14]/(floatruns))
+        show "Measured |1111>: %f" (stats.[15]/(floatruns))
+
+     
 module Main =
     open App
 
