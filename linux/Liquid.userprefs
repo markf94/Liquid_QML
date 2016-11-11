@@ -1,8 +1,8 @@
 ﻿<Properties StartupItem="Liquid.fsproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" />
-  <MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Main.fs">
     <Files>
-      <File FileName="Main.fs" Line="1" Column="1" />
+      <File FileName="Main.fs" Line="1899" Column="24" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

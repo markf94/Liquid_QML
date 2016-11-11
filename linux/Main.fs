@@ -1700,6 +1700,9 @@ module ParsingWindowDiffusion =
             // 3 qubit case: prepare the state |010>
             // 4 qubit case: prepare the state |0100>
             //X   [qs.[1]]
+            X   [qs.[0]]
+            X   [qs.[2]]
+            X   [qs.[3]]
 
             // Apply the diffusion operator to all qubits
             for i in 0..qubitnumber-1 do
@@ -1893,7 +1896,7 @@ module diffusionKNN =
         let diffusionqubitnumber = 4
         let qubitnumber = 3+diffusionqubitnumber
         let runs = 10000
-        let delta = 0.6
+        let delta = 0.9
         //let delta1 = 0.6
         //let delta2 = 0.8
 
@@ -1939,6 +1942,7 @@ module diffusionKNN =
             //CNOT [qs.[ancillaqubitpos];qs.[2]]
 
             // Apply the diffusion operator to all qubits in the diffusion register
+            // controlled by ancilla qubit
             for i in 1..diffusionregisterend do
                 Cgate (DiffusionGate   delta)   [qs.[ancillaqubitpos];qs.[i]]
             
@@ -1979,7 +1983,7 @@ module diffusionKNN =
             //if qs.[ancillaqubitpos].Bit.v = 1 && qs.[mqubitpos].Bit.v = 1 then
               //collectteststats2 stats qs
               //conditionalcounter <- conditionalcounter + 1
-              (**)
+            
             //Measure the ancilla
             M   [qs.[ancillaqubitpos]]
 
@@ -1994,17 +1998,17 @@ module diffusionKNN =
                     conditionalcounter <- conditionalcounter + 1
             
         let floatruns = float (runs)
-        let floatruns = float (conditionalcounter)
+        //let floatruns = float (conditionalcounter)
         show "-----------------------------"
         show "---------- RESULTS ----------"
         show " "
-        show "Ancilla measured in |0> state: %i" conditionalcounter
-        show "Ancilla measured in |1> state: %i" (runs-conditionalcounter)
+        show "Ancilla measured in |0> state: %f" ((float conditionalcounter)/floatruns)
+        show "Ancilla measured in |1> state: %f" ((floatruns-(float conditionalcounter))/floatruns)
         show "-----------------------------"
-        show "Class qubit measured in |0> state: %f" cstats.[0]
-        show "Class qubit measured in |1> state: %f" cstats.[1]
+        show "Class qubit measured in |0> state: %f" (cstats.[0]/(float conditionalcounter))
+        show "Class qubit measured in |1> state: %f" (cstats.[1]/(float conditionalcounter))
 
-
+        (*
         show "-----------------------------"
         show "---------- RESULTS ----------"
         show "With sqrt(d) and -sqrt(d) on the diagonal"
@@ -2024,8 +2028,38 @@ module diffusionKNN =
         show "Measured |1101>: %f" (stats.[13]/(floatruns))
         show "Measured |0111>: %f" (stats.[14]/(floatruns))
         show "Measured |1111>: %f" (stats.[15]/(floatruns))
+        *)
+   
+module GroverStatePreparation = 
+    open System
+    open Util
+    open Operations
+    //open Native             // Support for Native Interop
+    //open HamiltonianGates   // Extra gates for doing Hamiltonian simulations
+    //open Tests              // All the built-in tests
 
-     
+    //-----START: define new gates----\\
+
+    //-----END: define new gates----\\
+
+    //-----START: define new functions----\\
+
+    //-----END: define new functions----\\
+
+
+    [<LQD>]
+    let __GroverStatePreparation() = 
+        // Algorithm described in Grover & Rudolph (2002) "Creating superpositions that correspond to efficiently integrable probability distributions"
+
+        // GAUSSIAN with mean=0 and std=1
+        let qubitnumber = 2
+        let k = Ket(qubitnumber)
+        let qs = k.Qubits
+
+        //Initialize the Hadamard state since the gaussian distribution is symmetric around the mean
+        // 50% in region 0 (left of the mean) and 50% in region 1 (right of the mean)
+        H   [qs.[0]]
+
 module Main =
     open App
 
