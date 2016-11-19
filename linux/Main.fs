@@ -1958,20 +1958,29 @@ module diffusionKNN =
             for i in 1..diffusionregisterend do
                 Cgate (Cgate (DiffusionGate   delta))   [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[i]]
             
+            //correct the minus sign
+            Cgate (Cgate Z) [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[2]]
+
             //flip the m qubit and move the trainingsvector 1 to the |0> state of the m qubit
             X   [qs.[mqubitpos]]
 
             //prepare the |1111> state in the diffusion register
             //only when ancilla and m qubit are both |1>
-            //Cgate CNOT [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[1]]
-            //Cgate CNOT [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[3]]
-            //Cgate CNOT [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[4]]
             //Cgate CNOT [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[2]]
+            Cgate CNOT [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[3]]
+            Cgate CNOT [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[4]]
+            Cgate CNOT [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[1]]
 
             for i in 1..diffusionregisterend do
-                Cgate (Cgate (InverseDiffusionGate   delta))   [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[i]]
+                Cgate (Cgate (DiffusionGate   delta))   [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[i]]
+                //Cgate (Cgate (InverseDiffusionGate   delta))   [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[i]]
             
-            
+            //correct the minus signs
+            Cgate (Cgate Z) [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[1]]
+            Cgate (Cgate Z) [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[2]]
+            Cgate (Cgate Z) [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[3]]
+            Cgate (Cgate Z) [qs.[ancillaqubitpos];qs.[mqubitpos];qs.[4]]
+
             //flip the class label when the m qubit is |1>
             CNOT [qs.[mqubitpos];qs.[classqubitpos]]
 
@@ -1979,15 +1988,11 @@ module diffusionKNN =
 
             //Hadamard on ancilla interferes trainings and input vectors
             H   [qs.[ancillaqubitpos]]
-            //M >< qs
-            //if qs.[ancillaqubitpos].Bit.v = 1 && qs.[mqubitpos].Bit.v = 1 then
-              //collectteststats2 stats qs
-              //conditionalcounter <- conditionalcounter + 1
-            
+
             //Measure the ancilla
             M   [qs.[ancillaqubitpos]]
 
-            //if ancilla was found in 0> state
+            //if ancilla was found in |0> state
             if qs.[ancillaqubitpos].Bit.v = 0 then
                     //measure class qubit
                     M   [qs.[classqubitpos]]
@@ -2008,7 +2013,7 @@ module diffusionKNN =
         show "Class qubit measured in |0> state: %f" (cstats.[0]/(float conditionalcounter))
         show "Class qubit measured in |1> state: %f" (cstats.[1]/(float conditionalcounter))
 
-        (*
+
         show "-----------------------------"
         show "---------- RESULTS ----------"
         show "With sqrt(d) and -sqrt(d) on the diagonal"
@@ -2028,7 +2033,7 @@ module diffusionKNN =
         show "Measured |1101>: %f" (stats.[13]/(floatruns))
         show "Measured |0111>: %f" (stats.[14]/(floatruns))
         show "Measured |1111>: %f" (stats.[15]/(floatruns))
-        *)
+
    
 module GroverStatePreparation = 
     open System
@@ -2051,6 +2056,7 @@ module GroverStatePreparation =
     let __GroverStatePreparation() = 
         // Algorithm described in Grover & Rudolph (2002) "Creating superpositions that correspond to efficiently integrable probability distributions"
 
+        // First try:
         // GAUSSIAN with mean=0 and std=1
         let qubitnumber = 2
         let k = Ket(qubitnumber)
@@ -2059,6 +2065,9 @@ module GroverStatePreparation =
         //Initialize the Hadamard state since the gaussian distribution is symmetric around the mean
         // 50% in region 0 (left of the mean) and 50% in region 1 (right of the mean)
         H   [qs.[0]]
+
+
+
 
 module Main =
     open App
