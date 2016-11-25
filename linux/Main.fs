@@ -37,7 +37,7 @@ module BinaryAmplitudeKNN =
 
         //// #1 \\\\\
         ////////// START: Binary classifier in z-x-plane \\\\\\\\\\\\\\\\\\\\\\
-        /// input ector (3/4) >> alpha = 0.85355 - 0.35355i; beta = 0.35355 - 0.14645i
+        /// input vector (3/4) >> alpha = 0.85355 - 0.35355i; beta = 0.35355 - 0.14645i
         /// training vector #1 >> alpha = 1; beta = 0
         /// training vector #2 >> alpha = 0; beta = 1
 
@@ -156,7 +156,7 @@ module BinaryAmplitudeKNN =
         //STATE 1 -> X-Z plane binary classifier with 3/4 state
         //STATE 2 -> X-Z plane binary classifier with 7/8 state
         //STATE 3 -> X-Y plane binary classifier with 3/4 state
-        let state = 3
+        let state = 1
 
         //extract the individual qubits
         let q0, q1, q2, q3 = qs.Head, qs.[1], qs.[2], qs.[3]
@@ -229,14 +229,15 @@ module BinaryAmplitudeKNN =
         //printing etiquette:
         //printfn "A string: %s. An int: %i. A float: %f. A bool: %b" "hello" 42 3.14 true
 
-        show "Measured ancilla qubit: |0>: %f |1>: %f" stats01.[0] stats01.[1]
+        //show "Measured ancilla qubit: |0>: %f |1>: %f" stats01.[0] stats01.[1]
         //show "Old Measured ancilla qubit: 0-%d 1-%d" stats0.[0] stats0.[1]
-        show "Measured data register: |0> %f |1> %f" stats01.[2] stats01.[3]
+        //show "Measured data register: |0> %f |1> %f" stats01.[2] stats01.[3]
         //show "Old Measured data qubit: 0-%d 1-%d" stats1.[0] stats1.[1]
         show "Measured class register: |0> %f |1> %f" stats01.[4] stats01.[5]
         //show "Old Measured class qubit: 0-%d 1-%d" stats2.[0] stats2.[1]
         show "Measured m register: |0> %f |1> %f" stats01.[6] stats01.[7]
         //show "Old Measured m qubit: 0-%d 1-%d" stats3.[0] stats3.[1]
+        (*
         show "Measured |0000>: %f" stats.[0]
         show "Measured |0001>: %f" stats.[1]
         show "Measured |0010>: %f" stats.[2]
@@ -253,6 +254,7 @@ module BinaryAmplitudeKNN =
         show "Measured |1101>: %f" stats.[13]
         show "Measured |1011>: %f" stats.[14]
         show "Measured |1111>: %f" stats.[15]
+        *)
         if stats01.[4] > stats01.[5] then
             show "Input classified as: |0>"
         else
@@ -301,14 +303,14 @@ module BinaryAmplitudeKNN =
         let circ2 = Circuit.Compile secondpartofALG qs
 
         let totalcirc = Seq [circ;circ2]
-        totalcirc.RenderHT("TotalCircuit")
+        //totalcirc.RenderHT("TotalCircuit")
 
-        totalcirc.Dump()
+        //totalcirc.Dump()
 
         //output the circuit into the log file
-        circ.Dump()
+        //circ.Dump()
         //Draw it into HTML (H) and Tex (T)
-        circ.RenderHT("StatePreparation")
+        //circ.RenderHT("StatePreparation")
 
         //convolutes the quantum gates >> impossible on an actual quantum computer
         //but leads to a speed up in the classical simulation
@@ -316,9 +318,9 @@ module BinaryAmplitudeKNN =
         let circ    = circ.GrowGates(k)
 
         //output the circuit into the log file
-        circ.Dump()
+        //circ.Dump()
         //Draw it into HTML (H) and Tex (T)
-        circ.RenderHT("StatePreparationOptim")
+        //circ.RenderHT("StatePreparationOptim")
 
         for i in 0..(runs-1) do
 
@@ -359,8 +361,9 @@ module BinaryAmplitudeKNN =
             if s < 8 then
                 stats01.[s] <- stats01.[s]/float(conditionalcounter)
 
+        show "Probability of successful CM: %f" (float(conditionalcounter)/float(runs))
         printstats stats stats01
-        show "Successful CMs: %i" conditionalcounter
+       
         /////////////// OLD CODE SNIPPETS ///////////////////////
 
         //PRINTING THE QUBITS

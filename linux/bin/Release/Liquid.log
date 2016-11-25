@@ -1,29 +1,8 @@
 0:0000.0/=============== Logging to: Liquid.log opened ================
-0:0000.5/-----------------------------
-0:0000.5/---------- RESULTS ----------
-0:0000.5/ 
-0:0000.5/Ancilla measured in |0> state: 0.682600
-0:0000.5/Ancilla measured in |1> state: 0.317400
-0:0000.5/-----------------------------
-0:0000.5/Class qubit measured in |0> state: 0.578523
-0:0000.5/Class qubit measured in |1> state: 0.421477
-0:0000.5/-----------------------------
-0:0000.5/---------- RESULTS ----------
-0:0000.5/With sqrt(d) and -sqrt(d) on the diagonal
-0:0000.5/Measured |0000>: 0.000000
-0:0000.5/Measured |1000>: 0.000000
-0:0000.5/Measured |0100>: 0.000000
-0:0000.5/Measured |0010>: 0.000000
-0:0000.5/Measured |0001>: 0.000000
-0:0000.5/Measured |1100>: 0.000000
-0:0000.5/Measured |1010>: 0.000000
-0:0000.5/Measured |1001>: 0.000000
-0:0000.5/Measured |0110>: 0.000000
-0:0000.5/Measured |0101>: 0.000000
-0:0000.5/Measured |0011>: 0.000000
-0:0000.5/Measured |1011>: 0.000000
-0:0000.5/Measured |1110>: 0.000000
-0:0000.5/Measured |1101>: 0.000000
-0:0000.5/Measured |0111>: 0.000000
-0:0000.5/Measured |1111>: 0.000000
-0:0000.5/=============== Logging to: Liquid.log closed ================
+0:0000.0/The quantum kNN based on amplitude encoding
+0:0000.0/_______________________________________________________
+0:0000.0/Probability of successful CM: 0.803000
+0:0000.0/Measured class register: |0> 0.578954 |1> 0.421046
+0:0000.0/Measured m register: |0> 0.578954 |1> 0.421046
+0:0000.0/Input classified as: |0>
+0:0000.0/=============== Logging to: Liquid.log closed ================
