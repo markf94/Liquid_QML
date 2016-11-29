@@ -235,7 +235,7 @@ module BinaryAmplitudeKNN =
         //show "Old Measured data qubit: 0-%d 1-%d" stats1.[0] stats1.[1]
         show "Measured class register: |0> %f |1> %f" stats01.[4] stats01.[5]
         //show "Old Measured class qubit: 0-%d 1-%d" stats2.[0] stats2.[1]
-        show "Measured m register: |0> %f |1> %f" stats01.[6] stats01.[7]
+        //show "Measured m register: |0> %f |1> %f" stats01.[6] stats01.[7]
         //show "Old Measured m qubit: 0-%d 1-%d" stats3.[0] stats3.[1]
         (*
         show "Measured |0000>: %f" stats.[0]
