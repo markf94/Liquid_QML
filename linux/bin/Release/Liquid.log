@@ -1,7 +1,7 @@
 0:0000.0/=============== Logging to: Liquid.log opened ================
 0:0000.0/The quantum kNN based on amplitude encoding
 0:0000.0/_______________________________________________________
-0:0000.0/Probability of successful CM: 0.799100
-0:0000.0/Measured class register: |0> 0.583156 |1> 0.416844
+0:0000.0/Probability of successful CM: 0.801700
+0:0000.0/Measured class register: |0> 0.581639 |1> 0.418361
 0:0000.0/Input classified as: |0>
 0:0000.0/=============== Logging to: Liquid.log closed ================
