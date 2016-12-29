@@ -1,7 +1,54 @@
 0:0000.0/=============== Logging to: Liquid.log opened ================
-0:0000.0/The quantum kNN based on amplitude encoding
-0:0000.0/_______________________________________________________
-0:0000.0/Probability of successful CM: 0.801700
-0:0000.0/Measured class register: |0> 0.581639 |1> 0.418361
-0:0000.0/Input classified as: |0>
-0:0000.0/=============== Logging to: Liquid.log closed ================
+0:0000.0/Trugenberger's (2001) storage algorithm combined with Schuld et al.(2014) qubit KNN
+0:0000.0/____________________________________________________________________________________
+0:0000.7/
+0:0000.7/=========== START ===========
+0:0000.7/
+0:0000.7/Binary pattern length: 9
+0:0000.7/Number of required qubits: 20
+0:0000.7/Run Nr. 0
+0:0002.5/Initial quantum superposition prepared.
+0:0002.5/Classification algorithm initialized.
+0:0002.8/Run Nr. 1
+0:0004.4/Initial quantum superposition prepared.
+0:0004.4/Classification algorithm initialized.
+0:0004.7/Run Nr. 2
+0:0006.2/Initial quantum superposition prepared.
+0:0006.2/Classification algorithm initialized.
+0:0006.5/Run Nr. 3
+0:0007.9/Initial quantum superposition prepared.
+0:0007.9/Classification algorithm initialized.
+0:0008.2/Run Nr. 4
+0:0009.5/Initial quantum superposition prepared.
+0:0009.5/Classification algorithm initialized.
+0:0009.8/Run Nr. 5
+0:0011.1/Initial quantum superposition prepared.
+0:0011.1/Classification algorithm initialized.
+0:0011.4/Run Nr. 6
+0:0012.8/Initial quantum superposition prepared.
+0:0012.8/Classification algorithm initialized.
+0:0013.1/Run Nr. 7
+0:0014.4/Initial quantum superposition prepared.
+0:0014.4/Classification algorithm initialized.
+0:0014.7/Run Nr. 8
+0:0016.2/Initial quantum superposition prepared.
+0:0016.2/Classification algorithm initialized.
+0:0016.5/Run Nr. 9
+0:0017.9/Initial quantum superposition prepared.
+0:0017.9/Classification algorithm initialized.
+0:0018.2/Run Nr. 10
+0:0019.6/Initial quantum superposition prepared.
+0:0019.6/Classification algorithm initialized.
+0:0019.9/Run Nr. 11
+0:0021.2/Initial quantum superposition prepared.
+0:0021.2/Classification algorithm initialized.
+0:0021.5/Run Nr. 12
+0:0022.8/Initial quantum superposition prepared.
+0:0022.8/Classification algorithm initialized.
+0:0023.1/Run Nr. 13
+0:0024.3/Initial quantum superposition prepared.
+0:0024.3/Classification algorithm initialized.
+0:0024.6/Run Nr. 14
+0:0025.9/Initial quantum superposition prepared.
+0:0025.9/Classification algorithm initialized.
+0:0026.2/Run Nr. 15

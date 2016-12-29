@@ -108,6 +108,8 @@ module BinaryAmplitudeKNN =
         X   [q0]
         //apply Toffoli (q0 & q3 controls, q1 target) >> to create the second training vector
         CCNOT   [q0;q3;q1]
+
+
         //////// END \\\\\\\\\
 
     /// <summary>
@@ -294,7 +296,7 @@ module BinaryAmplitudeKNN =
 
         let mutable conditionalcounter = 0
 
-        //create state vector containing a single qubit
+        //create state vector containing four qubits
         let k  = Ket(4)
         let qs = k.Qubits
 
@@ -1423,6 +1425,8 @@ module TrugenbergerSchuld =
         // ---- MAIN LOOP ---- \\
         for i in 0..runs-1 do
 
+            show "Run Nr. %i" i
+
             //show "ITERATION %i" i
             let psi = k.Reset() //reset the state vector
 
@@ -1435,11 +1439,15 @@ module TrugenbergerSchuld =
             for p in 1..trainingpatterncount do
                 StorageAlgorithm trainingpatternstorage trainingpatternlength p psi
 
+            show "Initial quantum superposition prepared."
+
             // ---- MEMORY REGISTER IS NOW PREPARED ---- \\
 
 
 
             // ---- QUANTUM KNN ALGORITHM (see Schuld et al., 2014) ---- \\
+
+            show "Classification algorithm initialized."
 
             // TO KEEP TRACK OF WHAT'S HAPPENING
             // trainings register --> all qubits from psi.[memoryregisterstart] are part of the initialized memory register superposition
@@ -1553,7 +1561,7 @@ module TrugenbergerSchuld =
           if cstats.[0] > cstats.[1] then
             show "Input classified as |0>"
           else
-            show "Input classied as |1>"
+            show "Input classified as |1>"
         else
 
         // ---- TESTSTATS FOR DEBUGGING ---- \\
@@ -1678,7 +1686,7 @@ module ParsingWindowDiffusion =
     let __ParsingWindowDiffusion() =
 
         //Choose number of qubits, number of runs and diffusion delta value
-        let qubitnumber = 4
+        let qubitnumber = 3
         let runs = 100000
         let delta = 0.7
 
@@ -1702,10 +1710,11 @@ module ParsingWindowDiffusion =
 
             // 3 qubit case: prepare the state |010>
             // 4 qubit case: prepare the state |0100>
-            //X   [qs.[1]]
-            X   [qs.[0]]
+            X   [qs.[1]]
             X   [qs.[2]]
-            X   [qs.[3]]
+            //X   [qs.[0]]
+            //X   [qs.[2]]
+            //X   [qs.[3]]
 
             // Apply the diffusion operator to all qubits
             for i in 0..qubitnumber-1 do
@@ -1728,12 +1737,12 @@ module ParsingWindowDiffusion =
             show "---------- RESULTS ----------"
             show "With sqrt(d) and -sqrt(d) on the diagonal"
             show "Measured |000>: %f" (stats.[0]/(floatruns))
-            show "Measured |100>: %f" (stats.[1]/(floatruns))
-            show "Measured |010>: %f" (stats.[2]/(floatruns))
             show "Measured |001>: %f" (stats.[3]/(floatruns))
-            show "Measured |110>: %f" (stats.[4]/(floatruns))
+            show "Measured |010>: %f" (stats.[2]/(floatruns))
             show "Measured |011>: %f" (stats.[5]/(floatruns))
+            show "Measured |100>: %f" (stats.[1]/(floatruns))
             show "Measured |101>: %f" (stats.[6]/(floatruns))
+            show "Measured |110>: %f" (stats.[4]/(floatruns))
             show "Measured |111>: %f" (stats.[7]/(floatruns))
         else
             show "-----------------------------"
