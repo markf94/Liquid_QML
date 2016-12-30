@@ -1112,6 +1112,49 @@ module TrugenbergerSchuld =
             ))
         (gate qs).Run qs
 
+    let U1new (n:int) (qs:Qubits) =
+        let gate (qs:Qubits) =
+            Gate.Build("U1new_" + n.ToString(), fun () ->
+                new Gate(
+                    Qubits = qs.Length,
+                    Name = "U1new",
+                    Help = "First new part of the Hamiltonian unitary",
+                    //Draw = .....,
+                    Mat  = (CSMat(2,[(0,0,cos(-Math.PI/(2.*(float n))),sin(-Math.PI/(2.*(float n)))); (1,1,1.,0.)]))
+            ))
+        (gate qs).Run qs
+
+
+    let U2new (n:int) (qs:Qubits) =
+        let gate =
+            Gate.Build("U2new_" + n.ToString(), fun () ->
+                new Gate(
+                    //Qubits = qs.Length,
+                    Name = "U2new",
+                    Help = "Second new part of the Hamiltonian unitary",
+                    Mat  = (CSMat(2,[(0,0,cos(Math.PI/(float n)),sin(Math.PI/(float n))); (1,1,1.,0.)]))
+                    //Mat  = (CSMat(2,[(0,0,0.92388,0.38268); (1,1,1.,0.)]))
+                    //Draw = .....,
+            ))
+        gate.Run qs
+
+
+    let HDUnitarynew (n:int) (qs:Qubits) =
+        let gate (qs:Qubits) =
+            Gate.Build("HDUnitarynew_" + n.ToString(), fun () ->
+                let nam     = "HDUnitary"
+                new Gate(
+                    Qubits = qs.Length,
+                    Name = "HDUnitarynew",
+                    Help = "new Sums up the Hamming distances; n being the length of the training and input pattern",
+                    //Draw = .....,
+                    Op = WrapOp (fun (qs:Qubits) ->
+                            U1new   n   qs;
+                            Cgate (U2new n)   qs;
+                            )
+            ))
+        (gate qs).Run qs
+
 
     //-----END: define new gates----\\
 
@@ -1278,7 +1321,7 @@ module TrugenbergerSchuld =
             for i in 0..(patternlength-1) do
                 CCNOT [psi.[i];psi.[u2position];psi.[mregisterstart+i]]
 
-    let SchuldQMLAlg (inputregisterend:int) (memoryregisterstart:int) (classqubitposition:int) (ancillaqubitposition:int) (qs:Qubits) =
+    let SchuldQMLAlg (inputregisterend:int) (memoryregisterstart:int) (classqubitposition:int) (ancillaqubitposition:int) (qs:Qubits) (trainingpatternlength:int) =
 
             //Put ancilla register into superposition
             H   [qs.[ancillaqubitposition]]
@@ -1296,8 +1339,10 @@ module TrugenbergerSchuld =
 
             for j in 0..inputregisterend do
               //apply the unitary operator >> use the ancilla qubit as control for the CU^(-2) operation (see Trugenberger et al., 2001)
-              HDUnitary   [qs.[ancillaqubitposition];qs.[memoryregisterstart+j]]
-
+              //(HDUnitarynew  trainingpatternlength)   [qs.[ancillaqubitposition];qs.[memoryregisterstart+j]]
+              //HDUnitary  [qs.[ancillaqubitposition];qs.[memoryregisterstart+j]]
+              (U1new trainingpatternlength)    [qs.[memoryregisterstart+j]]
+              Cgate (U2new trainingpatternlength)   [qs.[ancillaqubitposition];qs.[memoryregisterstart+j]]
             //Hadamard on ancilla writes the total Hamming distance into the amplitudes
             H   [qs.[ancillaqubitposition]]
 
@@ -1494,7 +1539,7 @@ module TrugenbergerSchuld =
 
             // ---- RUNNING THE HEART OF THE KNN ALGORITHM ---- \\
             if test = false then
-                SchuldQMLAlg inputregisterend memoryregisterstart classqubitposition ancillaqubitposition psi
+                SchuldQMLAlg inputregisterend memoryregisterstart classqubitposition ancillaqubitposition psi trainingpatternlength
 
             // ---- RETRIEVING STATS ---- \\
 
@@ -1545,6 +1590,7 @@ module TrugenbergerSchuld =
           show ""
           show "Ancilla measured as 0: %d" stats.[0]
           show "Ancilla measured as 1: %d" stats.[1]
+          show "Probability: %f" ((float stats.[0])/(float runs))
           show "Prediction: %f" probanc
           show ""
           show "Class measured as 0: %d" cstats.[0]
